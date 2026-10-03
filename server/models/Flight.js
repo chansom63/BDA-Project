@@ -1,21 +1,31 @@
 const mongoose = require('mongoose');
 
 const flightSchema = new mongoose.Schema({
-  flightId: { type: String, required: true, unique: true, index: true }, // e.g. "AA104", "BA283"
-  icao24: { type: String, required: true, index: true },               // e.g. "400A0C"
-  callsign: { type: String, required: true },                           // e.g. "AAL104"
-  airline: { type: String, required: true },                            // e.g. "American Airlines"
-  aircraftType: { type: String, default: 'B787-9' },                   // e.g. "B787-9", "A350-900"
+  flightId: { type: String, required: true, unique: true, index: true },
+  icao24: { type: String, required: true, index: true },
+  callsign: { type: String, required: true },
+  airline: { type: String, required: true },
+  aircraftType: { type: String, default: 'Boeing 787-9' },
+  registration: { type: String, default: 'N104AN' },
+  countryFlag: { type: String, default: '🇺🇸' },
+  photoUrl: { type: String, default: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&auto=format&fit=crop&q=80' },
+  std: { type: String, default: '12:00 UTC' },
+  atd: { type: String, default: '12:10 UTC' },
+  sta: { type: String, default: '20:00 UTC' },
+  eta: { type: String, default: '19:50 UTC' },
+  radarSource: { type: String, default: 'F-KJFK1' },
   origin: {
-    code: { type: String, required: true },                            // e.g. "JFK"
-    city: { type: String, required: true },                            // e.g. "New York"
+    code: { type: String, required: true },
+    icao: { type: String, default: 'KJFK' },
+    city: { type: String, required: true },
     country: { type: String, default: 'USA' },
     lat: { type: Number, required: true },
     lon: { type: Number, required: true }
   },
   destination: {
-    code: { type: String, required: true },                            // e.g. "LHR"
-    city: { type: String, required: true },                            // e.g. "London"
+    code: { type: String, required: true },
+    icao: { type: String, default: 'EGLL' },
+    city: { type: String, required: true },
     country: { type: String, default: 'UK' },
     lat: { type: Number, required: true },
     lon: { type: Number, required: true }
@@ -23,12 +33,12 @@ const flightSchema = new mongoose.Schema({
   currentPosition: {
     lat: { type: Number, required: true, index: true },
     lon: { type: Number, required: true, index: true },
-    altitudeFt: { type: Number, required: true },                       // Altitude in feet
-    speedKnots: { type: Number, required: true },                       // Ground speed in knots
-    headingDeg: { type: Number, required: true },                       // Heading 0-360 deg
-    verticalRateFpm: { type: Number, default: 0 }                       // Vertical rate (climb/descent)
+    altitudeFt: { type: Number, required: true },
+    speedKnots: { type: Number, required: true },
+    headingDeg: { type: Number, required: true },
+    verticalRateFpm: { type: Number, default: 0 }
   },
-  squawk: { type: String, default: '1200' },                             // 1200 VFR, 7700 General Emergency, 7600 Radio, 7500 Hijack
+  squawk: { type: String, default: '1200' },
   status: {
     type: String,
     enum: ['Scheduled', 'Taxing', 'In-Flight', 'Approaching', 'Landed', 'Emergency', 'Diverted'],

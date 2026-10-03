@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Plane, Radio, AlertTriangle, Database, BarChart3, Settings, Layers, Shield, Clock } from 'lucide-react';
+import { Plane, Radio, AlertTriangle, Database, BarChart3, Settings, Layers, Shield, Clock, Search, Zap } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
 
-export default function Navbar({ activeTab, setActiveTab, activeAlertCount }) {
+export default function Navbar({ activeTab, setActiveTab, activeAlertCount, flights, onSelectFlight }) {
   const { user } = useAuth();
   const { isConnected } = useSocket();
   const [utcTime, setUtcTime] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -14,6 +17,26 @@ export default function Navbar({ activeTab, setActiveTab, activeAlertCount }) {
     }, 1000);
     return () => clearInterval(timer);
   }, []);
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    if (!query || query.trim() === '') {
+      setSearchResults([]);
+      setShowDropdown(false);
+      return;
+    }
+    const q = query.toLowerCase();
+    const matches = (flights || []).filter(f =>
+      f.callsign?.toLowerCase().includes(q) ||
+      f.flightId?.toLowerCase().includes(q) ||
+      f.airline?.toLowerCase().includes(q) ||
+      f.aircraftType?.toLowerCase().includes(q) ||
+      f.origin?.code?.toLowerCase().includes(q) ||
+      f.destination?.code?.toLowerCase().includes(q)
+    );
+    setSearchResults(matches);
+    setShowDropdown(true);
+  };
 
   const navItems = [
     { id: 'map', label: 'Flight Radar Map', icon: Plane },
@@ -25,47 +48,117 @@ export default function Navbar({ activeTab, setActiveTab, activeAlertCount }) {
   ];
 
   return (
-    <header className="glass-panel" style={{ borderRadius: 0, borderTop: 'none', borderLeft: 'none', borderRight: 'none', padding: '12px 24px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    <header style={{ background: '#0b0f17', borderBottom: '1px solid var(--fr24-panel-border)', padding: '10px 20px', zIndex: 1000, position: 'relative' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px' }}>
         
-        {/* Title & AWS Badge */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+        {/* Title & FR24 Logo */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{
-            background: 'linear-gradient(135deg, #ff9900 0%, #a855f7 100%)',
-            padding: '10px',
-            borderRadius: '10px',
+            background: 'linear-gradient(135deg, #facc15 0%, #eab308 100%)',
+            padding: '8px 10px',
+            borderRadius: '6px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 0 15px rgba(255, 153, 0, 0.4)'
+            color: '#000',
+            boxShadow: '0 0 12px rgba(250, 204, 21, 0.4)'
           }}>
-            <Plane size={24} color="#fff" />
+            <Plane size={22} color="#000" style={{ transform: 'rotate(45deg)' }} />
           </div>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <h1 style={{ fontSize: '18px', fontWeight: '700', color: '#fff', letterSpacing: '-0.02em' }}>
-                Monolithic MERN Architecture on AWS
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <h1 style={{ fontSize: '18px', fontWeight: '900', color: '#facc15', letterSpacing: '-0.03em', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                FLIGHTRADAR24 <span style={{ color: '#fff', fontSize: '14px', fontWeight: '600' }}>TELEMETRY</span>
               </h1>
               <span style={{
-                background: 'rgba(255, 153, 0, 0.15)',
-                color: '#ff9900',
-                border: '1px solid rgba(255, 153, 0, 0.4)',
-                fontSize: '11px',
-                fontWeight: '600',
-                padding: '2px 8px',
-                borderRadius: '12px'
+                background: 'rgba(250, 204, 21, 0.15)',
+                color: '#facc15',
+                border: '1px solid rgba(250, 204, 21, 0.4)',
+                fontSize: '10px',
+                fontWeight: '800',
+                padding: '1px 6px',
+                borderRadius: '10px'
               }}>
-                EC2 MONOLITH
+                MERN AWS
               </span>
             </div>
-            <p style={{ fontSize: '12px', color: '#9ca3af' }}>
-              Real-Time Flight Telemetry & Tracking System • AWS MSK ➔ Kinesis ➔ DocumentDB ➔ S3 ➔ Glue ➔ Redshift
+            <p style={{ fontSize: '11px', color: '#9ca3af' }}>
+              Live Global ADS-B Telemetry Tracking • MSK ➔ Kinesis ➔ DocumentDB ➔ Redshift
             </p>
           </div>
         </div>
 
-        {/* Center Nav Tabs */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(0, 0, 0, 0.3)', padding: '4px', borderRadius: '10px' }}>
+        {/* FR24 Real-Time Autocomplete Search Bar */}
+        <div style={{ position: 'relative', width: '300px' }}>
+          <div className="glass-panel" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 12px', background: '#161d2a' }}>
+            <Search size={15} color="#facc15" />
+            <input
+              type="text"
+              placeholder="Search flight, airline, airport..."
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
+              onFocus={() => searchQuery && setShowDropdown(true)}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#fff',
+                outline: 'none',
+                fontSize: '12px',
+                width: '100%'
+              }}
+            />
+          </div>
+
+          {/* Search Autocomplete Dropdown */}
+          {showDropdown && searchResults.length > 0 && (
+            <div className="glass-panel" style={{
+              position: 'absolute',
+              top: '40px',
+              left: 0,
+              right: 0,
+              background: '#161d2a',
+              border: '1px solid #facc15',
+              borderRadius: '8px',
+              maxHeight: '260px',
+              overflowY: 'auto',
+              zIndex: 1100,
+              boxShadow: '0 8px 24px rgba(0,0,0,0.8)'
+            }}>
+              {searchResults.map(f => (
+                <div
+                  key={f.flightId}
+                  onClick={() => {
+                    if (onSelectFlight) onSelectFlight(f);
+                    setActiveTab('map');
+                    setShowDropdown(false);
+                  }}
+                  style={{
+                    padding: '8px 12px',
+                    borderBottom: '1px solid var(--fr24-panel-border)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    justify: 'space-between',
+                    alignItems: 'center',
+                    transition: 'background 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(250, 204, 21, 0.15)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                >
+                  <div>
+                    <div style={{ fontSize: '13px', fontWeight: '800', color: '#facc15' }}>{f.callsign} ({f.flightId})</div>
+                    <div style={{ fontSize: '11px', color: '#9ca3af' }}>{f.airline} • {f.aircraftType}</div>
+                  </div>
+                  <div style={{ fontSize: '11px', color: '#00b4d8', fontWeight: '700' }}>
+                    {f.origin?.code} ➔ {f.destination?.code}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Center Navigation Tabs */}
+        <nav style={{ display: 'flex', alignItems: 'center', gap: '4px', background: '#111722', padding: '3px', borderRadius: '8px' }}>
           {navItems.map(item => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
@@ -76,30 +169,29 @@ export default function Navbar({ activeTab, setActiveTab, activeAlertCount }) {
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
-                  padding: '8px 14px',
-                  borderRadius: '8px',
+                  gap: '6px',
+                  padding: '7px 12px',
+                  borderRadius: '6px',
                   border: 'none',
-                  background: isActive ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : 'transparent',
-                  color: isActive ? '#fff' : '#9ca3af',
-                  fontWeight: isActive ? '600' : '500',
-                  fontSize: '13px',
+                  background: isActive ? 'linear-gradient(135deg, #facc15 0%, #eab308 100%)' : 'transparent',
+                  color: isActive ? '#000' : '#9ca3af',
+                  fontWeight: isActive ? '800' : '500',
+                  fontSize: '12px',
                   cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  position: 'relative'
+                  transition: 'all 0.2s ease'
                 }}
               >
-                <Icon size={16} />
+                <Icon size={14} color={isActive ? '#000' : undefined} />
                 <span>{item.label}</span>
                 {item.badge > 0 && (
-                  <span style={{
+                  <span className="emergency-pulse" style={{
                     background: '#ef4444',
                     color: '#fff',
                     fontSize: '10px',
-                    fontWeight: '700',
-                    padding: '2px 6px',
-                    borderRadius: '10px',
-                    marginLeft: '4px'
+                    fontWeight: '800',
+                    padding: '1px 5px',
+                    borderRadius: '8px',
+                    marginLeft: '2px'
                   }}>
                     {item.badge}
                   </span>
@@ -109,14 +201,14 @@ export default function Navbar({ activeTab, setActiveTab, activeAlertCount }) {
           })}
         </nav>
 
-        {/* System Status & User Profile */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(0,0,0,0.4)', padding: '6px 12px', borderRadius: '8px' }}>
-            <Clock size={14} color="#10b981" />
-            <span className="font-mono-hud" style={{ fontSize: '13px', color: '#10b981' }}>{utcTime}</span>
+        {/* System Status & Clock */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: '#111722', padding: '5px 10px', borderRadius: '6px' }}>
+            <Clock size={13} color="#facc15" />
+            <span className="font-mono-hud" style={{ fontSize: '12px', color: '#facc15' }}>{utcTime}</span>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px' }}>
             <span style={{
               width: '8px',
               height: '8px',
@@ -124,33 +216,10 @@ export default function Navbar({ activeTab, setActiveTab, activeAlertCount }) {
               background: isConnected ? '#10b981' : '#ef4444',
               boxShadow: isConnected ? '0 0 8px #10b981' : 'none'
             }} />
-            <span style={{ color: isConnected ? '#10b981' : '#ef4444', fontWeight: '600' }}>
-              {isConnected ? 'MSK FEED LIVE' : 'CONNECTING...'}
+            <span style={{ color: isConnected ? '#10b981' : '#ef4444', fontWeight: '700' }}>
+              {isConnected ? 'MSK LIVE' : 'CONNECTING...'}
             </span>
           </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', borderLeft: '1px solid var(--border-color)', paddingLeft: '16px' }}>
-            <div style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: '50%',
-              background: '#374151',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontWeight: '700',
-              fontSize: '13px',
-              color: '#10b981',
-              border: '1px solid var(--primary-green)'
-            }}>
-              {user?.username?.charAt(0).toUpperCase() || 'A'}
-            </div>
-            <div>
-              <div style={{ fontSize: '13px', fontWeight: '600', color: '#f3f4f6' }}>{user?.username}</div>
-              <div style={{ fontSize: '10px', color: '#a855f7', fontWeight: '600' }}>{user?.role || 'Admin'}</div>
-            </div>
-          </div>
-
         </div>
 
       </div>

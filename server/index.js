@@ -5,7 +5,8 @@ const cors = require('cors');
 const path = require('path');
 const dotenv = require('dotenv');
 
-dotenv.config();
+// Load environment variables from central root .env file
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 const { connectDB } = require('./config/db');
 const streamProcessor = require('./services/streamProcessor');

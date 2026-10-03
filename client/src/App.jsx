@@ -67,16 +67,21 @@ function MainApp() {
   const activeAlertsCount = (liveAlerts || []).filter(a => a.status === 'Active').length;
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg-dark)', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--fr24-black)', display: 'flex', flexDirection: 'column' }}>
       
-      {/* Top Bar */}
+      {/* Flightradar24 Top Header Bar */}
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         activeAlertCount={activeAlertsCount}
+        flights={flightsList}
+        onSelectFlight={(flight) => {
+          setSelectedFlight(flight);
+          setActiveTab('map');
+        }}
       />
 
-      {/* Main View Container */}
+      {/* Main Container */}
       <main style={{ flex: 1, position: 'relative' }}>
         
         {activeTab === 'map' && (
