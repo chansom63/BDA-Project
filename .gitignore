@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Production build outputs
+dist/
+client/dist/
+build/
+
+# Environment & local config
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Server temporary data & logs
+server/data/s3_datalake/*
+!server/data/s3_datalake/.gitkeep
+server/data/redshift_dw/*
+!server/data/redshift_dw/.gitkeep
+*.log
+
+# OS & IDE metadata
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp

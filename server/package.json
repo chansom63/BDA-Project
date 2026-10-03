@@ -1,0 +1,21 @@
+{
+  "name": "flight-telemetry-server",
+  "version": "1.0.0",
+  "description": "Monolithic MERN Backend & AWS Data Analytics Pipeline Simulator for Real-Time Flight Telemetry",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb-memory-server": "^10.0.0",
+    "mongoose": "^8.5.1",
+    "node-cron": "^3.0.3",
+    "ws": "^8.18.0"
+  }
+}

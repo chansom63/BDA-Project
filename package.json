@@ -1,0 +1,30 @@
+{
+  "name": "monolithic-mern-aws-flight-telemetry",
+  "version": "1.0.0",
+  "description": "Monolithic MERN Architecture on AWS (Data Analytics Project) - Real-Time Flight Telemetry & Tracking System",
+  "main": "server/index.js",
+  "scripts": {
+    "install-all": "npm install && npm --prefix server install && npm --prefix client install",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm run dev",
+    "dev": "node scripts/start-dev.js",
+    "start": "cd server && npm start"
+  },
+  "keywords": [
+    "mern",
+    "aws",
+    "flight-telemetry",
+    "kafka",
+    "kinesis",
+    "mongodb",
+    "redshift",
+    "s3",
+    "glue",
+    "quicksight",
+    "react",
+    "express",
+    "websocket"
+  ],
+  "author": "AWS Data Analytics Project Team",
+  "license": "ISC"
+}
