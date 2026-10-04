@@ -16,7 +16,7 @@ mongoose.set('bufferTimeoutMS', 300000); // 5 minutes
 
 const { connectDB } = require('./config/db');
 const streamProcessor = require('./services/streamProcessor');
-const adsbSimulator = require('./services/adsbSimulator');
+const openSkyService = require('./services/openSkyService');  // Real-time ADS-B
 const backgroundJobs = require('./services/backgroundJobs');
 const errorHandler = require('./middleware/errorHandler');
 
@@ -90,8 +90,8 @@ connectDB()
     // Initialize stream processor with WebSocket server
     streamProcessor.init(wss);
 
-    // Start ADS-B Telemetry Simulator
-    adsbSimulator.startSimulation(2000);
+    // Start OpenSky Network real-time ADS-B feed
+    openSkyService.start();
 
     // Start Background Cron Jobs
     backgroundJobs.init();

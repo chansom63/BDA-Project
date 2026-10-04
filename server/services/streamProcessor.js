@@ -1,7 +1,7 @@
 const Flight = require('../models/Flight');
 const Alert = require('../models/Alert');
 const AirspaceConfig = require('../models/AirspaceConfig');
-const adsbSimulator = require('./adsbSimulator');
+const openSkyService = require('./openSkyService');   // Real-time ADS-B via OpenSky Network
 const s3DataLake = require('./s3DataLake');
 const notificationService = require('./notificationService');
 
@@ -27,12 +27,12 @@ class StreamProcessorService {
   init(wss) {
     this.wss = wss;
 
-    // Listen to ADS-B Telemetry generator (simulating AWS MSK Kafka stream)
-    adsbSimulator.on('telemetry_batch', async (batch) => {
+    // Listen to OpenSky real-time ADS-B feed (simulating AWS MSK Kafka stream ingestion)
+    openSkyService.on('telemetry_batch', async (batch) => {
       await this.processTelemetryBatch(batch);
     });
 
-    console.log('⚡ Amazon Kinesis Stream Processor initialized & listening to MSK ADS-B feed');
+    console.log('⚡ Amazon Kinesis Stream Processor initialized & listening to OpenSky real-time ADS-B feed');
   }
 
   async processTelemetryBatch(batch) {
