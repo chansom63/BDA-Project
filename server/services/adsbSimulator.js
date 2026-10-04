@@ -1,415 +1,215 @@
 const EventEmitter = require('events');
 
-// Calculate distance in nautical miles (NM)
-function haversineNM(lat1, lon1, lat2, lon2) {
-  const R = 3440.065; // Radius of earth in Nautical Miles
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-    Math.sin(dLon / 2) * Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-}
-
-// Calculate initial heading in degrees (0-360)
 function calculateHeading(lat1, lon1, lat2, lon2) {
   const dLon = (lon2 - lon1) * Math.PI / 180;
   const y = Math.sin(dLon) * Math.cos(lat2 * Math.PI / 180);
   const x = Math.cos(lat1 * Math.PI / 180) * Math.sin(lat2 * Math.PI / 180) -
             Math.sin(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.cos(dLon);
-  let brng = Math.atan2(y, x) * 180 / Math.PI;
-  return (brng + 360) % 360;
+  return (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
+}
+
+function haversineNM(lat1, lon1, lat2, lon2) {
+  const R = 3440.065;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
 
 class ADSBTelemetrySimulator extends EventEmitter {
   constructor() {
     super();
-    this.intervalId = null;
+    this.intervalId     = null;
     this.speedMultiplier = 1.0;
-    this.isRunning = false;
+    this.isRunning      = false;
 
-    // Major global hub airports
-    this.airports = [
-      { code: 'JFK', icao: 'KJFK', name: 'John F. Kennedy Intl Airport', city: 'New York', country: 'United States', flag: '🇺🇸', lat: 40.6413, lon: -73.7781 },
-      { code: 'LHR', icao: 'EGLL', name: 'London Heathrow Airport', city: 'London', country: 'United Kingdom', flag: '🇬🇧', lat: 51.4700, lon: -0.4543 },
-      { code: 'LAX', icao: 'KLAX', name: 'Los Angeles Intl Airport', city: 'Los Angeles', country: 'United States', flag: '🇺🇸', lat: 33.9416, lon: -118.4085 },
-      { code: 'SFO', icao: 'KSFO', name: 'San Francisco Intl Airport', city: 'San Francisco', country: 'United States', flag: '🇺🇸', lat: 37.6213, lon: -122.3790 },
-      { code: 'HND', icao: 'RJTT', name: 'Tokyo Haneda Airport', city: 'Tokyo', country: 'Japan', flag: '🇯🇵', lat: 35.5494, lon: 139.7798 },
-      { code: 'DXB', icao: 'OMDB', name: 'Dubai Intl Airport', city: 'Dubai', country: 'UAE', flag: '🇦🇪', lat: 25.2532, lon: 55.3657 },
-      { code: 'FRA', icao: 'EDDF', name: 'Frankfurt Airport', city: 'Frankfurt', country: 'Germany', flag: '🇩🇪', lat: 50.0379, lon: 8.5622 },
-      { code: 'CDG', icao: 'LFPG', name: 'Paris Charles de Gaulle', city: 'Paris', country: 'France', flag: '🇫🇷', lat: 49.0097, lon: 2.5479 },
-      { code: 'SIN', icao: 'WSSS', name: 'Singapore Changi Airport', city: 'Singapore', country: 'Singapore', flag: '🇸🇬', lat: 1.3644, lon: 103.9915 },
-      { code: 'SYD', icao: 'YSSY', name: 'Sydney Kingsford Smith', city: 'Sydney', country: 'Australia', flag: '🇦🇺', lat: -33.9461, lon: 151.1772 },
-      { code: 'ORD', icao: 'KORD', name: 'Chicago O\'Hare Intl Airport', city: 'Chicago', country: 'United States', flag: '🇺🇸', lat: 41.9742, lon: -87.9073 },
-      { code: 'MIA', icao: 'KMIA', name: 'Miami Intl Airport', city: 'Miami', country: 'United States', flag: '🇺🇸', lat: 25.7959, lon: -80.2870 }
+    // ── 40+ global airports ──────────────────────────────────────────────────
+    const AIRPORTS = [
+      // North America
+      { code:'JFK', city:'New York',      country:'USA',         lat:40.6413,  lon:-73.7781  },
+      { code:'LAX', city:'Los Angeles',   country:'USA',         lat:33.9416,  lon:-118.4085 },
+      { code:'ORD', city:'Chicago',       country:'USA',         lat:41.9742,  lon:-87.9073  },
+      { code:'MIA', city:'Miami',         country:'USA',         lat:25.7959,  lon:-80.2870  },
+      { code:'SFO', city:'San Francisco', country:'USA',         lat:37.6213,  lon:-122.3790 },
+      { code:'YYZ', city:'Toronto',       country:'Canada',      lat:43.6777,  lon:-79.6248  },
+      { code:'MEX', city:'Mexico City',   country:'Mexico',      lat:19.4361,  lon:-99.0719  },
+      { code:'ATL', city:'Atlanta',       country:'USA',         lat:33.6407,  lon:-84.4277  },
+      { code:'SEA', city:'Seattle',       country:'USA',         lat:47.4502,  lon:-122.3088 },
+      { code:'DFW', city:'Dallas',        country:'USA',         lat:32.8998,  lon:-97.0403  },
+      // Europe
+      { code:'LHR', city:'London',        country:'UK',          lat:51.4700,  lon:-0.4543   },
+      { code:'CDG', city:'Paris',         country:'France',      lat:49.0097,  lon:2.5479    },
+      { code:'FRA', city:'Frankfurt',     country:'Germany',     lat:50.0379,  lon:8.5622    },
+      { code:'AMS', city:'Amsterdam',     country:'Netherlands', lat:52.3086,  lon:4.7639    },
+      { code:'MAD', city:'Madrid',        country:'Spain',       lat:40.4719,  lon:-3.5626   },
+      { code:'FCO', city:'Rome',          country:'Italy',       lat:41.8003,  lon:12.2389   },
+      { code:'IST', city:'Istanbul',      country:'Turkey',      lat:41.2753,  lon:28.7519   },
+      { code:'MUC', city:'Munich',        country:'Germany',     lat:48.3538,  lon:11.7861   },
+      { code:'ZRH', city:'Zurich',        country:'Switzerland', lat:47.4647,  lon:8.5492    },
+      { code:'CPH', city:'Copenhagen',    country:'Denmark',     lat:55.6180,  lon:12.6508   },
+      // Asia
+      { code:'HND', city:'Tokyo',         country:'Japan',       lat:35.5494,  lon:139.7798  },
+      { code:'PEK', city:'Beijing',       country:'China',       lat:40.0801,  lon:116.5846  },
+      { code:'PVG', city:'Shanghai',      country:'China',       lat:31.1443,  lon:121.8083  },
+      { code:'HKG', city:'Hong Kong',     country:'China',       lat:22.3080,  lon:113.9185  },
+      { code:'SIN', city:'Singapore',     country:'Singapore',   lat:1.3644,   lon:103.9915  },
+      { code:'BKK', city:'Bangkok',       country:'Thailand',    lat:13.6900,  lon:100.7501  },
+      { code:'ICN', city:'Seoul',         country:'S.Korea',     lat:37.4691,  lon:126.4510  },
+      { code:'DEL', city:'Delhi',         country:'India',       lat:28.5665,  lon:77.1031   },
+      { code:'BOM', city:'Mumbai',        country:'India',       lat:19.0896,  lon:72.8656   },
+      { code:'KUL', city:'Kuala Lumpur',  country:'Malaysia',    lat:2.7456,   lon:101.7099  },
+      // Middle East & Africa
+      { code:'DXB', city:'Dubai',         country:'UAE',         lat:25.2532,  lon:55.3657   },
+      { code:'DOH', city:'Doha',          country:'Qatar',       lat:25.2731,  lon:51.6080   },
+      { code:'CAI', city:'Cairo',         country:'Egypt',       lat:30.1219,  lon:31.4056   },
+      { code:'JNB', city:'Johannesburg',  country:'S.Africa',    lat:-26.1392, lon:28.2460   },
+      { code:'NBO', city:'Nairobi',       country:'Kenya',       lat:-1.3192,  lon:36.9275   },
+      // South America
+      { code:'GRU', city:'São Paulo',     country:'Brazil',      lat:-23.4356, lon:-46.4731  },
+      { code:'EZE', city:'Buenos Aires',  country:'Argentina',   lat:-34.8222, lon:-58.5358  },
+      { code:'BOG', city:'Bogotá',        country:'Colombia',    lat:4.7016,   lon:-74.1469  },
+      { code:'LIM', city:'Lima',          country:'Peru',        lat:-12.0219, lon:-77.1143  },
+      // Oceania
+      { code:'SYD', city:'Sydney',        country:'Australia',   lat:-33.9461, lon:151.1772  },
+      { code:'MEL', city:'Melbourne',     country:'Australia',   lat:-37.6690, lon:144.8410  },
+      { code:'AKL', city:'Auckland',      country:'N.Zealand',   lat:-37.0082, lon:174.7850  },
     ];
 
-    // Flightradar24 realistic fleet dataset
-    this.flights = [
-      {
-        flightId: 'AA104',
-        callsign: 'AAL104',
-        airline: 'American Airlines',
-        aircraftType: 'Boeing 787-9 Dreamliner',
-        registration: 'N800AN',
-        countryFlag: '🇺🇸',
-        photoUrl: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&auto=format&fit=crop&q=80',
-        origin: { code: 'JFK', icao: 'KJFK', city: 'New York', country: 'USA', lat: 40.6413, lon: -73.7781 },
-        destination: { code: 'LHR', icao: 'EGLL', city: 'London', country: 'UK', lat: 51.4700, lon: -0.4543 },
-        std: '19:30 UTC', atd: '19:42 UTC', sta: '07:30 UTC', eta: '07:18 UTC',
-        radarSource: 'F-KJFK1', icao24: 'A04B11',
-        lat: 46.200, lon: -41.500, altitudeFt: 37000, speedKnots: 495, headingDeg: 62, verticalRateFpm: 0,
-        squawk: '1200', status: 'In-Flight', progressPct: 48, weatherTurbulence: 'None', trajectory: []
-      },
-      {
-        flightId: 'BA283',
-        callsign: 'BAW283',
-        airline: 'British Airways',
-        aircraftType: 'Airbus A350-1000',
-        registration: 'G-XWBA',
-        countryFlag: '🇬🇧',
-        photoUrl: 'https://images.unsplash.com/photo-1524592714635-d77511a4834d?w=600&auto=format&fit=crop&q=80',
-        origin: { code: 'LHR', icao: 'EGLL', city: 'London', country: 'UK', lat: 51.4700, lon: -0.4543 },
-        destination: { code: 'LAX', icao: 'KLAX', city: 'Los Angeles', country: 'USA', lat: 33.9416, lon: -118.4085 },
-        std: '11:15 UTC', atd: '11:28 UTC', sta: '20:10 UTC', eta: '19:55 UTC',
-        radarSource: 'T-EGLL4', icao24: '400A0C',
-        lat: 56.400, lon: -35.200, altitudeFt: 38000, speedKnots: 475, headingDeg: 280, verticalRateFpm: 0,
-        squawk: '1200', status: 'In-Flight', progressPct: 35, weatherTurbulence: 'Light', trajectory: []
-      },
-      {
-        flightId: 'DL402',
-        callsign: 'DAL402',
-        airline: 'Delta Air Lines',
-        aircraftType: 'Airbus A330-900neo',
-        registration: 'N401DN',
-        countryFlag: '🇺🇸',
-        photoUrl: 'https://images.unsplash.com/photo-1569154941061-e231b4725ef1?w=600&auto=format&fit=crop&q=80',
-        origin: { code: 'LAX', icao: 'KLAX', city: 'Los Angeles', country: 'USA', lat: 33.9416, lon: -118.4085 },
-        destination: { code: 'JFK', icao: 'KJFK', city: 'New York', country: 'USA', lat: 40.6413, lon: -73.7781 },
-        std: '14:00 UTC', atd: '14:05 UTC', sta: '22:15 UTC', eta: '22:02 UTC',
-        radarSource: 'F-KLAX2', icao24: 'A12F98',
-        lat: 38.200, lon: -95.400, altitudeFt: 35000, speedKnots: 510, headingDeg: 78, verticalRateFpm: 0,
-        squawk: '1200', status: 'In-Flight', progressPct: 62, weatherTurbulence: 'None', trajectory: []
-      },
-      {
-        flightId: 'UA857',
-        callsign: 'UAL857',
-        airline: 'United Airlines',
-        aircraftType: 'Boeing 777-300ER',
-        registration: 'N2747U',
-        countryFlag: '🇺🇸',
-        photoUrl: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600&auto=format&fit=crop&q=80',
-        origin: { code: 'SFO', icao: 'KSFO', city: 'San Francisco', country: 'USA', lat: 37.6213, lon: -122.3790 },
-        destination: { code: 'HND', icao: 'RJTT', city: 'Tokyo', country: 'Japan', lat: 35.5494, lon: 139.7798 },
-        std: '12:30 UTC', atd: '12:44 UTC', sta: '02:40 UTC', eta: '02:25 UTC',
-        radarSource: 'F-KSFO1', icao24: 'A98C44',
-        lat: 48.500, lon: -160.200, altitudeFt: 34000, speedKnots: 460, headingDeg: 295, verticalRateFpm: 0,
-        squawk: '1200', status: 'In-Flight', progressPct: 40, weatherTurbulence: 'Moderate', trajectory: []
-      },
-      {
-        flightId: 'EK201',
-        callsign: 'UAE201',
-        airline: 'Emirates',
-        aircraftType: 'Airbus A380-800 Superjumbo',
-        registration: 'A6-EEO',
-        countryFlag: '🇦🇪',
-        photoUrl: 'https://images.unsplash.com/photo-1556388158-158ea5ccacbd?w=600&auto=format&fit=crop&q=80',
-        origin: { code: 'DXB', icao: 'OMDB', city: 'Dubai', country: 'UAE', lat: 25.2532, lon: 55.3657 },
-        destination: { code: 'JFK', icao: 'KJFK', city: 'New York', country: 'USA', lat: 40.6413, lon: -73.7781 },
-        std: '08:30 UTC', atd: '08:45 UTC', sta: '21:10 UTC', eta: '20:58 UTC',
-        radarSource: 'F-OMDB3', icao24: '89601A',
-        lat: 53.100, lon: 10.400, altitudeFt: 39000, speedKnots: 480, headingDeg: 290, verticalRateFpm: 0,
-        squawk: '1200', status: 'In-Flight', progressPct: 52, weatherTurbulence: 'None', trajectory: []
-      },
-      {
-        flightId: 'LH400',
-        callsign: 'DLH400',
-        airline: 'Lufthansa',
-        aircraftType: 'Boeing 747-8i Queen of the Skies',
-        registration: 'D-ABYA',
-        countryFlag: '🇩🇪',
-        photoUrl: 'https://images.unsplash.com/photo-1517400508447-f8dd518b86db?w=600&auto=format&fit=crop&q=80',
-        origin: { code: 'FRA', icao: 'EDDF', city: 'Frankfurt', country: 'Germany', lat: 50.0379, lon: 8.5622 },
-        destination: { code: 'JFK', icao: 'KJFK', city: 'New York', country: 'USA', lat: 40.6413, lon: -73.7781 },
-        std: '10:50 UTC', atd: '11:02 UTC', sta: '19:40 UTC', eta: '19:28 UTC',
-        radarSource: 'F-EDDF2', icao24: '3C658A',
-        lat: 52.800, lon: -20.500, altitudeFt: 36000, speedKnots: 470, headingDeg: 265, verticalRateFpm: 0,
-        squawk: '1200', status: 'In-Flight', progressPct: 58, weatherTurbulence: 'None', trajectory: []
-      },
-      {
-        flightId: 'AF011',
-        callsign: 'AFR011',
-        airline: 'Air France',
-        aircraftType: 'Airbus A350-900',
-        registration: 'F-HTYA',
-        countryFlag: '🇫🇷',
-        photoUrl: 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=600&auto=format&fit=crop&q=80',
-        origin: { code: 'JFK', icao: 'KJFK', city: 'New York', country: 'USA', lat: 40.6413, lon: -73.7781 },
-        destination: { code: 'CDG', icao: 'LFPG', city: 'Paris', country: 'France', lat: 49.0097, lon: 2.5479 },
-        std: '21:45 UTC', atd: '21:55 UTC', sta: '10:30 UTC', eta: '10:15 UTC',
-        radarSource: 'F-KJFK2', icao24: '394A88',
-        lat: 44.800, lon: -43.100, altitudeFt: 37000, speedKnots: 495, headingDeg: 65, verticalRateFpm: 0,
-        squawk: '1200', status: 'In-Flight', progressPct: 45, weatherTurbulence: 'None', trajectory: []
-      },
-      {
-        flightId: 'SQ025',
-        callsign: 'SIA025',
-        airline: 'Singapore Airlines',
-        aircraftType: 'Airbus A350-900ULR',
-        registration: '9V-SNA',
-        countryFlag: '🇸🇬',
-        photoUrl: 'https://images.unsplash.com/photo-1520637691918-49302e482329?w=600&auto=format&fit=crop&q=80',
-        origin: { code: 'FRA', icao: 'EDDF', city: 'Frankfurt', country: 'Germany', lat: 50.0379, lon: 8.5622 },
-        destination: { code: 'SIN', icao: 'WSSS', city: 'Singapore', country: 'Singapore', lat: 1.3644, lon: 103.9915 },
-        std: '11:30 UTC', atd: '11:45 UTC', sta: '05:50 UTC', eta: '05:35 UTC',
-        radarSource: 'F-EDDF1', icao24: '76B124',
-        lat: 32.500, lon: 58.200, altitudeFt: 40000, speedKnots: 485, headingDeg: 120, verticalRateFpm: 0,
-        squawk: '1200', status: 'In-Flight', progressPct: 42, weatherTurbulence: 'Light', trajectory: []
-      },
-      {
-        flightId: 'QF012',
-        callsign: 'QFA012',
-        airline: 'Qantas Airways',
-        aircraftType: 'Boeing 787-9 Dreamliner',
-        registration: 'VH-ZNA',
-        countryFlag: '🇦🇺',
-        photoUrl: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&auto=format&fit=crop&q=80',
-        origin: { code: 'LAX', icao: 'KLAX', city: 'Los Angeles', country: 'USA', lat: 33.9416, lon: -118.4085 },
-        destination: { code: 'SYD', icao: 'YSSY', city: 'Sydney', country: 'Australia', lat: -33.9461, lon: 151.1772 },
-        std: '22:30 UTC', atd: '22:42 UTC', sta: '06:15 UTC', eta: '06:00 UTC',
-        radarSource: 'F-KLAX1', icao24: '7C6B21',
-        lat: -5.200, lon: -168.400, altitudeFt: 38000, speedKnots: 470, headingDeg: 225, verticalRateFpm: 0,
-        squawk: '1200', status: 'In-Flight', progressPct: 55, weatherTurbulence: 'None', trajectory: []
-      },
-      {
-        flightId: 'CX888',
-        callsign: 'CPA888',
-        airline: 'Cathay Pacific',
-        aircraftType: 'Airbus A350-1000',
-        registration: 'B-LXR',
-        countryFlag: '🇭🇰',
-        photoUrl: 'https://images.unsplash.com/photo-1524592714635-d77511a4834d?w=600&auto=format&fit=crop&q=80',
-        origin: { code: 'HKG', icao: 'VHHH', city: 'Hong Kong', country: 'China', lat: 22.3080, lon: 113.9185 },
-        destination: { code: 'JFK', icao: 'KJFK', city: 'New York', country: 'USA', lat: 40.6413, lon: -73.7781 },
-        std: '00:15 UTC', atd: '00:30 UTC', sta: '14:20 UTC', eta: '14:05 UTC',
-        radarSource: 'F-VHHH1', icao24: '780F2A',
-        lat: 58.400, lon: -140.200, altitudeFt: 36000, speedKnots: 490, headingDeg: 70, verticalRateFpm: 0,
-        squawk: '1200', status: 'In-Flight', progressPct: 60, weatherTurbulence: 'None', trajectory: []
-      },
-      // Proximity Alert Pair
-      {
-        flightId: 'DL044',
-        callsign: 'DAL044',
-        airline: 'Delta Air Lines',
-        aircraftType: 'Boeing 767-400ER',
-        registration: 'N844MH',
-        countryFlag: '🇺🇸',
-        photoUrl: 'https://images.unsplash.com/photo-1569154941061-e231b4725ef1?w=600&auto=format&fit=crop&q=80',
-        origin: { code: 'JFK', icao: 'KJFK', city: 'New York', country: 'USA', lat: 40.6413, lon: -73.7781 },
-        destination: { code: 'CDG', icao: 'LFPG', city: 'Paris', country: 'France', lat: 49.0097, lon: 2.5479 },
-        std: '19:40 UTC', atd: '19:50 UTC', sta: '08:10 UTC', eta: '08:00 UTC',
-        radarSource: 'F-KJFK3', icao24: 'A045BB',
-        lat: 46.220, lon: -41.480, altitudeFt: 37000, speedKnots: 488, headingDeg: 62, verticalRateFpm: 0,
-        squawk: '1200', status: 'In-Flight', progressPct: 48, weatherTurbulence: 'Light', trajectory: []
-      },
-      // Emergency Aircraft 7700 MAYDAY
-      {
-        flightId: 'MAYDAY77',
-        callsign: 'EMG7700',
-        airline: 'Global Air Cargo',
-        aircraftType: 'Boeing 747-400F Freighter',
-        registration: 'N770EM',
-        countryFlag: '🇺🇸',
-        photoUrl: 'https://images.unsplash.com/photo-1517400508447-f8dd518b86db?w=600&auto=format&fit=crop&q=80',
-        origin: { code: 'ORD', icao: 'KORD', city: 'Chicago', country: 'USA', lat: 41.9742, lon: -87.9073 },
-        destination: { code: 'FRA', icao: 'EDDF', city: 'Frankfurt', country: 'Germany', lat: 50.0379, lon: 8.5622 },
-        std: '15:00 UTC', atd: '15:12 UTC', sta: '03:15 UTC', eta: '03:45 UTC',
-        radarSource: 'F-KORD1', icao24: 'A77000',
-        lat: 51.200, lon: -30.500, altitudeFt: 24000, speedKnots: 380, headingDeg: 90, verticalRateFpm: -1800,
-        squawk: '7700', status: 'Emergency', progressPct: 50, weatherTurbulence: 'Severe', trajectory: []
-      }
+    const AIRLINES = [
+      {name:'American Airlines',  cs:'AAL', flag:'🇺🇸'},
+      {name:'Delta Air Lines',    cs:'DAL', flag:'🇺🇸'},
+      {name:'United Airlines',    cs:'UAL', flag:'🇺🇸'},
+      {name:'British Airways',    cs:'BAW', flag:'🇬🇧'},
+      {name:'Lufthansa',          cs:'DLH', flag:'🇩🇪'},
+      {name:'Air France',         cs:'AFR', flag:'🇫🇷'},
+      {name:'Emirates',           cs:'UAE', flag:'🇦🇪'},
+      {name:'Qatar Airways',      cs:'QTR', flag:'🇶🇦'},
+      {name:'Singapore Airlines', cs:'SIA', flag:'🇸🇬'},
+      {name:'Cathay Pacific',     cs:'CPA', flag:'🇭🇰'},
+      {name:'Japan Airlines',     cs:'JAL', flag:'🇯🇵'},
+      {name:'Air Canada',         cs:'ACA', flag:'🇨🇦'},
+      {name:'KLM',                cs:'KLM', flag:'🇳🇱'},
+      {name:'Turkish Airlines',   cs:'THY', flag:'🇹🇷'},
+      {name:'Qantas',             cs:'QFA', flag:'🇦🇺'},
+      {name:'Ethiopian Airlines', cs:'ETH', flag:'🇪🇹'},
+      {name:'LATAM Airlines',     cs:'LAN', flag:'🇧🇷'},
+      {name:'Air India',          cs:'AIC', flag:'🇮🇳'},
+      {name:'Korean Air',         cs:'KAL', flag:'🇰🇷'},
+      {name:'China Southern',     cs:'CSN', flag:'🇨🇳'},
+    ];
+    const TYPES = [
+      'Boeing 737-800','Boeing 737 MAX 8','Boeing 777-300ER','Boeing 787-9 Dreamliner',
+      'Airbus A320neo','Airbus A321neo',  'Airbus A330-300', 'Airbus A350-900',
+      'Airbus A380-800','Boeing 747-8i',  'Embraer E190',    'Bombardier CRJ-900',
     ];
 
-    // Seed initial trajectories
-    this.flights.forEach(f => {
-      f.trajectory.push({
-        lat: f.lat,
-        lon: f.lon,
-        altitudeFt: f.altitudeFt,
-        speedKnots: f.speedKnots,
-        timestamp: new Date()
+    // Store airports for MapView pin display
+    this.airports = AIRPORTS;
+
+    // ── Generate 80 globally spread flights ───────────────────────────────────
+    this.flights = [];
+    for (let i = 0; i < 80; i++) {
+      const orig = AIRPORTS[i % AIRPORTS.length];
+      let dIdx   = (i * 7 + 13) % AIRPORTS.length;
+      if (dIdx === i % AIRPORTS.length) dIdx = (dIdx + 1) % AIRPORTS.length;
+      const dest = AIRPORTS[dIdx];
+      const al   = AIRLINES[i % AIRLINES.length];
+      const pct  = (i * 11 + 3) % 90 + 5;       // 5–95% progress
+      const t    = pct / 100;
+      const lat  = orig.lat + (dest.lat - orig.lat) * t;
+      const lon  = orig.lon + (dest.lon - orig.lon) * t;
+      const hdg  = calculateHeading(lat, lon, dest.lat, dest.lon);
+      this.flights.push({
+        flightId:        al.cs + (100 + i),
+        callsign:        al.cs + (100 + i),
+        airline:         al.name,
+        aircraftType:    TYPES[i % TYPES.length],
+        registration:    al.cs.charAt(0) + '-' + Math.floor(Math.random()*9000+1000),
+        countryFlag:     al.flag,
+        photoUrl:        'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600&auto=format&fit=crop&q=80',
+        origin:          { code:orig.code, city:orig.city, country:orig.country, lat:orig.lat, lon:orig.lon },
+        destination:     { code:dest.code, city:dest.city, country:dest.country, lat:dest.lat, lon:dest.lon },
+        std:'--:-- UTC', atd:'--:-- UTC', sta:'--:-- UTC', eta:'--:-- UTC',
+        radarSource:     'SIM-ADS-B-' + orig.code,
+        icao24:          Math.floor(Math.random()*0xFFFFFF).toString(16).padStart(6,'0'),
+        lat, lon,
+        altitudeFt:      30000 + (i % 12) * 1000,
+        speedKnots:      430 + (i % 8) * 10,
+        headingDeg:      hdg,
+        verticalRateFpm: 0,
+        squawk:          '1200',
+        status:          'In-Flight',
+        progressPct:     pct,
+        weatherTurbulence: 'None',
+        trajectory:      [{ lat, lon, altitudeFt: 30000 + (i%12)*1000, speedKnots: 430+(i%8)*10, timestamp: new Date() }]
       });
-    });
+    }
   }
 
-  startSimulation(intervalMs = 2000) {
+  tick() {
+    const dtHours = (20 / 3600) * this.speedMultiplier; // 20s tick
+
+    this.flights.forEach(f => {
+      const hdg = calculateHeading(f.lat, f.lon, f.destination.lat, f.destination.lon);
+      f.headingDeg = hdg;
+      const dist = f.speedKnots * dtHours;
+      const hdRad = hdg * Math.PI / 180;
+      f.lat += (dist / 60) * Math.cos(hdRad);
+      f.lon += (dist / 60) * Math.sin(hdRad) / (Math.cos(f.lat * Math.PI / 180) || 0.001);
+
+      if (f.verticalRateFpm !== 0) {
+        f.altitudeFt += f.verticalRateFpm * (20/60) * this.speedMultiplier;
+        if (f.altitudeFt <= 5000) f.verticalRateFpm = 0;
+      }
+
+      const totalDist = haversineNM(f.origin.lat, f.origin.lon, f.destination.lat, f.destination.lon);
+      const remDist   = haversineNM(f.lat, f.lon, f.destination.lat, f.destination.lon);
+      f.progressPct   = Math.min(100, Math.max(0, Math.round(((totalDist - remDist) / totalDist) * 100)));
+
+      if (remDist < 20) {
+        f.lat = f.origin.lat; f.lon = f.origin.lon;
+        f.altitudeFt = 35000; f.status = 'In-Flight'; f.progressPct = 0; f.trajectory = [];
+      }
+
+      if (f.trajectory.length > 40) f.trajectory.shift();
+      f.trajectory.push({ lat:f.lat, lon:f.lon, altitudeFt:f.altitudeFt, speedKnots:f.speedKnots, timestamp:new Date() });
+
+      // Build telemetry event
+      f._event = {
+        eventId: 'sim_' + Date.now() + '_' + f.icao24,
+        timestamp: new Date().toISOString(),
+        icao24: f.icao24, callsign: f.callsign, flightId: f.flightId,
+        airline: f.airline, aircraftType: f.aircraftType, registration: f.registration,
+        countryFlag: f.countryFlag, radarSource: f.radarSource, photoUrl: f.photoUrl,
+        origin: f.origin, destination: f.destination,
+        latitude: f.lat, longitude: f.lon, altitudeFt: Math.round(f.altitudeFt),
+        speedKnots: f.speedKnots, headingDeg: Math.round(f.headingDeg),
+        verticalRateFpm: f.verticalRateFpm, squawk: f.squawk, status: f.status,
+        progressPct: f.progressPct, weatherTurbulence: f.weatherTurbulence,
+        trajectory: [...f.trajectory],
+        std: f.std, atd: f.atd, sta: f.sta, eta: f.eta,
+      };
+    });
+
+    this.emit('telemetry_batch', this.flights.map(f => f._event));
+  }
+
+  startSimulation(intervalMs = 20000) {
     if (this.isRunning) return;
     this.isRunning = true;
-
-    this.intervalId = setInterval(() => {
-      this.tick();
-    }, intervalMs);
+    this.intervalId = setInterval(() => this.tick(), intervalMs);
     console.log('📡 ADS-B Telemetry Generator service STARTED (Simulated MSK Ingestion active)');
   }
 
   stopSimulation() {
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-      this.intervalId = null;
-    }
+    if (this.intervalId) { clearInterval(this.intervalId); this.intervalId = null; }
     this.isRunning = false;
     console.log('⏹️ ADS-B Telemetry Generator service STOPPED');
   }
 
-  setSpeedMultiplier(multiplier) {
-    this.speedMultiplier = Math.max(0.1, Math.min(20, multiplier));
-  }
+  setSpeedMultiplier(m) { this.speedMultiplier = Math.max(0.1, Math.min(20, m)); }
 
-  tick() {
-    const timeDeltaHours = (2 / 3600) * this.speedMultiplier;
-
-    const telemetryEvents = [];
-
-    this.flights.forEach(f => {
-      // Calculate target heading towards destination
-      const targetHeading = calculateHeading(f.lat, f.lon, f.destination.lat, f.destination.lon);
-      f.headingDeg = targetHeading;
-
-      // Move latitude and longitude based on speed and heading
-      const distanceMovedNM = f.speedKnots * timeDeltaHours;
-      const dLat = (distanceMovedNM / 60.0) * Math.cos(f.headingDeg * Math.PI / 180);
-      const dLon = (distanceMovedNM / 60.0) * Math.sin(f.headingDeg * Math.PI / 180) / Math.cos(f.lat * Math.PI / 180);
-
-      f.lat += dLat;
-      f.lon += dLon;
-
-      // Handle vertical rate / altitude adjustment
-      if (f.verticalRateFpm !== 0) {
-        f.altitudeFt += (f.verticalRateFpm * (2 / 60) * this.speedMultiplier);
-        if (f.altitudeFt <= 5000 && f.status === 'Emergency') {
-          f.verticalRateFpm = 0; // level off for emergency landing
-        }
-      }
-
-      // Calculate progress percentage
-      const totalDistance = haversineNM(f.origin.lat, f.origin.lon, f.destination.lat, f.destination.lon);
-      const remainingDistance = haversineNM(f.lat, f.lon, f.destination.lat, f.destination.lon);
-      f.progressPct = Math.min(100, Math.max(0, Math.round(((totalDistance - remainingDistance) / totalDistance) * 100)));
-
-      // If near destination (< 20 NM), reset route for continuous flight simulation
-      if (remainingDistance < 20) {
-        f.lat = f.origin.lat + 0.5;
-        f.lon = f.origin.lon + 0.5;
-        f.altitudeFt = 34000;
-        f.status = 'In-Flight';
-        f.progressPct = 0;
-        f.trajectory = [];
-      }
-
-      // Append trajectory (max 40 points for smooth playback trails)
-      if (f.trajectory.length > 40) f.trajectory.shift();
-      f.trajectory.push({
-        lat: f.lat,
-        lon: f.lon,
-        altitudeFt: f.altitudeFt,
-        speedKnots: f.speedKnots,
-        timestamp: new Date()
-      });
-
-      // Construct ADS-B telemetry payload
-      const telemetryEvent = {
-        eventId: `evt_${Date.now()}_${f.flightId}`,
-        timestamp: new Date().toISOString(),
-        icao24: f.icao24,
-        callsign: f.callsign,
-        flightId: f.flightId,
-        airline: f.airline,
-        aircraftType: f.aircraftType,
-        registration: f.registration,
-        countryFlag: f.countryFlag,
-        photoUrl: f.photoUrl,
-        std: f.std, atd: f.atd, sta: f.sta, eta: f.eta,
-        radarSource: f.radarSource,
-        origin: f.origin,
-        destination: f.destination,
-        latitude: f.lat,
-        longitude: f.lon,
-        altitudeFt: Math.round(f.altitudeFt),
-        speedKnots: Math.round(f.speedKnots),
-        headingDeg: Math.round(f.headingDeg),
-        verticalRateFpm: Math.round(f.verticalRateFpm),
-        squawk: f.squawk,
-        status: f.status,
-        progressPct: f.progressPct,
-        weatherTurbulence: f.weatherTurbulence,
-        trajectory: f.trajectory
-      };
-
-      telemetryEvents.push(telemetryEvent);
-    });
-
-    this.emit('telemetry_batch', telemetryEvents);
-  }
-
-  triggerEmergency(flightId, squawkCode = '7700') {
-    const flight = this.flights.find(f => f.flightId === flightId);
-    if (flight) {
-      flight.squawk = squawkCode;
-      flight.status = 'Emergency';
-      flight.verticalRateFpm = -1500;
-      flight.weatherTurbulence = 'Severe';
-      return flight;
-    }
-    return null;
-  }
-
-  setSquawk(flightId, squawkCode) {
-    const flight = this.flights.find(f => f.flightId === flightId);
-    if (flight) {
-      flight.squawk = squawkCode;
-      if (['7700', '7600', '7500'].includes(squawkCode)) {
-        flight.status = 'Emergency';
-      } else {
-        flight.status = 'In-Flight';
-        flight.verticalRateFpm = 0;
-      }
-      return flight;
-    }
-    return null;
-  }
-
-  injectCustomFlight(flightData) {
-    const newFlight = {
-      flightId: flightData.flightId || `FL${Math.floor(100 + Math.random() * 900)}`,
-      icao24: flightData.icao24 || Math.random().toString(16).substring(2, 8).toUpperCase(),
-      callsign: flightData.callsign || `CS${Math.floor(100 + Math.random() * 900)}`,
-      airline: flightData.airline || 'Skyways Express',
-      aircraftType: flightData.aircraftType || 'Airbus A320neo',
-      registration: flightData.registration || `N${Math.floor(100 + Math.random() * 900)}SK`,
-      countryFlag: '🇺🇸',
-      photoUrl: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&auto=format&fit=crop&q=80',
-      origin: flightData.origin || { code: 'SFO', city: 'San Francisco', country: 'USA', lat: 37.6213, lon: -122.3790 },
-      destination: flightData.destination || { code: 'ORD', city: 'Chicago', country: 'USA', lat: 41.9742, lon: -87.9073 },
-      std: '18:00 UTC', atd: '18:10 UTC', sta: '23:30 UTC', eta: '23:20 UTC',
-      radarSource: 'F-KSFO2',
-      lat: flightData.lat || 38.0,
-      lon: flightData.lon || -100.0,
-      altitudeFt: flightData.altitudeFt || 33000,
-      speedKnots: flightData.speedKnots || 450,
-      headingDeg: flightData.headingDeg || 80,
-      verticalRateFpm: 0,
-      squawk: flightData.squawk || '1200',
-      status: flightData.status || 'In-Flight',
-      progressPct: 10,
-      weatherTurbulence: 'None',
-      trajectory: []
-    };
-    this.flights.push(newFlight);
-    return newFlight;
-  }
+  getCurrentFlights() { return this.flights.map(f => f._event || f); }
 }
 
-const simulator = new ADSBTelemetrySimulator();
-module.exports = simulator;
+module.exports = new ADSBTelemetrySimulator();

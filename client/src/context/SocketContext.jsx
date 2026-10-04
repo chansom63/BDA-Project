@@ -1,19 +1,110 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef, useCallback } from 'react';
 
 const SocketContext = createContext();
 
+// ── Realistic flight physics dead-reckoning ───────────────────────────────────
+const DEG2RAD = Math.PI / 180;
+const RAD2DEG = 180 / Math.PI;
+
+function deadReckonFlight(f, dtSeconds) {
+  const pos = f.currentPosition || f;
+
+  let lat         = pos.lat            ?? f.latitude          ?? 0;
+  let lon         = pos.lon            ?? f.longitude         ?? 0;
+  let speedKnots  = pos.speedKnots     ?? f.speedKnots        ?? 450;
+  let headingDeg  = pos.headingDeg     ?? f.headingDeg        ?? 0;
+  let altitudeFt  = pos.altitudeFt     ?? f.altitudeFt        ?? 35000;
+  let vertRate    = pos.verticalRateFpm ?? f.verticalRateFpm  ?? 0;
+  let targetHeading = pos.targetHeading ?? headingDeg;
+  let targetSpeed   = pos.targetSpeed   ?? speedKnots;
+
+  if (!lat && !lon) return f;
+
+  // ── Physics: gradual turn (3°/sec standard rate = 180°/min) ──────────────
+  const maxTurnRate = 3.0; // deg/sec (standard rate turn)
+  const headingDiff = ((targetHeading - headingDeg + 540) % 360) - 180;
+  const turnStep    = Math.min(Math.abs(headingDiff), maxTurnRate * dtSeconds);
+  headingDeg        = (headingDeg + Math.sign(headingDiff) * turnStep + 360) % 360;
+
+  // ── Physics: smooth speed change (typical accel 1 kt/sec) ────────────────
+  const speedDiff = targetSpeed - speedKnots;
+  const speedStep = Math.min(Math.abs(speedDiff), 1.0 * dtSeconds);
+  speedKnots      = speedKnots + Math.sign(speedDiff) * speedStep;
+
+  // ── Physics: altitude change via vertical rate ────────────────────────────
+  altitudeFt = altitudeFt + (vertRate * dtSeconds / 60);
+  altitudeFt = Math.min(45000, Math.max(500, altitudeFt));
+
+  // ── Dead-reckoning position update ───────────────────────────────────────
+  const dtHours = dtSeconds / 3600;
+  const distNM  = speedKnots * dtHours;
+  const hdRad   = headingDeg * DEG2RAD;
+  const latRad  = lat * DEG2RAD;
+  lat = lat + (distNM / 60) * Math.cos(hdRad);
+  lon = lon + (distNM / 60) * Math.sin(hdRad) / (Math.cos(latRad) || 0.001);
+
+  return {
+    ...f,
+    latitude:   lat,
+    longitude:  lon,
+    altitudeFt: Math.round(altitudeFt),
+    headingDeg: Math.round(headingDeg * 10) / 10,
+    speedKnots: Math.round(speedKnots),
+    currentPosition: {
+      lat, lon, altitudeFt, speedKnots, headingDeg, verticalRateFpm: vertRate,
+      targetHeading, targetSpeed,
+    },
+  };
+}
+
 export const SocketProvider = ({ children }) => {
-  const [socket, setSocket] = useState(null);
+  const [socket, setSocket]       = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [liveFlights, setLiveFlights] = useState([]);
-  const [liveAlerts, setLiveAlerts] = useState([]);
+  const [liveAlerts,  setLiveAlerts]  = useState([]);
   const [lastTelemetryTimestamp, setLastTelemetryTimestamp] = useState(null);
 
+  // Refs for the animation loop — avoids stale closures
+  const flightsRef   = useRef([]);          // canonical server state
+  const lastTickRef  = useRef(null);        // timestamp of last rAF tick
+  const rafIdRef     = useRef(null);        // requestAnimationFrame id
+
+  // ── Animation loop (requestAnimationFrame) ──────────────────────────────────
+  const animate = useCallback((now) => {
+    rafIdRef.current = requestAnimationFrame(animate);
+
+    if (flightsRef.current.length === 0) return;
+
+    if (lastTickRef.current === null) {
+      lastTickRef.current = now;
+      return;
+    }
+
+    const dtSeconds = (now - lastTickRef.current) / 1000;
+    lastTickRef.current = now;
+
+    // Cap dt to 2 s to avoid huge jumps after tab is backgrounded
+    const safeDt = Math.min(dtSeconds, 2);
+    if (safeDt <= 0) return;
+
+    const updated = flightsRef.current.map(f => deadReckonFlight(f, safeDt));
+    flightsRef.current = updated;
+    setLiveFlights(updated);
+  }, []);
+
+  // Start / stop rAF loop
+  useEffect(() => {
+    rafIdRef.current = requestAnimationFrame(animate);
+    return () => {
+      if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
+    };
+  }, [animate]);
+
+  // ── WebSocket connection ────────────────────────────────────────────────────
   useEffect(() => {
     const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    // Connect to WebSocket server on port 5000 or current host
     const wsHost = window.location.hostname === 'localhost' ? 'localhost:5000' : window.location.host;
-    const wsUrl = `${wsProtocol}//${wsHost}/ws/telemetry`;
+    const wsUrl  = `${wsProtocol}//${wsHost}/ws/telemetry`;
 
     const ws = new WebSocket(wsUrl);
 
@@ -27,7 +118,11 @@ export const SocketProvider = ({ children }) => {
         const data = JSON.parse(event.data);
 
         if (data.type === 'TELEMETRY_UPDATE') {
-          setLiveFlights(data.flights || []);
+          // Anchor the canonical positions from server; rAF loop will extrapolate from here
+          const incoming = data.flights || [];
+          flightsRef.current  = incoming;
+          lastTickRef.current = null; // reset dt so we don't jump on the next tick
+          setLiveFlights(incoming);
           setLastTelemetryTimestamp(data.timestamp);
         } else if (data.type === 'NEW_ALERT') {
           setLiveAlerts(prev => [data.alert, ...prev]);
@@ -38,18 +133,13 @@ export const SocketProvider = ({ children }) => {
     };
 
     ws.onclose = () => {
-      console.log('🔌 WebSocket Connection Closed. Retrying in 3s...');
+      console.log('🔌 WebSocket Closed. Retrying in 3s...');
       setIsConnected(false);
-      setTimeout(() => {
-        // Attempt reconnect logic
-      }, 3000);
+      setTimeout(() => {}, 3000);
     };
 
     setSocket(ws);
-
-    return () => {
-      ws.close();
-    };
+    return () => ws.close();
   }, []);
 
   return (

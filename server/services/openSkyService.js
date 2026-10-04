@@ -1,224 +1,178 @@
 /**
  * OpenSky Network Real-Time ADS-B Feed
- * -------------------------------------
- * Fetches live flight positions from https://opensky-network.org/api/states/all
- * and emits them in the same telemetry_batch format as the simulator,
- * so the entire existing Kinesis → MongoDB → WebSocket pipeline works unchanged.
- *
- * Free, no API key required (anonymous: 100 req/10 min limit).
- * Polls every POLL_INTERVAL_MS (default 5 s) to simulate high-velocity streaming.
+ * ─────────────────────────────────────
+ * • Anonymous access — no credentials needed
+ * • Polls every 20s → 3 req/min → 30 req/10min  (limit: 100/10min, 70 headroom)
+ * • Respects Retry-After header on 429 — never hammers while banned
+ * • Falls back to ADS-B simulator seamlessly while waiting
+ * • Client-side requestAnimationFrame handles all smooth animation between polls
  */
 
 const EventEmitter = require('events');
-const https = require('https');
+const https        = require('https');
+const adsbSimulator = require('./adsbSimulator');
 
-// ── Configuration ──────────────────────────────────────────────────────────────
-const POLL_INTERVAL_MS = 5000;   // 5-second polling interval
-const MAX_AIRCRAFT     = 200;   // How many aircraft to show (randomly sampled for global spread)
+const POLL_MS    = 20000;   // 20s → 30 req/10min, well under anonymous 100/10min limit
+const MAX_PLANES = 200;
 
-// ── Known airline prefixes → full name mapping (best-effort) ──────────────────
+// ── Airline map ───────────────────────────────────────────────────────────────
 const AIRLINE_MAP = {
-  AAL: 'American Airlines',   UAL: 'United Airlines',    DAL: 'Delta Air Lines',
-  BAW: 'British Airways',     DLH: 'Lufthansa',          AFR: 'Air France',
-  UAE: 'Emirates',            KLM: 'KLM Royal Dutch',    SWR: 'Swiss Air',
-  IBE: 'Iberia',              RYR: 'Ryanair',            EZY: 'easyJet',
-  SIA: 'Singapore Airlines',  QFA: 'Qantas',             JAL: 'Japan Airlines',
-  ANA: 'All Nippon Airways',  CPA: 'Cathay Pacific',     THY: 'Turkish Airlines',
-  SVA: 'Saudi Arabian Airlines', ETH: 'Ethiopian Airlines', QTR: 'Qatar Airways',
-  VIR: 'Virgin Atlantic',     NKS: 'Spirit Airlines',    ASA: 'Alaska Airlines',
-  SWA: 'Southwest Airlines',  FDX: 'FedEx',              UPS: 'UPS Airlines',
+  AAL:'American Airlines', UAL:'United Airlines',  DAL:'Delta Air Lines',
+  BAW:'British Airways',   DLH:'Lufthansa',        AFR:'Air France',
+  UAE:'Emirates',          KLM:'KLM Royal Dutch',  SWR:'SWISS',
+  IBE:'Iberia',            RYR:'Ryanair',          EZY:'easyJet',
+  SIA:'Singapore Airlines',QFA:'Qantas',           JAL:'Japan Airlines',
+  ANA:'All Nippon Airways',CPA:'Cathay Pacific',   THY:'Turkish Airlines',
+  QTR:'Qatar Airways',     ETH:'Ethiopian Airlines',FDX:'FedEx',
 };
+const TYPES = [
+  'Boeing 737-800','Boeing 737 MAX 8','Boeing 777-300ER','Boeing 787-9',
+  'Airbus A320neo','Airbus A321neo',  'Airbus A330-300', 'Airbus A350-900',
+  'Airbus A380-800','Boeing 747-8i',  'Embraer E190',    'Bombardier CRJ-900',
+];
 
-function guessAirline(callsign) {
-  if (!callsign) return 'Unknown Airline';
-  const prefix = callsign.replace(/[0-9]/g, '').trim().toUpperCase().substring(0, 3);
-  return AIRLINE_MAP[prefix] || callsign.substring(0, 3).toUpperCase() + ' Airways';
+function airline(cs) {
+  if (!cs) return 'Unknown Airline';
+  const p = cs.replace(/\d/g,'').trim().toUpperCase().slice(0,3);
+  return AIRLINE_MAP[p] || cs.slice(0,3).toUpperCase() + ' Airways';
+}
+function acType(icao24) { return TYPES[parseInt(icao24.slice(0,2),16) % TYPES.length]; }
+
+// ── Dead-reckoning (server-side, keeps liveAircraft map current) ─────────────
+function deadReckon(ac, dtSec) {
+  const dist  = ac.speedKnots * dtSec / 3600;
+  const hdRad = ac.headingDeg * Math.PI / 180;
+  const latR  = ac.lat * Math.PI / 180;
+  ac.lat += (dist / 60) * Math.cos(hdRad);
+  ac.lon += (dist / 60) * Math.sin(hdRad) / (Math.cos(latR) || 0.001);
+  ac.altitudeFt = Math.min(45000, Math.max(500, ac.altitudeFt + ac.verticalRateFpm * dtSec / 60));
 }
 
-function guessAircraftType(icao24) {
-  const types = [
-    'Boeing 737-800', 'Boeing 737 MAX 8', 'Boeing 777-300ER', 'Boeing 787-9 Dreamliner',
-    'Airbus A320neo', 'Airbus A321neo', 'Airbus A330-300', 'Airbus A350-900', 'Airbus A380-800',
-    'Boeing 747-8i', 'Embraer E190', 'Bombardier CRJ-900'
-  ];
-  // deterministic per aircraft so it doesn't change each poll
-  const idx = parseInt(icao24.substring(0, 2), 16) % types.length;
-  return types[idx];
-}
-
-function squawkStatus(squawk) {
-  if (['7700', '7600', '7500'].includes(squawk)) return 'Emergency';
-  return 'In-Flight';
-}
-
-// ── HTTP helper ────────────────────────────────────────────────────────────────
+// ── HTTP fetch — reads Retry-After on 429 ────────────────────────────────────
 function fetchJSON(url) {
   return new Promise((resolve, reject) => {
-    const req = https.get(url, { timeout: 8000 }, (res) => {
-      if (res.statusCode === 429) return reject(new Error('OpenSky rate-limit (429)'));
-      if (res.statusCode !== 200) return reject(new Error('OpenSky HTTP ' + res.statusCode));
+    const req = https.get(url, { timeout: 25000 }, res => {
+      if (res.statusCode === 429) {
+        const retryAfter = parseInt(res.headers['retry-after'] || '600', 10);
+        return reject(Object.assign(new Error('rate-limited'), { retryAfter }));
+      }
+      if (res.statusCode !== 200)
+        return reject(new Error('HTTP ' + res.statusCode));
       let raw = '';
-      res.on('data', chunk => { raw += chunk; });
+      res.on('data', c => { raw += c; });
       res.on('end', () => {
         try { resolve(JSON.parse(raw)); }
-        catch (e) { reject(new Error('OpenSky JSON parse error')); }
+        catch(e) { reject(new Error('JSON parse error')); }
       });
     });
     req.on('error', reject);
-    req.on('timeout', () => { req.destroy(); reject(new Error('OpenSky request timeout')); });
+    req.on('timeout', () => { req.destroy(); reject(new Error('timeout')); });
   });
 }
 
-// ── Main service ───────────────────────────────────────────────────────────────
+// ── Service ───────────────────────────────────────────────────────────────────
 class OpenSkyService extends EventEmitter {
   constructor() {
     super();
-    this.intervalId   = null;
+    this.pollTimer    = null;
     this.isRunning    = false;
-    this.lastBatch    = [];
-    this.trajectories = new Map();  // icao24 → [{lat,lon,altitudeFt,...}]
-    this.aircraftMeta = new Map();  // icao24 → {airline, aircraftType, registration}
+    this.usingFallback = false;
+    this.resumeAt     = 0;          // epoch ms — don't poll before this
     this.fetchCount   = 0;
+    this.liveAircraft = new Map();  // icao24 → mutable state
+    this.meta         = new Map();  // icao24 → {airline, type, reg}
+    this.trajectories = new Map();  // icao24 → [{lat,lon,...}]
   }
 
-  // OpenSky state vector indices:
-  // [icao24, callsign, origin_country, time_pos, last_contact,
-  //  lon, lat, baro_alt, on_ground, velocity,
-  //  true_track, vert_rate, sensors, geo_alt, squawk, spi, pos_source]
   _parseState(sv) {
-    const icao24      = sv[0];
-    const rawCallsign = sv[1];
-    const originCountry = sv[2];
-    const lon         = sv[5];
-    const lat         = sv[6];
-    const baroAlt     = sv[7];
-    const onGround    = sv[8];
-    const velocity    = sv[9];
-    const trueTrack   = sv[10];
-    const vertRate    = sv[11];
-    const geoAlt      = sv[13];
-    const squawk      = sv[14];
-
-    if (!lat || !lon || onGround) return null;
-    // No geographic filter — accept aircraft from anywhere in the world
-
-
-    const callsign = (rawCallsign || '').trim() || icao24.toUpperCase();
-    const altFt    = Math.round(((geoAlt || baroAlt || 9144) * 3.28084));
-    const speedKts = velocity ? Math.round(velocity * 1.94384) : 450;
-    const hdg      = Math.round(trueTrack || 0);
-    const vr       = vertRate ? Math.round(vertRate * 196.85) : 0;
-    const sq       = squawk   ? String(squawk).padStart(4, '0') : '1200';
-
-    return { icao24, callsign, originCountry, lat, lon, altFt, speedKts, hdg, vr, sq };
+    const [icao24, cs, country,,, lon, lat, baro,, vel, trk, vr,, geo, sq] = sv;
+    if (!lat || !lon || sv[8]) return null;   // skip on-ground / no-pos
+    return {
+      icao24, callsign:(cs||'').trim()||icao24.toUpperCase(),
+      originCountry: country||'Unknown',
+      lat, lon,
+      altitudeFt:      Math.round((geo||baro||9000)*3.28084),
+      speedKnots:      vel  ? Math.round(vel*1.94384) : 450,
+      headingDeg:      Math.round(trk||0),
+      verticalRateFpm: vr   ? Math.round(vr*196.85)  : 0,
+      squawk:          sq   ? String(sq).padStart(4,'0') : '1200',
+    };
   }
 
-  _buildTelemetryEvent(parsed) {
-    const { icao24, callsign, originCountry, lat, lon, altFt, speedKts, hdg, vr, sq } = parsed;
-
-    if (!this.aircraftMeta.has(icao24)) {
-      this.aircraftMeta.set(icao24, {
-        airline:      guessAirline(callsign),
-        aircraftType: guessAircraftType(icao24),
-        registration: icao24.toUpperCase(),
-      });
-    }
-    const meta = this.aircraftMeta.get(icao24);
-
+  _toEvent(ac) {
+    const { icao24, callsign, originCountry, lat, lon,
+            altitudeFt, speedKnots, headingDeg, verticalRateFpm, squawk } = ac;
+    if (!this.meta.has(icao24))
+      this.meta.set(icao24, { airline:airline(callsign), type:acType(icao24), reg:icao24.toUpperCase() });
+    const m = this.meta.get(icao24);
     if (!this.trajectories.has(icao24)) this.trajectories.set(icao24, []);
     const traj = this.trajectories.get(icao24);
-    traj.push({ lat, lon, altitudeFt: altFt, speedKnots: speedKts, timestamp: new Date() });
-    if (traj.length > 30) traj.shift();
-
+    traj.push({ lat, lon, altitudeFt, speedKnots, timestamp: new Date() });
+    if (traj.length > 40) traj.shift();
     return {
-      eventId:         'opensky_' + Date.now() + '_' + icao24,
-      timestamp:       new Date().toISOString(),
-      icao24,
-      callsign,
-      flightId:        icao24.toUpperCase(),
-      airline:         meta.airline,
-      aircraftType:    meta.aircraftType,
-      registration:    meta.registration,
-      countryFlag:     '🌍',
-      radarSource:     'OpenSky-ADS-B-' + (originCountry || 'Global'),
-      photoUrl:        'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600&auto=format&fit=crop&q=80',
-      origin:      { code: 'LIVE', city: originCountry || 'Unknown', country: originCountry || 'Unknown', lat, lon },
-      destination: { code: 'LIVE', city: 'En Route', country: '?', lat, lon },
-      latitude:        lat,
-      longitude:       lon,
-      altitudeFt:      altFt,
-      speedKnots:      speedKts,
-      headingDeg:      hdg,
-      verticalRateFpm: vr,
-      squawk:          sq,
-      status:          squawkStatus(sq),
-      progressPct:     50,
-      weatherTurbulence: 'None',
-      trajectory:      [...traj],
-      std: '--:-- UTC', atd: '--:-- UTC', sta: '--:-- UTC', eta: '--:-- UTC',
+      eventId:`opensky_${Date.now()}_${icao24}`, timestamp:new Date().toISOString(),
+      icao24, callsign, flightId:icao24.toUpperCase(),
+      airline:m.airline, aircraftType:m.type, registration:m.reg,
+      countryFlag:'🌍', radarSource:'OpenSky-ADS-B-'+originCountry,
+      photoUrl:'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600&auto=format&fit=crop&q=80',
+      origin:      { code:'LIVE', city:originCountry, country:originCountry, lat, lon },
+      destination: { code:'LIVE', city:'En Route',    country:'?',          lat, lon },
+      latitude:lat, longitude:lon, altitudeFt:Math.round(altitudeFt),
+      speedKnots, headingDeg, verticalRateFpm, squawk,
+      status:['7700','7600','7500'].includes(squawk)?'Emergency':'In-Flight',
+      progressPct:50, weatherTurbulence:'None', trajectory:[...traj],
+      std:'--:-- UTC', atd:'--:-- UTC', sta:'--:-- UTC', eta:'--:-- UTC',
     };
   }
 
   async _poll() {
-    // Fetch ALL global aircraft (no bounding box) for worldwide spread
-    const url = 'https://opensky-network.org/api/states/all';
+    // Respect Retry-After from last 429
+    if (Date.now() < this.resumeAt) {
+      const waitMin = Math.ceil((this.resumeAt - Date.now()) / 60000);
+      console.log(`⏸  OpenSky: waiting ${waitMin}m more before retrying (Retry-After)`);
+      return;
+    }
+
     try {
-      const data = await fetchJSON(url);
-      if (!data || !Array.isArray(data.states)) {
-        console.warn('OpenSky: empty response, keeping last batch');
-        return;
-      }
+      const data = await fetchJSON('https://opensky-network.org/api/states/all');
+      if (!data?.states) return;
+
       this.fetchCount++;
 
-      // Parse all valid airborne states
-      const allParsed = data.states
-        .map(sv => this._parseState(sv))
-        .filter(Boolean);
+      // Parse, shuffle for global spread, cap at MAX_PLANES
+      const parsed = data.states.map(sv => this._parseState(sv)).filter(Boolean);
+      for (let i = parsed.length-1; i>0; i--) {
+        const j = Math.floor(Math.random()*(i+1));
+        [parsed[i],parsed[j]] = [parsed[j],parsed[i]];
+      }
+      const sample = parsed.slice(0, MAX_PLANES);
 
-      // Group aircraft into 20x20 degree geographical grid buckets to prevent 
-      // dense regions (US/Europe) from dominating the sample
-      const buckets = new Map();
-      allParsed.forEach(p => {
-        const gridKey = Math.floor(p.lat / 20) + '_' + Math.floor(p.lon / 20);
-        if (!buckets.has(gridKey)) buckets.set(gridKey, []);
-        buckets.get(gridKey).push(p);
-      });
+      const seen = new Set(sample.map(p => p.icao24));
+      for (const p of sample) this.liveAircraft.set(p.icao24, { ...p });
+      for (const id of this.liveAircraft.keys()) if (!seen.has(id)) this.liveAircraft.delete(id);
 
-      // Shuffle aircraft within each bucket
-      for (const list of buckets.values()) {
-        for (let i = list.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [list[i], list[j]] = [list[j], list[i]];
-        }
+      if (this.usingFallback) {
+        adsbSimulator.stopSimulation();
+        this.usingFallback = false;
+        console.log('✅ OpenSky rate-limit lifted — switched back to real data');
       }
 
-      // Pick aircraft round-robin from each bucket to get an even global spread
-      const selectedParsed = [];
-      let added = true;
-      let idx = 0;
-      while (selectedParsed.length < MAX_AIRCRAFT && added) {
-        added = false;
-        for (const list of buckets.values()) {
-          if (idx < list.length) {
-            selectedParsed.push(list[idx]);
-            added = true;
-            if (selectedParsed.length >= MAX_AIRCRAFT) break;
-          }
-        }
-        idx++;
-      }
+      const events = [...this.liveAircraft.values()].map(ac => this._toEvent(ac));
+      console.log(`🛫 OpenSky poll #${this.fetchCount} → ${events.length} real aircraft (anonymous, ${POLL_MS/1000}s interval)`);
+      this.emit('telemetry_batch', events);
 
-      const events = selectedParsed
-        .map(p => this._buildTelemetryEvent(p));
-
-      if (events.length > 0) {
-        this.lastBatch = events;
-        console.log('🛫 OpenSky → ' + events.length + ' live aircraft worldwide | poll #' + this.fetchCount);
-        this.emit('telemetry_batch', events);
-      }
     } catch (err) {
-      console.warn('OpenSky fetch error: ' + err.message + ' — using cached batch (' + this.lastBatch.length + ' aircraft)');
-      if (this.lastBatch.length > 0) this.emit('telemetry_batch', this.lastBatch);
+      if (err.message === 'rate-limited') {
+        const waitSec = err.retryAfter || 600;
+        this.resumeAt = Date.now() + waitSec * 1000;
+        console.warn(`⚠️  OpenSky 429 — will retry in ${Math.ceil(waitSec/60)} min (Retry-After: ${waitSec}s). Simulator active.`);
+        if (!this.usingFallback) {
+          this.usingFallback = true;
+          if (!adsbSimulator.isRunning) adsbSimulator.startSimulation(20000);
+        }
+      } else {
+        console.warn('OpenSky error:', err.message);
+      }
     }
   }
 
@@ -226,14 +180,14 @@ class OpenSkyService extends EventEmitter {
     if (this.isRunning) return;
     this.isRunning = true;
     this._poll();
-    this.intervalId = setInterval(() => this._poll(), POLL_INTERVAL_MS);
-    console.log('🌍 OpenSky Network ADS-B feed STARTED — polling real aircraft every ' + (POLL_INTERVAL_MS / 1000) + 's');
+    this.pollTimer = setInterval(() => this._poll(), POLL_MS);
+    console.log(`🌍 OpenSky ADS-B STARTED — anonymous, polling every ${POLL_MS/1000}s (${POLL_MS/1000*3}/10min of 100 allowed)`);
   }
 
   stop() {
-    if (this.intervalId) { clearInterval(this.intervalId); this.intervalId = null; }
+    if (this.pollTimer) clearInterval(this.pollTimer);
     this.isRunning = false;
-    console.log('OpenSky Network feed STOPPED');
+    adsbSimulator.stopSimulation();
   }
 }
 
