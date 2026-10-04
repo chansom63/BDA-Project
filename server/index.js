@@ -8,6 +8,12 @@ const dotenv = require('dotenv');
 // Load environment variables from central root .env file
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
+// Set global Mongoose buffer timeout BEFORE any models are loaded.
+// This prevents operations buffered pre-connection (e.g. auth seeding)
+// from timing out while the MongoDB Memory Server binary downloads on first run.
+const mongoose = require('mongoose');
+mongoose.set('bufferTimeoutMS', 300000); // 5 minutes
+
 const { connectDB } = require('./config/db');
 const streamProcessor = require('./services/streamProcessor');
 const adsbSimulator = require('./services/adsbSimulator');
@@ -79,23 +85,38 @@ wss.on('connection', (ws) => {
 });
 
 // Start DB connection, Services, and Server
-connectDB().then(() => {
-  // Initialize stream processor with WebSocket server
-  streamProcessor.init(wss);
+connectDB()
+  .then(() => {
+    // Initialize stream processor with WebSocket server
+    streamProcessor.init(wss);
 
-  // Start ADS-B Telemetry Simulator
-  adsbSimulator.startSimulation(2000);
+    // Start ADS-B Telemetry Simulator
+    adsbSimulator.startSimulation(2000);
 
-  // Start Background Cron Jobs
-  backgroundJobs.init();
+    // Start Background Cron Jobs
+    backgroundJobs.init();
 
-  server.listen(PORT, () => {
-    console.log(`
+    server.on('error', (err) => {
+      if (err.code === 'EADDRINUSE') {
+        console.error(`❌ Port ${PORT} is already in use. Kill the process using it and try again.`);
+        console.error(`   Run: lsof -ti:${PORT} | xargs kill -9`);
+      } else {
+        console.error('❌ Server error:', err.message);
+      }
+      process.exit(1);
+    });
+
+    server.listen(PORT, () => {
+      console.log(`
 ========================================================================
 🚀 AWS MONOLITHIC MERN FLIGHT TELEMETRY SYSTEM IS ONLINE!
 📡 Server running on: http://localhost:${PORT}
 🔌 WebSocket endpoint: ws://localhost:${PORT}/ws/telemetry
 ========================================================================
-    `);
+      `);
+    });
+  })
+  .catch((err) => {
+    console.error('❌ Failed to connect to database:', err.message);
+    process.exit(1);
   });
-});

@@ -38,7 +38,7 @@ async function seedDefaultUsers() {
     console.log('👤 Default RBAC accounts seeded (admin, analyst, dispatcher / pass: admin123)');
   }
 }
-seedDefaultUsers();
+seedDefaultUsers().catch(err => console.error('⚠️  User seeding error (non-fatal):', err.message));
 
 // POST /api/auth/login
 router.post('/login', async (req, res, next) => {
