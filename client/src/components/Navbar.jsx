@@ -42,8 +42,8 @@ export default function Navbar({ activeTab, setActiveTab, activeAlertCount, flig
     { id: 'map', label: 'Flight Radar Map', icon: Plane },
     { id: 'table', label: 'Telemetry List', icon: Radio },
     { id: 'alerts', label: 'Alert Center', icon: AlertTriangle, badge: activeAlertCount },
-    { id: 'pipeline', label: 'AWS Pipeline', icon: Layers },
-    { id: 'analytics', label: 'QuickSight BI', icon: BarChart3 },
+    { id: 'pipeline', label: 'Docker Pipeline', icon: Layers },
+    { id: 'analytics', label: 'Spark BI Analytics', icon: BarChart3 },
     { id: 'admin', label: 'Admin Panel', icon: Settings }
   ];
 
@@ -79,11 +79,11 @@ export default function Navbar({ activeTab, setActiveTab, activeAlertCount, flig
                 padding: '1px 6px',
                 borderRadius: '10px'
               }}>
-                MERN AWS
+                MERN DOCKER
               </span>
             </div>
             <p style={{ fontSize: '11px', color: '#9ca3af' }}>
-              Live Global ADS-B Telemetry Tracking • MSK ➔ Kinesis ➔ DocumentDB ➔ Redshift
+              Live Global ADS-B Telemetry Tracking • Kafka ➔ Node.js ➔ MongoDB ➔ Spark
             </p>
           </div>
         </div>
@@ -217,7 +217,7 @@ export default function Navbar({ activeTab, setActiveTab, activeAlertCount, flig
               boxShadow: isConnected ? '0 0 8px #10b981' : 'none'
             }} />
             <span style={{ color: isConnected ? '#10b981' : '#ef4444', fontWeight: '700' }}>
-              {isConnected ? 'MSK LIVE' : 'CONNECTING...'}
+              {isConnected ? 'KAFKA LIVE' : 'CONNECTING...'}
             </span>
           </div>
         </div>

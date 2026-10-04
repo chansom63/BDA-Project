@@ -26,7 +26,7 @@ export default function FlightList({ flights, setSelectedFlight, onTriggerSquawk
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <div>
           <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#fff' }}>Flight Telemetry Directory</h2>
-          <p style={{ fontSize: '13px', color: '#9ca3af' }}>Live parsed ADS-B stream records in MongoDB / DocumentDB operational database</p>
+          <p style={{ fontSize: '13px', color: '#9ca3af' }}>Live parsed ADS-B stream records in Dockerized MongoDB operational database</p>
         </div>
 
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>

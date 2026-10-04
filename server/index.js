@@ -18,6 +18,8 @@ const { connectDB } = require('./config/db');
 const streamProcessor = require('./services/streamProcessor');
 const adsbSimulator = require('./services/adsbSimulator');
 const backgroundJobs = require('./services/backgroundJobs');
+const kafkaService = require('./services/kafkaService');
+const clickhouseService = require('./services/clickhouseService');
 const errorHandler = require('./middleware/errorHandler');
 
 const authRoutes = require('./routes/auth');
@@ -86,7 +88,13 @@ wss.on('connection', (ws) => {
 
 // Start DB connection, Services, and Server
 connectDB()
-  .then(() => {
+  .then(async () => {
+    // Connect Kafka Producer & Consumer
+    await kafkaService.connect();
+
+    // Initialize ClickHouse Analytics DW
+    await clickhouseService.init();
+
     // Initialize stream processor with WebSocket server
     streamProcessor.init(wss);
 

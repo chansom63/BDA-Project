@@ -27,10 +27,13 @@ class StreamProcessorService {
   init(wss) {
     this.wss = wss;
 
-    // Listen to simulated ADS-B feed
-    adsbSimulator.on('telemetry_batch', async (batch) => {
+    // Consume from REAL Kafka stream instead of direct event emitter
+    const kafkaService = require('./kafkaService');
+    const clickhouseService = require('./clickhouseService');
+    kafkaService.consumeTelemetryStream(async (batch) => {
       await this.processTelemetryBatch(batch);
-    });
+      await clickhouseService.insertBatch(batch);
+    }).catch(console.error);
 
     console.log('⚡ Amazon Kinesis Stream Processor initialized & listening to OpenSky real-time ADS-B feed');
   }

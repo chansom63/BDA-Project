@@ -351,6 +351,10 @@ class ADSBTelemetrySimulator extends EventEmitter {
     });
 
     this.emit('telemetry_batch', telemetryEvents);
+    
+    // Produce to real Kafka broker
+    const kafkaService = require('./kafkaService');
+    kafkaService.produceTelemetryBatch(telemetryEvents).catch(console.error);
   }
 
   triggerEmergency(flightId, squawkCode = '7700') {
