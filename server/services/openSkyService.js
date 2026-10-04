@@ -175,14 +175,40 @@ class OpenSkyService extends EventEmitter {
         .map(sv => this._parseState(sv))
         .filter(Boolean);
 
-      // Randomly shuffle so we get a geographically spread sample each poll
-      for (let i = allParsed.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [allParsed[i], allParsed[j]] = [allParsed[j], allParsed[i]];
+      // Group aircraft into 20x20 degree geographical grid buckets to prevent 
+      // dense regions (US/Europe) from dominating the sample
+      const buckets = new Map();
+      allParsed.forEach(p => {
+        const gridKey = Math.floor(p.lat / 20) + '_' + Math.floor(p.lon / 20);
+        if (!buckets.has(gridKey)) buckets.set(gridKey, []);
+        buckets.get(gridKey).push(p);
+      });
+
+      // Shuffle aircraft within each bucket
+      for (const list of buckets.values()) {
+        for (let i = list.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [list[i], list[j]] = [list[j], list[i]];
+        }
       }
 
-      const events = allParsed
-        .slice(0, MAX_AIRCRAFT)
+      // Pick aircraft round-robin from each bucket to get an even global spread
+      const selectedParsed = [];
+      let added = true;
+      let idx = 0;
+      while (selectedParsed.length < MAX_AIRCRAFT && added) {
+        added = false;
+        for (const list of buckets.values()) {
+          if (idx < list.length) {
+            selectedParsed.push(list[idx]);
+            added = true;
+            if (selectedParsed.length >= MAX_AIRCRAFT) break;
+          }
+        }
+        idx++;
+      }
+
+      const events = selectedParsed
         .map(p => this._buildTelemetryEvent(p));
 
       if (events.length > 0) {
