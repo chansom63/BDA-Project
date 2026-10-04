@@ -11,9 +11,8 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    // Connect to WebSocket server on port 5000 or current host
-    const wsHost = window.location.hostname === 'localhost' ? 'localhost:5000' : window.location.host;
-    const wsUrl = `${wsProtocol}//${wsHost}/ws/telemetry`;
+    // Use current host, Vite proxy will forward /ws to backend port 5000 in dev
+    const wsUrl = `${wsProtocol}//${window.location.host}/ws/telemetry`;
 
     const ws = new WebSocket(wsUrl);
 
