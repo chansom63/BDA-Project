@@ -194,16 +194,59 @@ export default function MapView({ flights, selectedFlight, setSelectedFlight, on
             trajectoryPoints.push([lat, lon]);
           }
 
+          const originPoint = flight.origin?.lat && flight.origin?.lon ? [flight.origin.lat, flight.origin.lon] : null;
+          const destPoint = flight.destination?.lat && flight.destination?.lon ? [flight.destination.lat, flight.destination.lon] : null;
+
           return (
             <React.Fragment key={flight.flightId}>
               {/* Flight Trajectory Line */}
-              {showTrails && trajectoryPoints.length > 1 && (
+              {(showTrails || isSelected) && trajectoryPoints.length > 1 && (
                 <Polyline
                   positions={trajectoryPoints}
                   color={squawkBadge.isEmergency ? '#ef4444' : isSelected ? '#00b4d8' : '#facc15'}
                   weight={isSelected ? 3 : 2}
                   opacity={isSelected ? 0.9 : 0.6}
                 />
+              )}
+
+              {/* Past/Unrecorded route to origin (dashed) */}
+              {isSelected && originPoint && (
+                <Polyline
+                  positions={[originPoint, trajectoryPoints.length > 0 ? trajectoryPoints[0] : [lat, lon]]}
+                  color={squawkBadge.isEmergency ? '#ef4444' : '#00b4d8'}
+                  weight={2}
+                  opacity={0.6}
+                  dashArray="5 5"
+                />
+              )}
+
+              {/* Future route to destination (dashed) */}
+              {isSelected && destPoint && (
+                <Polyline
+                  positions={[[lat, lon], destPoint]}
+                  color="#9ca3af"
+                  weight={2}
+                  opacity={0.8}
+                  dashArray="5 5"
+                />
+              )}
+
+              {/* Origin Airport Pin */}
+              {isSelected && originPoint && (
+                <Marker position={originPoint} icon={createAirportPinIcon(flight.origin.code)} zIndexOffset={-100}>
+                  <Tooltip direction="bottom" offset={[0, 10]} opacity={0.9} permanent>
+                    <div style={{fontSize: '10px', textAlign: 'center'}}>Origin<br/><b>{flight.origin.city}</b></div>
+                  </Tooltip>
+                </Marker>
+              )}
+
+              {/* Destination Airport Pin */}
+              {isSelected && destPoint && (
+                <Marker position={destPoint} icon={createAirportPinIcon(flight.destination.code)} zIndexOffset={-100}>
+                  <Tooltip direction="bottom" offset={[0, 10]} opacity={0.9} permanent>
+                    <div style={{fontSize: '10px', textAlign: 'center'}}>Destination<br/><b>{flight.destination.city}</b></div>
+                  </Tooltip>
+                </Marker>
               )}
 
               {/* Emergency clearance circle for 7700 squawks */}
