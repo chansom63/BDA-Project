@@ -54,6 +54,10 @@ export default function MapView({ flights, selectedFlight, setSelectedFlight, on
   const [showRadarSweep, setShowRadarSweep] = useState(true);
   const [mapTileStyle, setMapTileStyle] = useState('dark'); // 'dark' | 'satellite' | 'street'
   const [showAirports, setShowAirports] = useState(true);
+  const [maxAircraft, setMaxAircraft] = useState(1000);
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  const displayedFlights = maxAircraft === 1000 ? flights : flights.slice(-maxAircraft);
 
   // Global airports database
   const airports = [
@@ -88,44 +92,64 @@ export default function MapView({ flights, selectedFlight, setSelectedFlight, on
         position: 'absolute',
         top: '16px',
         left: '16px',
-        zIndex: 500,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '8px'
+        zIndex: 2000,
       }}>
-        <div className="glass-panel" style={{ padding: '8px 14px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <GaganLogo size={26} />
-            <span style={{ fontSize: '14px', fontWeight: '900', color: '#facc15', letterSpacing: '0.5px' }}>GAGAN LIVE</span>
+        {/* Flex panel stack */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div className="glass-panel" style={{ padding: '8px 14px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <GaganLogo size={26} />
+              <span style={{ fontSize: '14px', fontWeight: '900', color: '#facc15', letterSpacing: '0.5px' }}>GAGAN LIVE</span>
+            </div>
+            <span
+              onClick={() => setShowDropdown(!showDropdown)}
+              style={{ fontSize: '11px', background: 'rgba(250, 204, 21, 0.2)', color: '#facc15', border: '1px solid rgba(250, 204, 21, 0.4)', fontWeight: '800', padding: '2px 8px', borderRadius: '10px', cursor: 'pointer', userSelect: 'none' }}
+            >
+              {(displayedFlights || flights || []).length} Aircraft
+            </span>
           </div>
-          <span style={{ fontSize: '11px', background: 'rgba(250, 204, 21, 0.2)', color: '#facc15', border: '1px solid rgba(250, 204, 21, 0.4)', fontWeight: '800', padding: '2px 8px', borderRadius: '10px' }}>
-            {flights.length} Aircraft
-          </span>
+
+          <div className="glass-panel" style={{ padding: '6px 10px', display: 'flex', gap: '6px', alignItems: 'center' }}>
+            <button
+              className={mapTileStyle === 'dark' ? 'btn-fr24-yellow' : 'btn-secondary'}
+              onClick={() => setMapTileStyle('dark')}
+              style={{ fontSize: '11px', padding: '4px 8px' }}
+            >
+              FR24 Dark
+            </button>
+            <button
+              className={mapTileStyle === 'satellite' ? 'btn-fr24-yellow' : 'btn-secondary'}
+              onClick={() => setMapTileStyle('satellite')}
+              style={{ fontSize: '11px', padding: '4px 8px' }}
+            >
+              Satellite
+            </button>
+            <button
+              className={showTrails ? 'btn-primary' : 'btn-secondary'}
+              onClick={() => setShowTrails(!showTrails)}
+              style={{ fontSize: '11px', padding: '4px 8px' }}
+            >
+              {showTrails ? 'Trails On' : 'Trails Off'}
+            </button>
+          </div>
         </div>
 
-        <div className="glass-panel" style={{ padding: '6px 10px', display: 'flex', gap: '6px', alignItems: 'center' }}>
-          <button
-            className={mapTileStyle === 'dark' ? 'btn-fr24-yellow' : 'btn-secondary'}
-            onClick={() => setMapTileStyle('dark')}
-            style={{ fontSize: '11px', padding: '4px 8px' }}
-          >
-            FR24 Dark
-          </button>
-          <button
-            className={mapTileStyle === 'satellite' ? 'btn-fr24-yellow' : 'btn-secondary'}
-            onClick={() => setMapTileStyle('satellite')}
-            style={{ fontSize: '11px', padding: '4px 8px' }}
-          >
-            Satellite
-          </button>
-          <button
-            className={showTrails ? 'btn-primary' : 'btn-secondary'}
-            onClick={() => setShowTrails(!showTrails)}
-            style={{ fontSize: '11px', padding: '4px 8px' }}
-          >
-            {showTrails ? 'Trails On' : 'Trails Off'}
-          </button>
-        </div>
+        {/* Dropdown rendered OUTSIDE the flex stack so it floats above everything */}
+        {showDropdown && (
+          <div style={{ position: 'absolute', top: '42px', right: '0', background: '#0f172a', border: '1px solid #facc15', borderRadius: '6px', overflow: 'hidden', display: 'flex', flexDirection: 'column', zIndex: 9999, minWidth: '56px', boxShadow: '0 4px 16px rgba(0,0,0,0.8)' }}>
+            {[100, 500, 1000].map(val => (
+              <button
+                key={val}
+                onClick={() => { setMaxAircraft(val); setShowDropdown(false); }}
+                style={{ padding: '5px 10px', background: val === maxAircraft ? '#facc15' : 'transparent', border: 'none', color: val === maxAircraft ? '#000' : '#ccc', fontSize: '12px', fontWeight: val === maxAircraft ? '800' : '600', cursor: 'pointer', textAlign: 'center', borderBottom: val !== 1000 ? '1px solid #1e293b' : 'none' }}
+                onMouseOver={e => { e.currentTarget.style.background = '#facc15'; e.currentTarget.style.color = '#000'; }}
+                onMouseOut={e => { e.currentTarget.style.background = val === maxAircraft ? '#facc15' : 'transparent'; e.currentTarget.style.color = val === maxAircraft ? '#000' : '#ccc'; }}
+              >
+                {val}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* FR24 Altitude Legend */}
@@ -178,7 +202,7 @@ export default function MapView({ flights, selectedFlight, setSelectedFlight, on
         ))}
 
         {/* Flight Markers & Trajectory Polylines */}
-        {flights.map(flight => {
+        {displayedFlights.map(flight => {
           const lat = flight.currentPosition?.lat || flight.lat;
           const lon = flight.currentPosition?.lon || flight.lon;
           const alt = flight.currentPosition?.altitudeFt || flight.altitudeFt || 30000;

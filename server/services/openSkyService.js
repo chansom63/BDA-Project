@@ -136,6 +136,11 @@ class OpenSkyService extends EventEmitter {
     if (Date.now() < this.resumeAt) {
       const waitMin = Math.ceil((this.resumeAt - Date.now()) / 60000);
       console.log(`⏸  OpenSky: waiting ${waitMin}m more before retrying (Retry-After)`);
+      
+      // We must still tick the simulator and emit telemetry even when skipping real fetch!
+      adsbSimulator.tick();
+      const simFlights = adsbSimulator.getCurrentFlights();
+      this.emit('telemetry_batch', simFlights);
       return;
     }
 
@@ -195,12 +200,15 @@ class OpenSkyService extends EventEmitter {
         const waitSec = err.retryAfter || 600;
         this.resumeAt = Date.now() + waitSec * 1000;
         console.warn(`⚠️  OpenSky 429 — will retry in ${Math.ceil(waitSec/60)} min (Retry-After: ${waitSec}s). Simulator active.`);
-        if (!this.usingFallback) {
-          this.usingFallback = true;
-          if (!adsbSimulator.isRunning) adsbSimulator.startSimulation(20000);
-        }
       } else {
-        console.warn('OpenSky error:', err.message);
+        console.warn('⚠️  OpenSky generic error:', err.message, '— Simulator active.');
+        // Retry sooner for generic network errors (e.g., DNS failure)
+        this.resumeAt = Date.now() + 30000; 
+      }
+      
+      if (!this.usingFallback) {
+        this.usingFallback = true;
+        if (!adsbSimulator.isRunning) adsbSimulator.startSimulation(20000);
       }
     }
   }
