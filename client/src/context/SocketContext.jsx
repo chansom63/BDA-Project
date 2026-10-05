@@ -105,44 +105,54 @@ export const SocketProvider = ({ children }) => {
 
   // ── WebSocket connection ────────────────────────────────────────────────────
   useEffect(() => {
-    const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    // Use current host, Vite proxy will forward /ws to backend port 5000 in dev
-    const wsUrl = `${wsProtocol}//${window.location.host}/ws/telemetry`;
+    let ws = null;
+    let reconnectTimeout = null;
 
-    const ws = new WebSocket(wsUrl);
+    const connectWS = () => {
+      const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const wsUrl = `${wsProtocol}//${window.location.host}/ws/telemetry`;
 
-    ws.onopen = () => {
-      console.log('📡 WebSocket Connected to AWS Flight Telemetry Stream');
-      setIsConnected(true);
-    };
+      ws = new WebSocket(wsUrl);
 
-    ws.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
+      ws.onopen = () => {
+        console.log('📡 WebSocket Connected to AWS Flight Telemetry Stream');
+        setIsConnected(true);
+      };
 
-        if (data.type === 'TELEMETRY_UPDATE') {
-          // Anchor the canonical positions from server; rAF loop will extrapolate from here
-          const incoming = data.flights || [];
-          flightsRef.current  = incoming;
-          lastTickRef.current = null; // reset dt so we don't jump on the next tick
-          setLiveFlights(incoming);
-          setLastTelemetryTimestamp(data.timestamp);
-        } else if (data.type === 'NEW_ALERT') {
-          setLiveAlerts(prev => [data.alert, ...prev]);
+      ws.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          if (data.type === 'TELEMETRY_UPDATE') {
+            const incoming = data.flights || [];
+            flightsRef.current  = incoming;
+            lastTickRef.current = null;
+            setLiveFlights(incoming);
+            setLastTelemetryTimestamp(data.timestamp);
+          } else if (data.type === 'NEW_ALERT') {
+            setLiveAlerts(prev => [data.alert, ...prev]);
+          }
+        } catch (err) {
+          console.error('Error parsing WS message:', err);
         }
-      } catch (err) {
-        console.error('Error parsing WS message:', err);
-      }
+      };
+
+      ws.onclose = () => {
+        console.log('🔌 WebSocket Closed. Retrying in 3s...');
+        setIsConnected(false);
+        reconnectTimeout = setTimeout(() => {
+          connectWS();
+        }, 3000);
+      };
+
+      setSocket(ws);
     };
 
-    ws.onclose = () => {
-      console.log('🔌 WebSocket Closed. Retrying in 3s...');
-      setIsConnected(false);
-      setTimeout(() => {}, 3000);
-    };
+    connectWS();
 
-    setSocket(ws);
-    return () => ws.close();
+    return () => {
+      if (ws) ws.close();
+      if (reconnectTimeout) clearTimeout(reconnectTimeout);
+    };
   }, []);
 
   return (

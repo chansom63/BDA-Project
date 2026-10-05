@@ -31,6 +31,11 @@ router.get('/', async (req, res, next) => {
       filter['currentPosition.lon'] = { $gte: Number(minLon), $lte: Number(maxLon) };
     }
 
+    // Only return flights that received a telemetry update in the last 2 minutes.
+    // This prevents stale historical MongoDB records from flooding the initial page load.
+    const twoMinutesAgo = new Date(Date.now() - 2 * 60 * 1000);
+    filter.lastTelemetryUpdate = { $gte: twoMinutesAgo };
+
     const flights = await Flight.find(filter).sort({ flightId: 1 });
     res.json({
       success: true,
