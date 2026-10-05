@@ -143,12 +143,12 @@ export default function AlertCenter() {
         <div>
           <h3 style={{ fontSize: '15px', fontWeight: '700', color: '#fff', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Mail size={18} color="#ff9900" />
-            AWS SES & SNS Dispatch Logs
+            Kafka Event Dispatch Logs
           </h3>
 
           <div className="glass-panel" style={{ padding: '16px', marginBottom: '16px' }}>
             <div style={{ fontSize: '12px', fontWeight: '700', color: '#ff9900', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Mail size={14} /> Amazon SES (Email Notifications)
+              <Mail size={14} /> SMTP Alert Dispatch (Email Notifications)
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '200px', overflowY: 'auto' }}>
               {notificationLogs.sesEmails.length === 0 ? (
@@ -167,7 +167,7 @@ export default function AlertCenter() {
 
           <div className="glass-panel" style={{ padding: '16px' }}>
             <div style={{ fontSize: '12px', fontWeight: '700', color: '#a855f7', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <MessageSquare size={14} /> Amazon SNS (SMS / Push Alerts)
+              <MessageSquare size={14} /> Twilio Alert Dispatch (SMS / Push Alerts)
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '200px', overflowY: 'auto' }}>
               {notificationLogs.snsMessages.length === 0 ? (

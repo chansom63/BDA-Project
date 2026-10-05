@@ -14,8 +14,8 @@ function createFR24PlaneIcon(headingDeg, squawk, altitudeFt, isSelected) {
 
   const svgHtml = `
     <div style="transform: rotate(${headingDeg}deg); transition: transform 0.4s ease-out; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px;">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="${fillColor}" stroke="${strokeColor}" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3.5c-.5-.5-2.5 0-4 1.5L13.5 8.5 5.3 6.7c-.5-.1-.9.1-1.1.5l-.8 1.4c-.2.4-.1.9.3 1.2l4.8 3.5-3.2 3.2-2.3-.6c-.4-.1-.8.1-1 .5l-.4.7c-.2.4-.1.8.2 1.1l2.4 2.4c.3.3.7.4 1.1.2l.7-.4c.4-.2.6-.6.5-1l-.6-2.3 3.2-3.2 3.5 4.8c.3.4.8.5 1.2.3l1.4-.8c.4-.2.6-.6.5-1.1z"/>
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="${fillColor}" stroke="${strokeColor}" stroke-width="1" stroke-linejoin="round">
+        <path d="M11 2.2C11 1.5 11.4 1 12 1s1 .5 1 1.2v6.3l7.6 5.8v2l-7.6-3.2v5.1l2.2 2v1.5l-3.2-1.3-3.2 1.3V20l2.2-2v-5.1L3.4 16.1v-2l7.6-5.8V2.2z"/>
       </svg>
     </div>
   `;
@@ -194,16 +194,59 @@ export default function MapView({ flights, selectedFlight, setSelectedFlight, on
             trajectoryPoints.push([lat, lon]);
           }
 
+          const originPoint = flight.origin?.lat && flight.origin?.lon ? [flight.origin.lat, flight.origin.lon] : null;
+          const destPoint = flight.destination?.lat && flight.destination?.lon ? [flight.destination.lat, flight.destination.lon] : null;
+
           return (
             <React.Fragment key={flight.flightId}>
               {/* Flight Trajectory Line */}
-              {showTrails && trajectoryPoints.length > 1 && (
+              {(showTrails || isSelected) && trajectoryPoints.length > 1 && (
                 <Polyline
                   positions={trajectoryPoints}
                   color={squawkBadge.isEmergency ? '#ef4444' : isSelected ? '#00b4d8' : '#facc15'}
                   weight={isSelected ? 3 : 2}
                   opacity={isSelected ? 0.9 : 0.6}
                 />
+              )}
+
+              {/* Past/Unrecorded route to origin (dashed) */}
+              {isSelected && originPoint && (
+                <Polyline
+                  positions={[originPoint, trajectoryPoints.length > 0 ? trajectoryPoints[0] : [lat, lon]]}
+                  color={squawkBadge.isEmergency ? '#ef4444' : '#00b4d8'}
+                  weight={2}
+                  opacity={0.6}
+                  dashArray="5 5"
+                />
+              )}
+
+              {/* Future route to destination (dashed) */}
+              {isSelected && destPoint && (
+                <Polyline
+                  positions={[[lat, lon], destPoint]}
+                  color="#9ca3af"
+                  weight={2}
+                  opacity={0.8}
+                  dashArray="5 5"
+                />
+              )}
+
+              {/* Origin Airport Pin */}
+              {isSelected && originPoint && (
+                <Marker position={originPoint} icon={createAirportPinIcon(flight.origin.code)} zIndexOffset={-100}>
+                  <Tooltip direction="bottom" offset={[0, 10]} opacity={0.9} permanent>
+                    <div style={{fontSize: '10px', textAlign: 'center'}}>Origin<br/><b>{flight.origin.city}</b></div>
+                  </Tooltip>
+                </Marker>
+              )}
+
+              {/* Destination Airport Pin */}
+              {isSelected && destPoint && (
+                <Marker position={destPoint} icon={createAirportPinIcon(flight.destination.code)} zIndexOffset={-100}>
+                  <Tooltip direction="bottom" offset={[0, 10]} opacity={0.9} permanent>
+                    <div style={{fontSize: '10px', textAlign: 'center'}}>Destination<br/><b>{flight.destination.city}</b></div>
+                  </Tooltip>
+                </Marker>
               )}
 
               {/* Emergency clearance circle for 7700 squawks */}

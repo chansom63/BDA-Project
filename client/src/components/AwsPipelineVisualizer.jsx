@@ -16,7 +16,7 @@ export default function AwsPipelineVisualizer() {
         setPipelineData(data);
       }
     } catch (err) {
-      console.error('Error fetching AWS pipeline info:', err);
+      console.error('Error fetching Docker pipeline info:', err);
     }
   };
 
@@ -28,7 +28,7 @@ export default function AwsPipelineVisualizer() {
 
   const triggerGlueEtl = async () => {
     setEtlRunning(true);
-    setEtlMessage('Running AWS Glue ETL Crawlers & Redshift Load...');
+    setEtlMessage('Running Apache Spark ETL Crawlers & Warehouse Load...');
     try {
       const res = await fetch('/api/etl/run', {
         method: 'POST',
@@ -39,11 +39,11 @@ export default function AwsPipelineVisualizer() {
       });
       const data = await res.json();
       if (data.success) {
-        setEtlMessage(`Glue Job Executed in ${data.jobResult.executionTimeSec}s! ${data.jobResult.recordsTransformed} records transformed into Redshift.`);
+        setEtlMessage(`Spark Job Executed in ${data.jobResult.executionTimeSec}s! ${data.jobResult.recordsTransformed} records transformed into the Analytical Warehouse.`);
         fetchPipelineStatus();
       }
     } catch (err) {
-      setEtlMessage('Glue ETL execution failed.');
+      setEtlMessage('Spark ETL execution failed.');
     } finally {
       setEtlRunning(false);
     }
@@ -56,12 +56,12 @@ export default function AwsPipelineVisualizer() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#fff' }}>AWS Data Analytics Architecture Pipeline</h2>
+            <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#fff' }}>Dockerized Data Analytics Architecture Pipeline</h2>
             <span style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#a855f7', border: '1px solid rgba(168, 85, 247, 0.4)', fontSize: '11px', fontWeight: '700', padding: '2px 10px', borderRadius: '12px' }}>
-              AWS SERVICED FLOW
+              DOCKERIZED SERVICES
             </span>
           </div>
-          <p style={{ fontSize: '13px', color: '#9ca3af' }}>Live interactive flow of real-time ADS-B telemetry across AWS Big Data & Analytics stack</p>
+          <p style={{ fontSize: '13px', color: '#9ca3af' }}>Live interactive flow of real-time ADS-B telemetry across the Docker Big Data Analytics stack</p>
         </div>
 
         <button
@@ -71,7 +71,7 @@ export default function AwsPipelineVisualizer() {
           disabled={etlRunning}
         >
           <Play size={16} className={etlRunning ? 'spin' : ''} />
-          {etlRunning ? 'Executing Glue ETL...' : 'Trigger AWS Glue Batch ETL'}
+          {etlRunning ? 'Executing Spark ETL...' : 'Trigger Apache Spark Batch ETL'}
         </button>
       </div>
 
@@ -102,7 +102,7 @@ export default function AwsPipelineVisualizer() {
             </div>
 
             <div style={{ background: 'rgba(255, 153, 0, 0.08)', padding: '14px', borderRadius: '8px', border: '1px solid rgba(255, 153, 0, 0.3)' }}>
-              <div style={{ fontSize: '12px', fontWeight: '700', color: '#ff9900' }}>Amazon MSK (Managed Streaming for Apache Kafka)</div>
+              <div style={{ fontSize: '12px', fontWeight: '700', color: '#ff9900' }}>Apache Kafka Broker (Docker Container)</div>
               <div style={{ fontSize: '11px', color: '#9ca3af', margin: '4px 0' }}>Durable, scalable event streaming topic: raw-adsb-telemetry-feed</div>
               <div className="font-mono-hud" style={{ fontSize: '14px', fontWeight: '700', color: '#ff9900' }}>
                 6 Partitions • 120 msg/sec
@@ -110,7 +110,7 @@ export default function AwsPipelineVisualizer() {
             </div>
 
             <div style={{ background: 'rgba(6, 182, 212, 0.08)', padding: '14px', borderRadius: '8px', border: '1px solid rgba(6, 182, 212, 0.3)' }}>
-              <div style={{ fontSize: '12px', fontWeight: '700', color: '#06b6d4' }}>Amazon Kinesis Data Analytics</div>
+              <div style={{ fontSize: '12px', fontWeight: '700', color: '#06b6d4' }}>Node.js Stream Processor</div>
               <div style={{ fontSize: '11px', color: '#9ca3af', margin: '4px 0' }}>Real-time stream processing, proximity rule evaluation & windowed aggregations</div>
               <div className="font-mono-hud" style={{ fontSize: '14px', fontWeight: '700', color: '#06b6d4' }}>
                 4 Shards ACTIVE
@@ -128,7 +128,7 @@ export default function AwsPipelineVisualizer() {
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
             <div style={{ background: 'rgba(16, 185, 129, 0.08)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
-              <div style={{ fontSize: '13px', fontWeight: '700', color: '#10b981' }}>Amazon DocumentDB (MongoDB Atlas on AWS)</div>
+              <div style={{ fontSize: '13px', fontWeight: '700', color: '#10b981' }}>MongoDB (Docker Container)</div>
               <div style={{ fontSize: '12px', color: '#9ca3af', margin: '4px 0' }}>Operational state store for current aircraft positions, alerts, and user profiles</div>
               <div className="font-mono-hud" style={{ fontSize: '15px', fontWeight: '700', color: '#fff', marginTop: '8px' }}>
                 {pipelineData?.realtimeMetrics?.activeFlights || 0} Live Docs • {pipelineData?.realtimeMetrics?.totalAlerts || 0} Alerts Stored
@@ -136,7 +136,7 @@ export default function AwsPipelineVisualizer() {
             </div>
 
             <div style={{ background: 'rgba(255, 153, 0, 0.08)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(255, 153, 0, 0.3)' }}>
-              <div style={{ fontSize: '13px', fontWeight: '700', color: '#ff9900' }}>Amazon S3 Raw Data Lake</div>
+              <div style={{ fontSize: '13px', fontWeight: '700', color: '#ff9900' }}>Local S3-like Raw Data Lake</div>
               <div style={{ fontSize: '12px', color: '#9ca3af', margin: '4px 0' }}>Raw telemetry partition structure: year=YYYY/month=MM/day=DD/hour=HH (Parquet & JSON)</div>
               <div className="font-mono-hud" style={{ fontSize: '15px', fontWeight: '700', color: '#ff9900', marginTop: '8px' }}>
                 {pipelineData?.realtimeMetrics?.s3ObjectsCount || 0} Objects • {pipelineData?.realtimeMetrics?.s3ParquetStoredMB || 0} MB Stored
@@ -154,7 +154,7 @@ export default function AwsPipelineVisualizer() {
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
             <div style={{ background: 'rgba(168, 85, 247, 0.08)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(168, 85, 247, 0.3)' }}>
-              <div style={{ fontSize: '13px', fontWeight: '700', color: '#a855f7' }}>AWS Glue (ETL & Data Catalog)</div>
+              <div style={{ fontSize: '13px', fontWeight: '700', color: '#a855f7' }}>Apache Spark Batch ETL Pipeline</div>
               <div style={{ fontSize: '12px', color: '#9ca3af', margin: '4px 0' }}>Automated batch transform, schema crawler discovery & catalog maintenance</div>
               <div className="font-mono-hud" style={{ fontSize: '15px', fontWeight: '700', color: '#fff', marginTop: '8px' }}>
                 Catalog Database: flight_telemetry_catalog • Status: READY
@@ -162,7 +162,7 @@ export default function AwsPipelineVisualizer() {
             </div>
 
             <div style={{ background: 'rgba(56, 189, 248, 0.08)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
-              <div style={{ fontSize: '13px', fontWeight: '700', color: '#38bdf8' }}>Amazon Redshift Data Warehouse</div>
+              <div style={{ fontSize: '13px', fontWeight: '700', color: '#38bdf8' }}>Analytical OLAP Data Warehouse</div>
               <div style={{ fontSize: '12px', color: '#9ca3af', margin: '4px 0' }}>High performance OLAP analytical database for route statistics & delay analysis</div>
               <div className="font-mono-hud" style={{ fontSize: '15px', fontWeight: '700', color: '#38bdf8', marginTop: '8px' }}>
                 {pipelineData?.realtimeMetrics?.redshiftProcessedEvents?.toLocaleString() || 145200} Rows Queryable

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const redshiftAnalytics = require('../services/redshiftAnalytics');
+const clickhouseService = require('../services/clickhouseService');
 const s3DataLake = require('../services/s3DataLake');
 const AnalyticsSummary = require('../models/AnalyticsSummary');
 const Flight = require('../models/Flight');
@@ -9,7 +9,7 @@ const Alert = require('../models/Alert');
 // GET /api/analytics/dashboard - QuickSight BI dashboard data endpoint
 router.get('/dashboard', async (req, res, next) => {
   try {
-    const redshiftReport = redshiftAnalytics.getAnalyticsReport();
+    const clickhouseReport = await clickhouseService.getAnalyticsReport();
     const s3Metrics = s3DataLake.getMetrics();
 
     const activeFlightsCount = await Flight.countDocuments({ status: { $ne: 'Landed' } });
@@ -28,9 +28,9 @@ router.get('/dashboard', async (req, res, next) => {
         activeAlerts: activeAlertsCount,
         s3ParquetStoredMB: s3Metrics.totalSizeMB,
         s3ObjectsCount: s3Metrics.totalObjectsCount,
-        redshiftProcessedEvents: redshiftReport.dwData.totalProcessedEvents
+        redshiftProcessedEvents: clickhouseReport.dwData.totalProcessedEvents
       },
-      redshiftData: redshiftReport.dwData,
+      redshiftData: clickhouseReport.dwData,
       recentSummaries,
       awsPipelineStatus: {
         mskKafka: 'HEALTHY',

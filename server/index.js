@@ -16,8 +16,10 @@ mongoose.set('bufferTimeoutMS', 300000); // 5 minutes
 
 const { connectDB } = require('./config/db');
 const streamProcessor = require('./services/streamProcessor');
-const openSkyService = require('./services/openSkyService');  // Real-time ADS-B
+const adsbSimulator = require('./services/adsbSimulator');
 const backgroundJobs = require('./services/backgroundJobs');
+const kafkaService = require('./services/kafkaService');
+const clickhouseService = require('./services/clickhouseService');
 const errorHandler = require('./middleware/errorHandler');
 
 const authRoutes = require('./routes/auth');
@@ -86,12 +88,18 @@ wss.on('connection', (ws) => {
 
 // Start DB connection, Services, and Server
 connectDB()
-  .then(() => {
+  .then(async () => {
+    // Connect Kafka Producer & Consumer
+    await kafkaService.connect();
+
+    // Initialize ClickHouse Analytics DW
+    await clickhouseService.init();
+
     // Initialize stream processor with WebSocket server
     streamProcessor.init(wss);
 
-    // Start OpenSky Network real-time ADS-B feed
-    openSkyService.start();
+    // Start simulated ADS-B feed
+    adsbSimulator.startSimulation();
 
     // Start Background Cron Jobs
     backgroundJobs.init();

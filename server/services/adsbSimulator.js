@@ -165,7 +165,11 @@ class ADSBTelemetrySimulator extends EventEmitter {
       };
     });
 
-    this.emit('telemetry_batch', this.flights.map(f => f._event));
+    const telemetryEvents = this.flights.map(f => f._event);
+    this.emit('telemetry_batch', telemetryEvents);
+    // Produce to real Kafka broker
+    const kafkaService = require('./kafkaService');
+    kafkaService.produceTelemetryBatch(telemetryEvents).catch(console.error);
   }
 
   startSimulation(intervalMs = 20000) {
@@ -184,6 +188,63 @@ class ADSBTelemetrySimulator extends EventEmitter {
   setSpeedMultiplier(m) { this.speedMultiplier = Math.max(0.1, Math.min(20, m)); }
 
   getCurrentFlights() { return this.flights.map(f => f._event || f); }
+
+  triggerEmergency(flightId, squawkCode = '7700') {
+    const flight = this.flights.find(f => f.flightId === flightId);
+    if (flight) {
+      flight.squawk = squawkCode;
+      flight.status = 'Emergency';
+      flight.verticalRateFpm = -1500;
+      flight.weatherTurbulence = 'Severe';
+      return flight;
+    }
+    return null;
+  }
+
+  setSquawk(flightId, squawkCode) {
+    const flight = this.flights.find(f => f.flightId === flightId);
+    if (flight) {
+      flight.squawk = squawkCode;
+      if (['7700', '7600', '7500'].includes(squawkCode)) {
+        flight.status = 'Emergency';
+      } else {
+        flight.status = 'In-Flight';
+        flight.verticalRateFpm = 0;
+      }
+      return flight;
+    }
+    return null;
+  }
+
+  injectCustomFlight(flightData) {
+    const newFlight = {
+      flightId: flightData.flightId || `FL${Math.floor(100 + Math.random() * 900)}`,
+      icao24: flightData.icao24 || Math.random().toString(16).substring(2, 8).toUpperCase(),
+      callsign: flightData.callsign || `CS${Math.floor(100 + Math.random() * 900)}`,
+      airline: flightData.airline || 'Skyways Express',
+      aircraftType: flightData.aircraftType || 'Airbus A320neo',
+      registration: flightData.registration || `N${Math.floor(100 + Math.random() * 900)}SK`,
+      countryFlag: '🇺🇸',
+      photoUrl: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&auto=format&fit=crop&q=80',
+      origin: flightData.origin || { code: 'SFO', city: 'San Francisco', country: 'USA', lat: 37.6213, lon: -122.3790 },
+      destination: flightData.destination || { code: 'ORD', city: 'Chicago', country: 'USA', lat: 41.9742, lon: -87.9073 },
+      std: '18:00 UTC', atd: '18:10 UTC', sta: '23:30 UTC', eta: '23:20 UTC',
+      radarSource: 'F-KSFO2',
+      lat: flightData.lat || 38.0,
+      lon: flightData.lon || -100.0,
+      altitudeFt: flightData.altitudeFt || 33000,
+      speedKnots: flightData.speedKnots || 450,
+      headingDeg: flightData.headingDeg || 80,
+      verticalRateFpm: 0,
+      squawk: flightData.squawk || '1200',
+      status: flightData.status || 'In-Flight',
+      progressPct: 10,
+      weatherTurbulence: 'None',
+      trajectory: []
+    };
+    this.flights.push(newFlight);
+    return newFlight;
+  }
 }
 
 module.exports = new ADSBTelemetrySimulator();

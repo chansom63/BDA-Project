@@ -17,7 +17,7 @@ export default function AnalyticsDashboard() {
         setData(json);
       }
     } catch (err) {
-      console.error('Error fetching QuickSight data:', err);
+      console.error('Error fetching Spark data:', err);
     } finally {
       setLoading(false);
     }
@@ -31,7 +31,7 @@ export default function AnalyticsDashboard() {
     return (
       <div style={{ padding: '60px', textAlign: 'center', color: '#9ca3af' }}>
         <RefreshCw size={32} className="spin" style={{ marginBottom: '12px', color: '#10b981' }} />
-        <div>Loading Amazon QuickSight BI Dashboard...</div>
+        <div>Loading Apache Spark BI Dashboard...</div>
       </div>
     );
   }
@@ -45,16 +45,16 @@ export default function AnalyticsDashboard() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#fff' }}>Amazon QuickSight Operational BI Dashboards</h2>
+            <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#fff' }}>Apache Spark Operational BI Dashboards</h2>
             <span style={{ background: 'rgba(56, 189, 248, 0.2)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.4)', fontSize: '11px', fontWeight: '700', padding: '2px 10px', borderRadius: '12px' }}>
-              CONNECTED TO AMAZON REDSHIFT
+              CONNECTED TO APACHE SPARK
             </span>
           </div>
           <p style={{ fontSize: '13px', color: '#9ca3af' }}>Historical flight route statistics, altitude band distribution & stream analytics</p>
         </div>
 
         <button className="btn-secondary" onClick={fetchDashboardData} style={{ fontSize: '12px' }}>
-          <RefreshCw size={14} /> Refresh QuickSight Data
+          <RefreshCw size={14} /> Refresh Spark Data
         </button>
       </div>
 
@@ -68,7 +68,7 @@ export default function AnalyticsDashboard() {
         </div>
 
         <div className="glass-panel" style={{ padding: '16px' }}>
-          <div style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '4px' }}>REDSHIFT PROCESSED ROWS</div>
+          <div style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '4px' }}>SPARK PROCESSED ROWS</div>
           <div className="font-mono-hud" style={{ fontSize: '24px', fontWeight: '700', color: '#38bdf8' }}>
             {realtimeMetrics.redshiftProcessedEvents.toLocaleString()}
           </div>
