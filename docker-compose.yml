@@ -18,6 +18,11 @@ services:
 
   kafka:
     image: confluentinc/cp-kafka:7.4.0
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 9092 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     container_name: bda-kafka
     ports:
       - "9093:9092"
@@ -29,6 +34,9 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9093
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_MESSAGE_MAX_BYTES: 10485760
+      KAFKA_REPLICA_FETCH_MAX_BYTES: 10485760
+      KAFKA_LOG_SEGMENT_BYTES: 1073741824
     depends_on:
       - zookeeper
     restart: always
