@@ -41,9 +41,6 @@ class StreamProcessorService {
       await this.processTelemetryBatch(batch);
       await clickhouseService.insertBatch(batch);
     }).catch(console.error);
-      await this.processTelemetryBatch(batch);
-      await clickhouseService.insertBatch(batch);
-    }).catch(console.error);
 
 
     console.log('⚡ Amazon Kinesis Stream Processor initialized & listening to OpenSky real-time ADS-B feed');
