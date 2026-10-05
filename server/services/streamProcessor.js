@@ -194,7 +194,11 @@ class StreamProcessorService {
       }
     }
 
-    // 5. Broadcast real-time telemetry frame to WebSockets
+    // 5. Delete stale flights (not seen in last 2 minutes) to keep MongoDB clean
+    const twoMinutesAgo = new Date(Date.now() - 2 * 60 * 1000);
+    await Flight.deleteMany({ lastTelemetryUpdate: { $lt: twoMinutesAgo } });
+
+    // 6. Broadcast real-time telemetry frame to WebSockets
     this.broadcastWS({
       type: 'TELEMETRY_UPDATE',
       timestamp: new Date().toISOString(),

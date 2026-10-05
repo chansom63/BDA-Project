@@ -16,6 +16,7 @@ mongoose.set('bufferTimeoutMS', 300000); // 5 minutes
 
 const { connectDB } = require('./config/db');
 const streamProcessor = require('./services/streamProcessor');
+const openSkyService = require('./services/openSkyService');
 const adsbSimulator = require('./services/adsbSimulator');
 const backgroundJobs = require('./services/backgroundJobs');
 const kafkaService = require('./services/kafkaService');
@@ -98,8 +99,8 @@ connectDB()
     // Initialize stream processor with WebSocket server
     streamProcessor.init(wss);
 
-    // Start simulated ADS-B feed
-    adsbSimulator.startSimulation();
+    // Start OpenSky API Real-Time Feed (which also natively injects simulated flights)
+    openSkyService.start();
 
     // Start Background Cron Jobs
     backgroundJobs.init();

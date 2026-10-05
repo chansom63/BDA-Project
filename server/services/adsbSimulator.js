@@ -167,9 +167,6 @@ class ADSBTelemetrySimulator extends EventEmitter {
 
     const telemetryEvents = this.flights.map(f => f._event);
     this.emit('telemetry_batch', telemetryEvents);
-    // Produce to real Kafka broker
-    const kafkaService = require('./kafkaService');
-    kafkaService.produceTelemetryBatch(telemetryEvents).catch(console.error);
   }
 
   startSimulation(intervalMs = 20000) {
