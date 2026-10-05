@@ -25,54 +25,21 @@ class ADSBTelemetrySimulator extends EventEmitter {
 
     // ── 40+ global airports ──────────────────────────────────────────────────
     const AIRPORTS = [
-      // North America
-      { code:'JFK', city:'New York',      country:'USA',         lat:40.6413,  lon:-73.7781  },
-      { code:'LAX', city:'Los Angeles',   country:'USA',         lat:33.9416,  lon:-118.4085 },
-      { code:'ORD', city:'Chicago',       country:'USA',         lat:41.9742,  lon:-87.9073  },
-      { code:'MIA', city:'Miami',         country:'USA',         lat:25.7959,  lon:-80.2870  },
-      { code:'SFO', city:'San Francisco', country:'USA',         lat:37.6213,  lon:-122.3790 },
-      { code:'YYZ', city:'Toronto',       country:'Canada',      lat:43.6777,  lon:-79.6248  },
-      { code:'MEX', city:'Mexico City',   country:'Mexico',      lat:19.4361,  lon:-99.0719  },
-      { code:'ATL', city:'Atlanta',       country:'USA',         lat:33.6407,  lon:-84.4277  },
-      { code:'SEA', city:'Seattle',       country:'USA',         lat:47.4502,  lon:-122.3088 },
-      { code:'DFW', city:'Dallas',        country:'USA',         lat:32.8998,  lon:-97.0403  },
-      // Europe
-      { code:'LHR', city:'London',        country:'UK',          lat:51.4700,  lon:-0.4543   },
-      { code:'CDG', city:'Paris',         country:'France',      lat:49.0097,  lon:2.5479    },
-      { code:'FRA', city:'Frankfurt',     country:'Germany',     lat:50.0379,  lon:8.5622    },
-      { code:'AMS', city:'Amsterdam',     country:'Netherlands', lat:52.3086,  lon:4.7639    },
-      { code:'MAD', city:'Madrid',        country:'Spain',       lat:40.4719,  lon:-3.5626   },
-      { code:'FCO', city:'Rome',          country:'Italy',       lat:41.8003,  lon:12.2389   },
-      { code:'IST', city:'Istanbul',      country:'Turkey',      lat:41.2753,  lon:28.7519   },
-      { code:'MUC', city:'Munich',        country:'Germany',     lat:48.3538,  lon:11.7861   },
-      { code:'ZRH', city:'Zurich',        country:'Switzerland', lat:47.4647,  lon:8.5492    },
-      { code:'CPH', city:'Copenhagen',    country:'Denmark',     lat:55.6180,  lon:12.6508   },
-      // Asia
-      { code:'HND', city:'Tokyo',         country:'Japan',       lat:35.5494,  lon:139.7798  },
-      { code:'PEK', city:'Beijing',       country:'China',       lat:40.0801,  lon:116.5846  },
-      { code:'PVG', city:'Shanghai',      country:'China',       lat:31.1443,  lon:121.8083  },
-      { code:'HKG', city:'Hong Kong',     country:'China',       lat:22.3080,  lon:113.9185  },
-      { code:'SIN', city:'Singapore',     country:'Singapore',   lat:1.3644,   lon:103.9915  },
-      { code:'BKK', city:'Bangkok',       country:'Thailand',    lat:13.6900,  lon:100.7501  },
-      { code:'ICN', city:'Seoul',         country:'S.Korea',     lat:37.4691,  lon:126.4510  },
-      { code:'DEL', city:'Delhi',         country:'India',       lat:28.5665,  lon:77.1031   },
-      { code:'BOM', city:'Mumbai',        country:'India',       lat:19.0896,  lon:72.8656   },
-      { code:'KUL', city:'Kuala Lumpur',  country:'Malaysia',    lat:2.7456,   lon:101.7099  },
-      // Middle East & Africa
-      { code:'DXB', city:'Dubai',         country:'UAE',         lat:25.2532,  lon:55.3657   },
-      { code:'DOH', city:'Doha',          country:'Qatar',       lat:25.2731,  lon:51.6080   },
-      { code:'CAI', city:'Cairo',         country:'Egypt',       lat:30.1219,  lon:31.4056   },
-      { code:'JNB', city:'Johannesburg',  country:'S.Africa',    lat:-26.1392, lon:28.2460   },
-      { code:'NBO', city:'Nairobi',       country:'Kenya',       lat:-1.3192,  lon:36.9275   },
-      // South America
-      { code:'GRU', city:'São Paulo',     country:'Brazil',      lat:-23.4356, lon:-46.4731  },
-      { code:'EZE', city:'Buenos Aires',  country:'Argentina',   lat:-34.8222, lon:-58.5358  },
-      { code:'BOG', city:'Bogotá',        country:'Colombia',    lat:4.7016,   lon:-74.1469  },
-      { code:'LIM', city:'Lima',          country:'Peru',        lat:-12.0219, lon:-77.1143  },
-      // Oceania
-      { code:'SYD', city:'Sydney',        country:'Australia',   lat:-33.9461, lon:151.1772  },
-      { code:'MEL', city:'Melbourne',     country:'Australia',   lat:-37.6690, lon:144.8410  },
-      { code:'AKL', city:'Auckland',      country:'N.Zealand',   lat:-37.0082, lon:174.7850  },
+      // Upper & Remote Regions (Northern Hemisphere ONLY)
+      { code:'ANC', city:'Anchorage',     country:'USA',         lat:61.1743,  lon:-149.9962 },
+      { code:'KEF', city:'Reykjavik',     country:'Iceland',     lat:63.9850,  lon:-22.6056  },
+      { code:'SVO', city:'Moscow',        country:'Russia',      lat:55.9726,  lon:37.4146   },
+      { code:'YVR', city:'Vancouver',     country:'Canada',      lat:49.1967,  lon:-123.1815 },
+      { code:'HEL', city:'Helsinki',      country:'Finland',     lat:60.3172,  lon:24.9633   },
+      { code:'OSL', city:'Oslo',          country:'Norway',      lat:60.2028,  lon:11.0835   },
+      { code:'OVB', city:'Novosibirsk',   country:'Russia',      lat:55.0126,  lon:82.6507   },
+      { code:'YEG', city:'Edmonton',      country:'Canada',      lat:53.3097,  lon:-113.5797 },
+      { code:'YWG', city:'Winnipeg',      country:'Canada',      lat:49.9100,  lon:-97.2399  },
+      { code:'YHZ', city:'Halifax',       country:'Canada',      lat:44.8808,  lon:-63.5086  },
+      { code:'TOS', city:'Tromso',        country:'Norway',      lat:69.6833,  lon:18.9189   },
+      { code:'KUF', city:'Samara',        country:'Russia',      lat:53.5048,  lon:50.1633   },
+      { code:'YFB', city:'Iqaluit',       country:'Canada',      lat:63.7503,  lon:-68.5558  },
+      { code:'LYR', city:'Svalbard',      country:'Norway',      lat:78.2461,  lon:15.4656   }
     ];
 
     const AIRLINES = [
@@ -106,19 +73,26 @@ class ADSBTelemetrySimulator extends EventEmitter {
     // Store airports for MapView pin display
     this.airports = AIRPORTS;
 
-    // ── Generate 80 globally spread flights ───────────────────────────────────
+    // ── Generate 500 globally spread flights ──────────────────────────────────
     this.flights = [];
-    for (let i = 0; i < 80; i++) {
-      const orig = AIRPORTS[i % AIRPORTS.length];
-      let dIdx   = (i * 7 + 13) % AIRPORTS.length;
-      if (dIdx === i % AIRPORTS.length) dIdx = (dIdx + 1) % AIRPORTS.length;
-      const dest = AIRPORTS[dIdx];
+    for (let i = 0; i < 500; i++) {
       const al   = AIRLINES[i % AIRLINES.length];
-      const pct  = (i * 11 + 3) % 90 + 5;       // 5–95% progress
-      const t    = pct / 100;
-      const lat  = orig.lat + (dest.lat - orig.lat) * t;
-      const lon  = orig.lon + (dest.lon - orig.lon) * t;
-      const hdg  = calculateHeading(lat, lon, dest.lat, dest.lon);
+      
+      // Generate completely random coordinates in the northern hemisphere (Lat: 45 to 85)
+      const origLat = 45 + Math.random() * 40;
+      const origLon = -180 + Math.random() * 360;
+      const destLat = 45 + Math.random() * 40;
+      const destLon = -180 + Math.random() * 360;
+      
+      // Use random airports for the UI labels, but use random coords for actual position
+      const origAirport = AIRPORTS[Math.floor(Math.random() * AIRPORTS.length)];
+      const destAirport = AIRPORTS[Math.floor(Math.random() * AIRPORTS.length)];
+
+      const pct  = Math.random(); // 0 to 1
+      const lat  = origLat + (destLat - origLat) * pct;
+      const lon  = origLon + (destLon - origLon) * pct;
+      const hdg  = calculateHeading(lat, lon, destLat, destLon);
+      
       this.flights.push({
         flightId:        al.cs + (100 + i),
         callsign:        al.cs + (100 + i),
@@ -127,10 +101,10 @@ class ADSBTelemetrySimulator extends EventEmitter {
         registration:    al.cs.charAt(0) + '-' + Math.floor(Math.random()*9000+1000),
         countryFlag:     al.flag,
         photoUrl:        'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600&auto=format&fit=crop&q=80',
-        origin:          { code:orig.code, city:orig.city, country:orig.country, lat:orig.lat, lon:orig.lon },
-        destination:     { code:dest.code, city:dest.city, country:dest.country, lat:dest.lat, lon:dest.lon },
+        origin:          { code:origAirport.code, city:origAirport.city, country:origAirport.country, lat:origLat, lon:origLon },
+        destination:     { code:destAirport.code, city:destAirport.city, country:destAirport.country, lat:destLat, lon:destLon },
         std:'--:-- UTC', atd:'--:-- UTC', sta:'--:-- UTC', eta:'--:-- UTC',
-        radarSource:     'SIM-ADS-B-' + orig.code,
+        radarSource:     'SIM-ADS-B-' + origAirport.code,
         icao24:          Math.floor(Math.random()*0xFFFFFF).toString(16).padStart(6,'0'),
         lat, lon,
         altitudeFt:      30000 + (i % 12) * 1000,

@@ -13,7 +13,7 @@ const https        = require('https');
 const adsbSimulator = require('./adsbSimulator');
 
 const POLL_MS    = 20000;   // 20s → 30 req/10min, well under anonymous 100/10min limit
-const MAX_PLANES = 200;
+const MAX_PLANES = 500;
 
 // ── Airline map ───────────────────────────────────────────────────────────────
 const AIRLINE_MAP = {
@@ -50,8 +50,13 @@ function deadReckon(ac, dtSec) {
 
 // ── HTTP fetch — reads Retry-After on 429 ────────────────────────────────────
 function fetchJSON(url) {
+  const options = { timeout: 25000 };
+  if (process.env.OPENSKY_USERNAME && process.env.OPENSKY_PASSWORD) {
+    const auth = Buffer.from(`${process.env.OPENSKY_USERNAME}:${process.env.OPENSKY_PASSWORD}`).toString('base64');
+    options.headers = { 'Authorization': `Basic ${auth}` };
+  }
   return new Promise((resolve, reject) => {
-    const req = https.get(url, { timeout: 25000 }, res => {
+    const req = https.get(url, options, res => {
       if (res.statusCode === 429) {
         const retryAfter = parseInt(res.headers['retry-after'] || '600', 10);
         return reject(Object.assign(new Error('rate-limited'), { retryAfter }));
@@ -82,6 +87,7 @@ class OpenSkyService extends EventEmitter {
     this.liveAircraft = new Map();  // icao24 → mutable state
     this.meta         = new Map();  // icao24 → {airline, type, reg}
     this.trajectories = new Map();  // icao24 → [{lat,lon,...}]
+    this.targetIcaos  = new Set();  // icao24 → tracked subset
   }
 
   _parseState(sv) {
@@ -139,13 +145,30 @@ class OpenSkyService extends EventEmitter {
 
       this.fetchCount++;
 
-      // Parse, shuffle for global spread, cap at MAX_PLANES
+      // Parse and filter valid flights
       const parsed = data.states.map(sv => this._parseState(sv)).filter(Boolean);
-      for (let i = parsed.length-1; i>0; i--) {
-        const j = Math.floor(Math.random()*(i+1));
-        [parsed[i],parsed[j]] = [parsed[j],parsed[i]];
+      
+      // Remove stale targets that are no longer in the global feed
+      const activeGlobalIcaos = new Set(parsed.map(p => p.icao24));
+      for (const id of this.targetIcaos) {
+        if (!activeGlobalIcaos.has(id)) this.targetIcaos.delete(id);
       }
-      const sample = parsed.slice(0, MAX_PLANES);
+
+      // If we don't have enough tracked targets, pick new ones to fill up to MAX_PLANES
+      if (this.targetIcaos.size < MAX_PLANES) {
+        const available = parsed.filter(p => !this.targetIcaos.has(p.icao24));
+        // Shuffle available
+        for (let i = available.length-1; i>0; i--) {
+          const j = Math.floor(Math.random()*(i+1));
+          [available[i],available[j]] = [available[j],available[i]];
+        }
+        const needed = MAX_PLANES - this.targetIcaos.size;
+        const newTargets = available.slice(0, needed);
+        for (const p of newTargets) this.targetIcaos.add(p.icao24);
+      }
+
+      // Filter parsed data to ONLY include our tracked targets
+      const sample = parsed.filter(p => this.targetIcaos.has(p.icao24));
 
       const seen = new Set(sample.map(p => p.icao24));
       for (const p of sample) this.liveAircraft.set(p.icao24, { ...p });
@@ -158,7 +181,13 @@ class OpenSkyService extends EventEmitter {
       }
 
       const events = [...this.liveAircraft.values()].map(ac => this._toEvent(ac));
-      console.log(`🛫 OpenSky poll #${this.fetchCount} → ${events.length} real aircraft (anonymous, ${POLL_MS/1000}s interval)`);
+
+      // Inject global simulated flights to populate remote regions
+      adsbSimulator.tick(); // manually step the physics for simulator
+      const simFlights = adsbSimulator.getCurrentFlights();
+      events.push(...simFlights);
+
+      console.log(`🛫 OpenSky poll #${this.fetchCount} → ${events.length} total aircraft (${events.length - simFlights.length} real, ${simFlights.length} sim)`);
       this.emit('telemetry_batch', events);
 
     } catch (err) {

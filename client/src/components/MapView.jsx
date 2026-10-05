@@ -227,7 +227,7 @@ export default function MapView({ flights, selectedFlight, setSelectedFlight, on
                   {/* FR24 Flight Tooltip on Hover */}
                   <Tooltip direction="top" offset={[0, -18]} opacity={0.9} permanent={false}>
                     <div style={{ fontSize: '11px', fontWeight: '700', color: isSelected ? '#00b4d8' : '#facc15' }}>
-                      {flight.callsign} • {formatAltitude(alt)} • {speed} kts
+                      {flight.callsign} • {formatAltitude(alt)} • {Number(speed).toFixed(1)} kts
                     </div>
                   </Tooltip>
 
@@ -252,7 +252,7 @@ export default function MapView({ flights, selectedFlight, setSelectedFlight, on
                       </div>
                       <div className="font-mono-hud" style={{ fontSize: '11px', color: '#9ca3af', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px', marginTop: '6px' }}>
                         <div>ALT: {formatAltitude(alt)}</div>
-                        <div>SPD: {speed} kts</div>
+                        <div>SPD: {Number(speed).toFixed(1)} kts</div>
                         <div>HDG: {heading}°</div>
                         <div>REG: {flight.registration || 'N104AN'}</div>
                       </div>

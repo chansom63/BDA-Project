@@ -31,6 +31,9 @@ function deadReckonFlight(f, dtSeconds) {
   const speedStep = Math.min(Math.abs(speedDiff), 1.0 * dtSeconds);
   speedKnots      = speedKnots + Math.sign(speedDiff) * speedStep;
 
+  // Simulate realistic wind micro-turbulence for dynamic UI feeling
+  speedKnots += (Math.random() - 0.5) * 0.4; // +/- 0.2 knots variance
+
   // ── Physics: altitude change via vertical rate ────────────────────────────
   altitudeFt = altitudeFt + (vertRate * dtSeconds / 60);
   altitudeFt = Math.min(45000, Math.max(500, altitudeFt));
@@ -49,7 +52,7 @@ function deadReckonFlight(f, dtSeconds) {
     longitude:  lon,
     altitudeFt: Math.round(altitudeFt),
     headingDeg: Math.round(headingDeg * 10) / 10,
-    speedKnots: Math.round(speedKnots),
+    speedKnots: Math.round(speedKnots * 10) / 10,
     currentPosition: {
       lat, lon, altitudeFt, speedKnots, headingDeg, verticalRateFpm: vertRate,
       targetHeading, targetSpeed,

@@ -48,10 +48,11 @@ class StreamProcessorService {
     s3DataLake.writeTelemetryBatch(batch);
 
     // 2. Fetch airspace configuration thresholds
-    let config = await AirspaceConfig.findOne({ configId: 'default_config' });
-    if (!config) {
-      config = await AirspaceConfig.create({ configId: 'default_config' });
-    }
+    let config = await AirspaceConfig.findOneAndUpdate(
+      { configId: 'default_config' },
+      { $setOnInsert: { configId: 'default_config' } },
+      { upsert: true, new: true }
+    );
     const proximityLimitNM = config.proximityAlertDistanceNM || 10.0;
 
     const updatedFlights = [];
