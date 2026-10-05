@@ -1,6 +1,7 @@
 const Flight = require('../models/Flight');
 const Alert = require('../models/Alert');
 const AirspaceConfig = require('../models/AirspaceConfig');
+const openSkyService = require('./openSkyService');
 const adsbSimulator = require('./adsbSimulator');
 const s3DataLake = require('./s3DataLake');
 const notificationService = require('./notificationService');
@@ -27,13 +28,20 @@ class StreamProcessorService {
   init(wss) {
     this.wss = wss;
 
-    // Consume from REAL Kafka stream instead of direct event emitter
+    // Produce OpenSky data to Kafka (to mimic the friend's architecture)
     const kafkaService = require('./kafkaService');
     const clickhouseService = require('./clickhouseService');
+
+    openSkyService.on('telemetry_batch', async (batch) => {
+      kafkaService.produceTelemetryBatch(batch).catch(console.error);
+    });
+
+    // Consume from REAL Kafka stream
     kafkaService.consumeTelemetryStream(async (batch) => {
       await this.processTelemetryBatch(batch);
       await clickhouseService.insertBatch(batch);
     }).catch(console.error);
+
 
     console.log('⚡ Amazon Kinesis Stream Processor initialized & listening to OpenSky real-time ADS-B feed');
   }
@@ -45,10 +53,11 @@ class StreamProcessorService {
     s3DataLake.writeTelemetryBatch(batch);
 
     // 2. Fetch airspace configuration thresholds
-    let config = await AirspaceConfig.findOne({ configId: 'default_config' });
-    if (!config) {
-      config = await AirspaceConfig.create({ configId: 'default_config' });
-    }
+    let config = await AirspaceConfig.findOneAndUpdate(
+      { configId: 'default_config' },
+      { $setOnInsert: { configId: 'default_config' } },
+      { upsert: true, new: true }
+    );
     const proximityLimitNM = config.proximityAlertDistanceNM || 10.0;
 
     const updatedFlights = [];

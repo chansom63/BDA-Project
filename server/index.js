@@ -106,8 +106,7 @@ connectDB()
 
     server.on('error', (err) => {
       if (err.code === 'EADDRINUSE') {
-        console.error(`❌ Port ${PORT} is already in use. Kill the process using it and try again.`);
-        console.error(`   Run: lsof -ti:${PORT} | xargs kill -9`);
+        console.error(`❌ Port ${PORT} is already in use.`);
       } else {
         console.error('❌ Server error:', err.message);
       }
@@ -116,11 +115,8 @@ connectDB()
 
     server.listen(PORT, () => {
       console.log(`
-========================================================================
-🚀 AWS MONOLITHIC MERN FLIGHT TELEMETRY SYSTEM IS ONLINE!
-📡 Server running on: http://localhost:${PORT}
-🔌 WebSocket endpoint: ws://localhost:${PORT}/ws/telemetry
-========================================================================
+        FlightRadar 24 Server alive on: http://localhost:${PORT}
+        WebSocket endpoint: ws://localhost:${PORT}/ws/telemetry
       `);
     });
   })
