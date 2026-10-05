@@ -93,6 +93,24 @@ class ADSBTelemetrySimulator extends EventEmitter {
       const lon  = origLon + (destLon - origLon) * pct;
       const hdg  = calculateHeading(lat, lon, destLat, destLon);
       
+      // Assign normal squawks to the vast majority, and emergency squawks to 2 specific flights
+      let squawk = ['1200', '2000', '7000', '4512', '1420'][i % 5];
+      let status = 'In-Flight';
+      let verticalRateFpm = 0;
+      let weatherTurbulence = 'None';
+
+      if (i === 5) {
+        squawk = '7700'; // MAYDAY General Emergency
+        status = 'Emergency';
+        verticalRateFpm = -1500;
+        weatherTurbulence = 'Severe';
+      } else if (i === 15) {
+        squawk = '7600'; // Radio Communications Failure
+        status = 'Emergency';
+        verticalRateFpm = -800;
+        weatherTurbulence = 'Moderate';
+      }
+
       this.flights.push({
         flightId:        al.cs + (100 + i),
         callsign:        al.cs + (100 + i),
@@ -110,11 +128,11 @@ class ADSBTelemetrySimulator extends EventEmitter {
         altitudeFt:      30000 + (i % 12) * 1000,
         speedKnots:      430 + (i % 8) * 10,
         headingDeg:      hdg,
-        verticalRateFpm: 0,
-        squawk:          '1200',
-        status:          'In-Flight',
+        verticalRateFpm: verticalRateFpm,
+        squawk:          squawk,
+        status:          status,
         progressPct:     pct,
-        weatherTurbulence: 'None',
+        weatherTurbulence: weatherTurbulence,
         trajectory:      [{ lat, lon, altitudeFt: 30000 + (i%12)*1000, speedKnots: 430+(i%8)*10, timestamp: new Date() }]
       });
     }
@@ -142,7 +160,9 @@ class ADSBTelemetrySimulator extends EventEmitter {
 
       if (remDist < 20) {
         f.lat = f.origin.lat; f.lon = f.origin.lon;
-        f.altitudeFt = 35000; f.status = 'In-Flight'; f.progressPct = 0; f.trajectory = [];
+        f.altitudeFt = 35000;
+        f.status = ['7700','7600','7500'].includes(f.squawk) ? 'Emergency' : 'In-Flight';
+        f.progressPct = 0; f.trajectory = [];
       }
 
       if (f.trajectory.length > 40) f.trajectory.shift();

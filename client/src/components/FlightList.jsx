@@ -172,21 +172,13 @@ export default function FlightList({ flights, setSelectedFlight, onTriggerSquawk
                         >
                           View HUD
                         </button>
-                        {squawk !== '7700' ? (
-                          <button
-                            className="btn-danger"
-                            style={{ fontSize: '11px', padding: '4px 10px' }}
-                            onClick={() => onTriggerSquawk(flight.flightId, '7700')}
-                          >
-                            7700
-                          </button>
-                        ) : (
+                        {['7700', '7600', '7500'].includes(squawk) && (
                           <button
                             className="btn-secondary"
                             style={{ fontSize: '11px', padding: '4px 10px' }}
                             onClick={() => onTriggerSquawk(flight.flightId, '1200')}
                           >
-                            Reset
+                            Reset Squawk
                           </button>
                         )}
                       </div>

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Plane, Radio, AlertTriangle, Database, BarChart3, Settings, Layers, Shield, Clock, Search, Zap } from 'lucide-react';
+import { Plane, Radio, AlertTriangle, Database, BarChart3, Settings, Layers, Shield, Clock, Search, Zap, FileText } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
+import GaganLogo from './GaganLogo';
 
 export default function Navbar({ activeTab, setActiveTab, activeAlertCount, flights, onSelectFlight }) {
   const { user } = useAuth();
@@ -42,7 +43,6 @@ export default function Navbar({ activeTab, setActiveTab, activeAlertCount, flig
     { id: 'map', label: 'Flight Radar Map', icon: Plane },
     { id: 'table', label: 'Telemetry List', icon: Radio },
     { id: 'alerts', label: 'Alert Center', icon: AlertTriangle, badge: activeAlertCount },
-    { id: 'pipeline', label: 'Docker Pipeline', icon: Layers },
     { id: 'analytics', label: 'Spark BI Analytics', icon: BarChart3 },
     { id: 'admin', label: 'Admin Panel', icon: Settings }
   ];
@@ -51,24 +51,13 @@ export default function Navbar({ activeTab, setActiveTab, activeAlertCount, flig
     <header style={{ background: '#0b0f17', borderBottom: '1px solid var(--fr24-panel-border)', padding: '10px 20px', zIndex: 1000, position: 'relative' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px' }}>
         
-        {/* Title & FR24 Logo */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div style={{
-            background: 'linear-gradient(135deg, #facc15 0%, #eab308 100%)',
-            padding: '8px 10px',
-            borderRadius: '6px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#000',
-            boxShadow: '0 0 12px rgba(250, 204, 21, 0.4)'
-          }}>
-            <Plane size={22} color="#000" style={{ transform: 'rotate(45deg)' }} />
-          </div>
+        {/* Title & GAGAN Fancy Logo */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <GaganLogo size={42} />
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <h1 style={{ fontSize: '18px', fontWeight: '900', color: '#facc15', letterSpacing: '-0.03em', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                FLIGHTRADAR24 <span style={{ color: '#fff', fontSize: '14px', fontWeight: '600' }}>TELEMETRY</span>
+              <h1 style={{ fontSize: '20px', fontWeight: '900', color: '#facc15', letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                GAGAN
               </h1>
               <span style={{
                 background: 'rgba(250, 204, 21, 0.15)',
@@ -76,14 +65,14 @@ export default function Navbar({ activeTab, setActiveTab, activeAlertCount, flig
                 border: '1px solid rgba(250, 204, 21, 0.4)',
                 fontSize: '10px',
                 fontWeight: '800',
-                padding: '1px 6px',
+                padding: '1px 8px',
                 borderRadius: '10px'
               }}>
-                MERN DOCKER
+                AWS ANALYTICS
               </span>
             </div>
-            <p style={{ fontSize: '11px', color: '#9ca3af' }}>
-              Live Global ADS-B Telemetry Tracking • Kafka ➔ Node.js ➔ MongoDB ➔ Spark
+            <p style={{ fontSize: '11px', color: '#9ca3af', fontWeight: '500' }}>
+              Geospatial Aircraft Guidance & Analytics Network • Real-Time Telemetry Tracking
             </p>
           </div>
         </div>

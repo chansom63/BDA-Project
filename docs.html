@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real-Time Flight Telemetry & Tracking System - Documentation</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Highlight.js for Syntax Highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+  
+  <!-- Mermaid.js for Diagrams -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  
+  <!-- KaTeX for Math Equations -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+
+  <style>
+    :root {
+      --bg-primary: #0b0f19;
+      --bg-secondary: #111827;
+      --bg-card: rgba(17, 24, 39, 0.7);
+      --bg-sidebar: #0f172a;
+      --border-color: rgba(255, 255, 255, 0.1);
+      --border-glow: rgba(59, 130, 246, 0.4);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent-blue: #3b82f6;
+      --accent-cyan: #06b6d4;
+      --accent-purple: #8b5cf6;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-crimson: #ef4444;
+      --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-code: 'JetBrains Mono', monospace;
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-card: #ffffff;
+      --bg-sidebar: #f1f5f9;
+      --border-color: #e2e8f0;
+      --border-glow: rgba(59, 130, 246, 0.3);
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --accent-blue: #2563eb;
+      --accent-cyan: #0891b2;
+      --accent-purple: #7c3aed;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-main);
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Top Floating Progress Bar */
+    #reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan), var(--accent-purple));
+      z-index: 1000;
+      width: 0%;
+      transition: width 0.1s;
+    }
+
+    /* Top Navigation Header */
+    header.top-navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background: rgba(11, 15, 25, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 500;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #ffffff;
+      text-decoration: none;
+    }
+
+    .nav-brand-badge {
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      color: white;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .search-input {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 8px 14px;
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      outline: none;
+      width: 240px;
+      transition: all 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 12px rgba(59, 130, 246, 0.3);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border-color);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--text-secondary);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-blue), #2563eb);
+      color: #ffffff;
+      border: none;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.6);
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    }
+
+    /* Layout */
+    .app-container {
+      display: flex;
+      width: 100%;
+      margin-top: 64px;
+    }
+
+    /* Sidebar Navigation */
+    aside.sidebar {
+      width: 300px;
+      position: fixed;
+      top: 64px;
+      bottom: 0;
+      left: 0;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border-color);
+      padding: 24px 16px;
+      overflow-y: auto;
+      z-index: 400;
+    }
+
+    .sidebar-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      padding-left: 12px;
+    }
+
+    .toc-list { list-style: none; }
+    .toc-item { margin-bottom: 4px; }
+    .toc-link {
+      display: block;
+      padding: 8px 12px;
+      border-radius: 6px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .toc-link:hover, .toc-link.active {
+      color: #ffffff;
+      background: rgba(59, 130, 246, 0.15);
+      border-left: 3px solid var(--accent-blue);
+      padding-left: 9px;
+    }
+
+    .toc-sublink {
+      padding-left: 24px;
+      font-size: 0.825rem;
+      color: var(--text-muted);
+    }
+
+    /* Main Content Area */
+    main.content-area {
+      margin-left: 300px;
+      flex: 1;
+      padding: 40px 60px 100px 60px;
+      max-width: 1100px;
+    }
+
+    .doc-hero {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+      border: 1px solid var(--border-glow);
+      border-radius: 16px;
+      padding: 36px 40px;
+      margin-bottom: 40px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .doc-hero::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .doc-hero h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #ffffff, #93c5fd, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    .doc-hero p {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      max-width: 800px;
+    }
+
+    /* Markdown Elements Styling */
+    h1, h2, h3, h4, h5, h6 {
+      color: #ffffff;
+      font-weight: 700;
+      margin-top: 40px;
+      margin-bottom: 16px;
+      scroll-margin-top: 80px;
+    }
+
+    h1 { font-size: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; }
+    h2 { font-size: 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.06); padding-bottom: 8px; }
+    h3 { font-size: 1.25rem; color: var(--accent-cyan); }
+
+    p { margin-bottom: 16px; color: var(--text-secondary); font-size: 1rem; }
+    a { color: var(--accent-blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    ul, ol { margin-bottom: 20px; padding-left: 24px; color: var(--text-secondary); }
+    li { margin-bottom: 6px; }
+
+    hr { border: none; border-top: 1px solid var(--border-color); margin: 40px 0; }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      background: var(--bg-card);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    th, td {
+      padding: 14px 18px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.925rem;
+    }
+
+    th {
+      background: rgba(30, 41, 59, 0.9);
+      color: #ffffff;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.5px;
+    }
+
+    tr:hover { background: rgba(255, 255, 255, 0.03); }
+
+    /* Code Blocks */
+    pre {
+      background: #090d16 !important;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      overflow-x: auto;
+      margin: 20px 0;
+      font-family: var(--font-code);
+      font-size: 0.875rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      position: relative;
+    }
+
+    code {
+      font-family: var(--font-code);
+      background: rgba(255, 255, 255, 0.08);
+      color: #38bdf8;
+      padding: 3px 6px;
+      border-radius: 4px;
+      font-size: 0.875em;
+    }
+
+    pre code {
+      background: transparent !important;
+      padding: 0;
+      color: inherit;
+    }
+
+    /* Mermaid Container */
+    .mermaid {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-glow);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+      display: flex;
+      justify-content: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    /* Back to Top Floating Button */
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--accent-blue);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      z-index: 900;
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .back-to-top:hover {
+      transform: translateY(-4px);
+    }
+
+    /* PRINT / PDF GENERATION STYLES */
+    @media print {
+      header.top-navbar, aside.sidebar, #reading-progress, .back-to-top, .nav-actions {
+        display: none !important;
+      }
+
+      body {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+      }
+
+      main.content-area {
+        margin-left: 0 !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+      }
+
+      .doc-hero {
+        background: #f1f5f9 !important;
+        border: 1px solid #cbd5e1 !important;
+        box-shadow: none !important;
+        color: #000000 !important;
+        page-break-after: always;
+      }
+
+      .doc-hero h1 {
+        background: none !important;
+        -webkit-text-fill-color: #000000 !important;
+        color: #000000 !important;
+      }
+
+      h1, h2 {
+        page-break-before: always;
+        color: #0f172a !important;
+        border-bottom: 2px solid #0f172a !important;
+      }
+
+      h3, h4 { color: #1e293b !important; }
+      p, li, td { color: #334155 !important; }
+
+      table, pre, .mermaid {
+        page-break-inside: avoid;
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        color: #000000 !important;
+      }
+
+      th {
+        background: #e2e8f0 !important;
+        color: #000000 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Reading Progress Bar -->
+  <div id="reading-progress"></div>
+
+  <!-- Top Floating Header -->
+  <header class="top-navbar">
+    <a href="#" class="nav-brand">
+      <span>✈️ AWS Flight Telemetry & Analytics</span>
+      <span class="nav-brand-badge">Documentation</span>
+    </a>
+
+    <div class="nav-actions">
+      <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search documentation..." onkeyup="filterDocs()">
+      <button class="btn" onclick="toggleTheme()">🌓 Theme</button>
+      <button class="btn btn-primary" onclick="window.print()">📥 Export PDF</button>
+    </div>
+  </header>
+
+  <!-- Container -->
+  <div class="app-container">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-title">Table of Contents</div>
+      <ul class="toc-list" id="tocList">
+        <!-- Dynamically generated TOC -->
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content-area" id="docContent">
+      <div class="doc-hero">
+        <h1>Real-Time Flight Telemetry & Tracking System</h1>
+        <p>Comprehensive Architectural Specification, AWS Data Pipeline Integration, REST/WebSocket API Reference & Mathematics Engine Documentation</p>
+      </div>
+
+      <div class="markdown-body">
+        <h1>Real-Time Flight Telemetry &amp; Tracking System</h1>
+<h2>Comprehensive Technical &amp; Architectural Documentation</h2>
+<hr>
+<h2>1. Executive Summary &amp; System Overview</h2>
+<p>The <strong>Real-Time Flight Telemetry &amp; Tracking System</strong> is an enterprise-grade, high-performance web application and data analytics platform designed for real-time airspace visualization, flight monitoring, collision hazard detection, and big data analytics. Built upon a monolithic <strong>MERN (MongoDB/DocumentDB, Express.js, React, Node.js)</strong> architecture, the application integrates simulated and live <strong>AWS Data Analytics Cloud Pipelines</strong> incorporating <strong>Amazon MSK (Apache Kafka)</strong>, <strong>Amazon Kinesis Data Analytics</strong>, <strong>Amazon DocumentDB</strong>, <strong>Amazon S3 Data Lake</strong>, <strong>AWS Glue ETL</strong>, <strong>Amazon Redshift / ClickHouse Data Warehouse</strong>, <strong>Amazon SES/SNS</strong>, and <strong>Amazon QuickSight BI</strong>.</p>
+<h3>System Capabilities &amp; Highlights</h3>
+<ul>
+<li><strong>Live Airspace Visualization</strong>: Tracks 500+ global aircraft simultaneously on an interactive Leaflet radar map with smooth 60 FPS physics-based dead-reckoning interpolation.</li>
+<li><strong>Dual Telemetry Ingestion Engine</strong>: Dynamically switches between the live <strong>OpenSky Network REST API</strong> (with automatic rate-limit detection and <code>Retry-After</code> header compliance) and a background <strong>ADS-B Flight Simulator</strong>.</li>
+<li><strong>Proximity Breach &amp; Emergency Rule Engine</strong>: Calculates real-time lateral (Haversine in Nautical Miles) and vertical separation between aircraft, automatically triggering critical alerts for proximity violations (&lt; 10 NM lateral &amp; &lt; 1,000 ft vertical) and emergency squawk codes (<code>7700</code> MAYDAY, <code>7600</code> Radio Loss, <code>7500</code> Hijack).</li>
+<li><strong>Automated AWS Analytics Pipeline</strong>: Streams raw telemetry through Kafka topics, ingests data into S3 partitioned by UTC date (<code>year=YYYY/month=MM/day=DD/hour=HH</code>), executes batch Glue ETL transformations, and populates OLAP Data Warehouses (ClickHouse / Redshift).</li>
+<li><strong>Incident Response &amp; Notification System</strong>: Integrates automated notification dispatch logs mimicking <strong>Amazon SES (Email)</strong> and <strong>Amazon SNS (SMS)</strong> for air traffic controllers and dispatch personnel.</li>
+<li><strong>Role-Based Access Control (RBAC)</strong>: Enforces access policies for seeded user roles (<code>Admin</code>, <code>Analyst</code>, <code>Dispatcher</code>, <code>Viewer</code>).</li>
+</ul>
+<hr>
+<h2>2. System Architecture &amp; Data Flow</h2>
+<div class="mermaid">flowchart TD
+    subgraph Data_Sources["📡 Live Telemetry Ingestion Layer"]
+        OS["OpenSky Network API (REST / ADS-B)"]
+        SIM["ADS-B Flight Simulator Engine"]
+    end
+
+    subgraph Streaming_Ingestion["⚡ Ingestion & Streaming Layer (AWS MSK / Kafka)"]
+        KF["Apache Kafka Broker (Topic: raw-adsb-telemetry-feed)"]
+        ZK["Apache Zookeeper Cluster"]
+        KF --- ZK
+    end
+
+    subgraph Stream_Processing["🧠 Stream Processing & Rule Engine (Kinesis Analytics)"]
+        SP["StreamProcessorService"]
+        HA["Haversine Proximity Engine (<10 NM, <1000 ft)"]
+        SQ["Emergency Squawk Parser (7700, 7600, 7500)"]
+        SP --> HA
+        SP --> SQ
+    end
+
+    subgraph Storage_Layer["💾 Multi-Tier Storage & AWS Data Lake"]
+        MDB[("Amazon DocumentDB / MongoDB (Operational Store)")]
+        S3["Amazon S3 Raw Data Lake (Parquet-Compatible Partitions)"]
+        CH[("ClickHouse / Amazon Redshift (OLAP Data Warehouse)")]
+    end
+
+    subgraph Batch_ETL["⚙️ Batch Processing Layer"]
+        GLUE["AWS Glue ETL Job (Hourly / Manual Execution)"]
+        S3 --> GLUE
+        GLUE --> CH
+    end
+
+    subgraph Application_Layer["🖥️ Monolithic Backend (Node.js & Express.js)"]
+        API["REST API Server (Port 5000)"]
+        WS["WebSocket Server (/ws/telemetry)"]
+        CRON["Background Jobs Engine (node-cron)"]
+        NOTIF["Notification Dispatcher (Amazon SES / SNS Logs)"]
+    end
+
+    subgraph Client_Layer["📱 Frontend Client (React + Vite)"]
+        MAP["Interactive Flight Radar Map (Leaflet)"]
+        HUD["Flight Telemetry HUD Inspector"]
+        ALERT["Alert Center & Dispatch Log"]
+        BI["Amazon QuickSight BI Analytics (Recharts)"]
+        PIPE["AWS Pipeline Visualizer"]
+        ADMIN["Admin RBAC Control Panel"]
+    end
+
+    %% Flow Connections
+    OS -->|Batch Telemetry| SP
+    SIM -->|Simulated Feed| KF
+    KF -->|Stream Consumer| SP
+    
+    SP -->|Upsert Flight State| MDB
+    SP -->|Raw JSON Write| S3
+    SP -->|Real-Time Event Stream| CH
+    SP -->|Broadcast Telemetry Frame| WS
+    SQ -->|Trigger Notifications| NOTIF
+
+    API <-->|HTTP / REST| Client_Layer
+    WS -->|Live Telemetry Updates| MAP
+    WS -->|Live Alerts| ALERT
+</div>
+<h3>End-to-End Pipeline Execution Walkthrough</h3>
+<ol>
+<li><strong>Telemetry Generation &amp; Polling</strong>: Every 20 seconds, the backend polls OpenSky Network API states or runs the internal ADS-B simulator generating updated aircraft positions (lat, lon, altitude, heading, ground speed, squawk).</li>
+<li><strong>Kafka Ingestion</strong>: Telemetry batches are serialized into JSON messages and produced to the Apache Kafka topic <code>raw-adsb-telemetry-feed</code> (running on Confluent Docker container on port <code>9093</code>).</li>
+<li><strong>Kinesis Stream Processing</strong>: The Kafka consumer consumes batches, triggering <code>streamProcessor.js</code>:<ul>
+<li><strong>S3 Data Lake Partitioning</strong>: Raw payload files are stored in <code>data/s3_datalake/year=YYYY/month=MM/day=DD/hour=HH/</code>.</li>
+<li><strong>DocumentDB/MongoDB Sync</strong>: Active flight state documents are upserted into the MongoDB <code>flights</code> collection.</li>
+<li><strong>Proximity Rule Evaluation</strong>: Calculates pairwise distances between all active aircraft. If lateral distance $\le 10$ NM and vertical separation $\le 1000$ ft, a <code>CRITICAL</code> proximity breach alert is written to the database and broadcasted.</li>
+<li><strong>Emergency Squawk Detection</strong>: Detects squawk codes <code>7700</code>, <code>7600</code>, or <code>7500</code>, creating an <code>EMERGENCY</code> alert and firing mock Amazon SES email and SNS SMS dispatches.</li>
+<li><strong>ClickHouse OLAP Ingestion</strong>: Events are written directly into the <code>flight_telemetry</code> MergeTree table in ClickHouse.</li>
+</ul>
+</li>
+<li><strong>WebSocket Broadcast</strong>: A unified telemetry payload is emitted over <code>/ws/telemetry</code> to connected React clients.</li>
+<li><strong>Client Dead-Reckoning</strong>: React receives position snapshots and smoothly interpolates aircraft coordinates at 60 FPS using <code>requestAnimationFrame</code> and dead-reckoning equations.</li>
+</ol>
+<hr>
+<h2>3. Core Component Features</h2>
+<h3>3.1 Interactive Flight Radar Map (<code>MapView.jsx</code>)</h3>
+<ul>
+<li><strong>Real-Time Aircraft Rendering</strong>: Displays 500+ active aircraft rotated dynamically based on <code>headingDeg</code>.</li>
+<li><strong>Altitude-Coded Marker Palette</strong>:<ul>
+<li><strong>FL380+ (High Cruise)</strong>: <code>#a855f7</code> (Purple)</li>
+<li><strong>FL300–FL370 (Standard Cruise)</strong>: <code>#06b6d4</code> (Cyan)</li>
+<li><strong>FL200–FL290 (Mid Altitude)</strong>: <code>#22c55e</code> (Green)</li>
+<li><strong>FL100–FL190 (Low Altitude)</strong>: <code>#f59e0b</code> (Amber)</li>
+<li><strong>Emergency Squawk</strong>: <code>#ef4444</code> (Crimson Pulse)</li>
+</ul>
+</li>
+<li><strong>Trajectory Trailing</strong>: Renders smooth polyline paths showing historical flight positions (up to 40 coordinate steps).</li>
+<li><strong>Airport Pin Overlays</strong>: Interactive airport icons representing key international hubs (JFK, LHR, LAX, SFO, DXB, HND, etc.).</li>
+<li><strong>Animated Radar Sweep</strong>: Visual sweeping radar overlay giving a live air traffic control terminal radar scope aesthetic.</li>
+</ul>
+<h3>3.2 Telemetry HUD Inspector (<code>FlightDrawer.jsx</code>)</h3>
+<ul>
+<li><strong>Live Flight Metrics Gauges</strong>: Instant readouts for altitude (ft), ground speed (kts), heading (°), vertical rate (fpm), and squawk code.</li>
+<li><strong>Flight Progress Bar</strong>: Calculated flight progress percentage based on origin and destination coordinates.</li>
+<li><strong>Emergency Action Panel</strong>: Direct control buttons for dispatchers to trigger squawk codes (<code>7700</code> MAYDAY, <code>7600</code> COMMS LOSS, <code>7500</code> HIJACK, <code>1200</code> CLEAR).</li>
+<li><strong>High-Resolution Aircraft Profile</strong>: Photo preview, aircraft type, tail registration, and operating airline flag.</li>
+</ul>
+<h3>3.3 Airspace Alert &amp; Proximity Center (<code>AlertCenter.jsx</code>)</h3>
+<ul>
+<li><strong>Live Event Log</strong>: Real-time stream of incoming warnings, emergency declarations, and proximity alerts.</li>
+<li><strong>Incident Response Workflow</strong>: Dispatchers can review incident details, location coordinates, involved aircraft callsigns, and click <strong>Acknowledge Alert</strong>.</li>
+<li><strong>Amazon SES &amp; SNS Delivery Logs</strong>: Transparent view of dispatched emergency emails (<code>Amazon SES</code>) and SMS notifications (<code>Amazon SNS</code>).</li>
+</ul>
+<h3>3.4 AWS Data Analytics Pipeline Visualizer (<code>AwsPipelineVisualizer.jsx</code>)</h3>
+<ul>
+<li><strong>Interactive Architecture Flow</strong>: Visual representation of raw data moving from ingest -&gt; MSK Kafka -&gt; Kinesis Stream -&gt; S3 Lake -&gt; Glue ETL -&gt; Redshift/ClickHouse DW -&gt; QuickSight BI.</li>
+<li><strong>Live Metric Counter</strong>: Real-time throughput numbers for Kafka topics, S3 storage size (MB), processed S3 objects, and Redshift DW row counts.</li>
+<li><strong>Manual Glue ETL Trigger</strong>: Button allowing administrators to manually trigger an AWS Glue Batch ETL job outside the standard hourly cron schedule.</li>
+</ul>
+<h3>3.5 QuickSight BI Analytics Dashboard (<code>AnalyticsDashboard.jsx</code>)</h3>
+<ul>
+<li><strong>Hourly Flight Telemetry Density</strong>: Area chart visualizing flight volume and streaming event ingestion over a 24-hour window.</li>
+<li><strong>Altitude Band Distribution</strong>: Donut chart analyzing flight cruise levels across FL380+, FL310–370, FL200–300, and terminal areas.</li>
+<li><strong>Air Corridor Performance</strong>: Horizontal bar charts displaying international flight route density, average flight speeds, and on-time percentages.</li>
+<li><strong>Delay Factor Root-Cause Analysis</strong>: Breakdown of primary flight delays (ATC Holds, North Atlantic Weather Avoidance, Jet Stream Headwinds, Gate Congestion).</li>
+</ul>
+<h3>3.6 Admin Panel &amp; System Control (<code>AdminPanel.jsx</code> &amp; <code>SimulatorControlPanel.jsx</code>)</h3>
+<ul>
+<li><strong>Threshold Tuning</strong>: Adjust proximity breach distance (default 10 NM) and vertical separation buffer.</li>
+<li><strong>Simulation Speed Controls</strong>: Change simulation speed multiplier from <code>1x</code> up to <code>10x</code>.</li>
+<li><strong>Manual Flight Injector</strong>: Form allowing operators to inject custom aircraft into the live stream with custom origin, destination, altitude, speed, and callsign.</li>
+<li><strong>RBAC User Directory</strong>: Manage user roles (<code>Admin</code>, <code>Analyst</code>, <code>Dispatcher</code>, <code>Viewer</code>).</li>
+</ul>
+<hr>
+<h2>4. Technology Stack &amp; Component Specifications</h2>
+<table>
+<thead>
+<tr>
+<th align="left">Tier</th>
+<th align="left">Technology / Library</th>
+<th align="left">Purpose &amp; Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Frontend Core</strong></td>
+<td align="left">React 18 + Vite</td>
+<td align="left">SPA framework with fast HMR build setup</td>
+</tr>
+<tr>
+<td align="left"><strong>Mapping &amp; GIS</strong></td>
+<td align="left">Leaflet 1.9 + React-Leaflet</td>
+<td align="left">Open-source interactive map rendering</td>
+</tr>
+<tr>
+<td align="left"><strong>Data Visualization</strong></td>
+<td align="left">Recharts</td>
+<td align="left">SVG chart suite for QuickSight BI dashboard</td>
+</tr>
+<tr>
+<td align="left"><strong>Icons &amp; UI Styling</strong></td>
+<td align="left">Lucide React + Vanilla CSS</td>
+<td align="left">Dark glassmorphic aviation design system (<code>index.css</code>)</td>
+</tr>
+<tr>
+<td align="left"><strong>Backend Runtime</strong></td>
+<td align="left">Node.js (v18+/v24+) + Express.js</td>
+<td align="left">Monolithic server framework hosting REST API and WebSockets</td>
+</tr>
+<tr>
+<td align="left"><strong>WebSocket Engine</strong></td>
+<td align="left"><code>ws</code> (WebSocket Protocol)</td>
+<td align="left">Full-duplex real-time telemetry streaming server (<code>/ws/telemetry</code>)</td>
+</tr>
+<tr>
+<td align="left"><strong>Operational Database</strong></td>
+<td align="left">MongoDB 6.0 / Mongoose</td>
+<td align="left">Document database for flights, alerts, users, and airspace configs</td>
+</tr>
+<tr>
+<td align="left"><strong>In-Memory Fallback DB</strong></td>
+<td align="left"><code>mongodb-memory-server</code></td>
+<td align="left">Zero-configuration local database for quick setup</td>
+</tr>
+<tr>
+<td align="left"><strong>Message Broker</strong></td>
+<td align="left">Apache Kafka (<code>kafkajs</code>)</td>
+<td align="left">Event streaming platform simulating Amazon MSK</td>
+</tr>
+<tr>
+<td align="left"><strong>OLAP Data Warehouse</strong></td>
+<td align="left">ClickHouse (<code>@clickhouse/client</code>)</td>
+<td align="left">High-speed analytical database simulating Amazon Redshift</td>
+</tr>
+<tr>
+<td align="left"><strong>Scheduler</strong></td>
+<td align="left"><code>node-cron</code></td>
+<td align="left">Background job execution engine for batch ETL and aggregations</td>
+</tr>
+<tr>
+<td align="left"><strong>Authentication</strong></td>
+<td align="left">JSON Web Tokens (<code>jsonwebtoken</code>) + <code>bcryptjs</code></td>
+<td align="left">JWT header authentication with salted password hashing</td>
+</tr>
+<tr>
+<td align="left"><strong>Containerization</strong></td>
+<td align="left">Docker &amp; Docker Compose</td>
+<td align="left">Multi-container setup (MongoDB, Zookeeper, Kafka, ClickHouse)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>5. Database Models &amp; Schemas</h2>
+<h3>5.1 Flight Schema (<code>server/models/Flight.js</code>)</h3>
+<pre><code class="language-javascript">{
+  flightId: { type: String, required: true, unique: true, index: true },
+  icao24: { type: String, required: true, index: true },
+  callsign: { type: String, required: true },
+  airline: { type: String, required: true },
+  aircraftType: { type: String, default: &#39;Boeing 787-9&#39; },
+  registration: { type: String, default: &#39;N104AN&#39; },
+  countryFlag: { type: String, default: &#39;🇺🇸&#39; },
+  photoUrl: { type: String },
+  origin: {
+    code: String, city: String, country: String, lat: Number, lon: Number
+  },
+  destination: {
+    code: String, city: String, country: String, lat: Number, lon: Number
+  },
+  currentPosition: {
+    lat: { type: Number, required: true, index: true },
+    lon: { type: Number, required: true, index: true },
+    altitudeFt: Number,
+    speedKnots: Number,
+    headingDeg: Number,
+    verticalRateFpm: Number
+  },
+  squawk: { type: String, default: &#39;1200&#39; },
+  status: {
+    type: String,
+    enum: [&#39;Scheduled&#39;, &#39;Taxing&#39;, &#39;In-Flight&#39;, &#39;Approaching&#39;, &#39;Landed&#39;, &#39;Emergency&#39;, &#39;Diverted&#39;],
+    default: &#39;In-Flight&#39;
+  },
+  progressPct: { type: Number, default: 0 },
+  trajectory: [{ lat: Number, lon: Number, altitudeFt: Number, speedKnots: Number, timestamp: Date }],
+  weatherTurbulence: { type: String, enum: [&#39;None&#39;, &#39;Light&#39;, &#39;Moderate&#39;, &#39;Severe&#39;], default: &#39;None&#39; },
+  lastTelemetryUpdate: { type: Date, default: Date.now, index: true }
+}
+</code></pre>
+<h3>5.2 Alert Schema (<code>server/models/Alert.js</code>)</h3>
+<pre><code class="language-javascript">{
+  alertId: { type: String, required: true, unique: true },
+  type: {
+    type: String,
+    enum: [&#39;ProximityBreach&#39;, &#39;EmergencySquawk&#39;, &#39;RouteDeviation&#39;, &#39;AltitudeViolation&#39;, &#39;TurbulenceAlert&#39;, &#39;SystemNotice&#39;],
+    required: true
+  },
+  severity: { type: String, enum: [&#39;INFO&#39;, &#39;WARNING&#39;, &#39;CRITICAL&#39;, &#39;EMERGENCY&#39;], default: &#39;WARNING&#39; },
+  flightId: { type: String, required: true, index: true },
+  callsign: { type: String, required: true },
+  secondaryFlightId: String,
+  secondaryCallsign: String,
+  distanceNM: Number,
+  squawkCode: String,
+  message: { type: String, required: true },
+  location: { lat: Number, lon: Number, altitudeFt: Number },
+  acknowledged: { type: Boolean, default: false },
+  acknowledgedBy: String,
+  acknowledgedAt: Date,
+  status: { type: String, enum: [&#39;Active&#39;, &#39;Resolved&#39;, &#39;Dismissed&#39;], default: &#39;Active&#39; }
+}
+</code></pre>
+<h3>5.3 User Schema (<code>server/models/User.js</code>)</h3>
+<pre><code class="language-javascript">{
+  username: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  role: { type: String, enum: [&#39;Admin&#39;, &#39;Analyst&#39;, &#39;Dispatcher&#39;, &#39;Viewer&#39;], default: &#39;Analyst&#39; },
+  department: { type: String, default: &#39;Flight Operations&#39; },
+  preferences: {
+    theme: { type: String, default: &#39;dark&#39; },
+    notificationsEnabled: { type: Boolean, default: true },
+    proximityAlertDistanceNM: { type: Number, default: 10 }
+  }
+}
+</code></pre>
+<h3>5.4 Airspace Configuration Schema (<code>server/models/AirspaceConfig.js</code>)</h3>
+<pre><code class="language-javascript">{
+  configId: { type: String, default: &#39;default_config&#39;, unique: true },
+  proximityAlertDistanceNM: { type: Number, default: 10.0 },
+  minAltitudeFt: { type: Number, default: 1000 },
+  maxAltitudeFt: { type: Number, default: 45000 },
+  simulationSpeedMultiplier: { type: Number, default: 1.0 },
+  autoNotificationEmail: { type: Boolean, default: true },
+  autoNotificationSMS: { type: Boolean, default: true },
+  s3RetentionDays: { type: Number, default: 90 },
+  glueEtlSchedule: { type: String, default: &#39;Every 1 Hour&#39; },
+  weatherOverlayEnabled: { type: Boolean, default: true }
+}
+</code></pre>
+<hr>
+<h2>6. API Reference &amp; Specifications</h2>
+<h3>6.1 Authentication Endpoints (<code>/api/auth</code>)</h3>
+<ul>
+<li><code>POST /api/auth/login</code>: Authenticates user credentials and returns JWT bearer token.<ul>
+<li><strong>Body</strong>: <code>{ &quot;username&quot;: &quot;admin&quot;, &quot;password&quot;: &quot;admin123&quot; }</code></li>
+<li><strong>Response</strong>: <code>{ &quot;success&quot;: true, &quot;token&quot;: &quot;&lt;JWT_STRING&gt;&quot;, &quot;user&quot;: {...} }</code></li>
+</ul>
+</li>
+<li><code>GET /api/auth/me</code>: Validates JWT token and returns current session profile.</li>
+<li><code>GET /api/auth/users</code>: Returns registered users list (Admin role restricted).</li>
+</ul>
+<h3>6.2 Flight Telemetry Endpoints (<code>/api/flights</code>)</h3>
+<ul>
+<li><code>GET /api/flights</code>: Queries active flights with optional query filters (<code>status</code>, <code>search</code>, <code>minLat</code>, <code>maxLat</code>, <code>minLon</code>, <code>maxLon</code>).</li>
+<li><code>GET /api/flights/:flightId</code>: Retrieves detailed flight trajectory and position info for a specific flight.</li>
+<li><code>POST /api/flights/inject</code>: Injects a custom aircraft into the telemetry stream (Requires JWT Token).</li>
+<li><code>POST /api/flights/:flightId/squawk</code>: Updates flight squawk code or triggers emergency state (Requires JWT Token).<ul>
+<li><strong>Body</strong>: <code>{ &quot;squawkCode&quot;: &quot;7700&quot; }</code></li>
+</ul>
+</li>
+</ul>
+<h3>6.3 Alert Management Endpoints (<code>/api/alerts</code>)</h3>
+<ul>
+<li><code>GET /api/alerts</code>: Fetches recent alerts with optional filters (<code>status</code>, <code>severity</code>). Includes SES/SNS log data.</li>
+<li><code>POST /api/alerts/:alertId/acknowledge</code>: Marks an alert as acknowledged and resolved by operator (Requires JWT Token).</li>
+</ul>
+<h3>6.4 AWS Analytics &amp; ETL Endpoints (<code>/api/analytics</code>, <code>/api/etl</code>)</h3>
+<ul>
+<li><code>GET /api/analytics/dashboard</code>: Returns real-time metrics, S3 bucket storage sizes, and ClickHouse/Redshift OLAP summaries for QuickSight BI dashboards.</li>
+<li><code>GET /api/etl/status</code>: Returns Glue ETL job history and S3 Data Lake catalog partition metrics.</li>
+<li><code>POST /api/etl/run</code>: Manually triggers an AWS Glue batch ETL execution (Requires JWT Token).</li>
+</ul>
+<h3>6.5 System Configuration Endpoints (<code>/api/config</code>)</h3>
+<ul>
+<li><code>GET /api/config</code>: Retrieves current airspace separation limits and simulator speed multiplier.</li>
+<li><code>PUT /api/config</code>: Updates airspace rules, proximity thresholds, and simulation speed (Admin/Analyst role restricted).</li>
+</ul>
+<h3>6.6 WebSocket Telemetry Protocol (<code>/ws/telemetry</code>)</h3>
+<ul>
+<li><strong>Connection URL</strong>: <code>ws://localhost:5000/ws/telemetry</code></li>
+<li><strong>Initial Connection Handshake</strong>:<pre><code class="language-json">{
+  &quot;type&quot;: &quot;SYSTEM_STATUS&quot;,
+  &quot;message&quot;: &quot;Connected to AWS Flight Telemetry MSK/Kinesis WebSocket Stream&quot;,
+  &quot;timestamp&quot;: &quot;2026-10-05T21:00:00.000Z&quot;
+}
+</code></pre>
+</li>
+<li><strong>Telemetry Batch Event Frame</strong>:<pre><code class="language-json">{
+  &quot;type&quot;: &quot;TELEMETRY_UPDATE&quot;,
+  &quot;timestamp&quot;: &quot;2026-10-05T21:00:20.000Z&quot;,
+  &quot;flightsCount&quot;: 500,
+  &quot;flights&quot;: [ /* Array of flight objects */ ]
+}
+</code></pre>
+</li>
+<li><strong>Alert Trigger Frame</strong>:<pre><code class="language-json">{
+  &quot;type&quot;: &quot;NEW_ALERT&quot;,
+  &quot;alert&quot;: {
+    &quot;alertId&quot;: &quot;alt_1728162000_123&quot;,
+    &quot;type&quot;: &quot;EmergencySquawk&quot;,
+    &quot;severity&quot;: &quot;EMERGENCY&quot;,
+    &quot;flightId&quot;: &quot;AAL102&quot;,
+    &quot;callsign&quot;: &quot;AAL102&quot;,
+    &quot;squawkCode&quot;: &quot;7700&quot;,
+    &quot;message&quot;: &quot;EMERGENCY SQUAWK 7700: Flight AAL102 declared GENERAL EMERGENCY&quot;,
+    &quot;status&quot;: &quot;Active&quot;
+  }
+}
+</code></pre>
+</li>
+</ul>
+<hr>
+<h2>7. Setup &amp; Deployment Guide</h2>
+<h3>7.1 Prerequisites</h3>
+<ul>
+<li><strong>Node.js</strong>: <code>v18.0.0</code> or higher (Tested on <code>v24+</code>)</li>
+<li><strong>npm</strong>: <code>v9.0.0</code> or higher</li>
+<li><strong>Docker &amp; Docker Compose</strong> (Optional for running standalone MongoDB, Kafka, and ClickHouse containers)</li>
+</ul>
+<h3>7.2 Installation Steps</h3>
+<ol>
+<li><p><strong>Clone &amp; Install Workspace Dependencies</strong>:</p>
+<pre><code class="language-bash">git clone &lt;repository_url&gt;
+cd Project
+npm run install-all
+</code></pre>
+<p><em>This command installs root, server, and client package dependencies automatically.</em></p>
+</li>
+<li><p><strong>Environment Configuration</strong>:
+Copy <code>.env.example</code> to <code>.env</code> in the root directory:</p>
+<pre><code class="language-bash">cp .env.example .env
+</code></pre>
+</li>
+<li><p><strong>Start Core Infrastructure (Docker Containers)</strong>:</p>
+<pre><code class="language-bash">docker-compose up -d
+</code></pre>
+<p><em>Launches MongoDB (Port 27017), Zookeeper (Port 2181), Kafka Broker (Port 9093), and ClickHouse Server (Port 8123).</em></p>
+</li>
+<li><p><strong>Launch Application in Development Mode</strong>:</p>
+<pre><code class="language-bash">npm run dev
+</code></pre>
+<p><em>Runs backend server on <code>http://localhost:5000</code> and Vite client dev server on <code>http://localhost:5173</code> (proxied).</em></p>
+</li>
+<li><p><strong>Access Application</strong>:</p>
+<ul>
+<li><strong>Web Application Interface</strong>: <code>http://localhost:5000</code> (or <code>http://localhost:5173</code>)</li>
+<li><strong>WebSocket Stream</strong>: <code>ws://localhost:5000/ws/telemetry</code></li>
+<li><strong>Health Endpoint</strong>: <code>http://localhost:5000/api/health</code></li>
+</ul>
+</li>
+</ol>
+<h3>7.3 Default Seeded Credentials</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Role</th>
+<th align="left">Username</th>
+<th align="left">Password</th>
+<th align="left">Email</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Admin</strong></td>
+<td align="left"><code>admin</code></td>
+<td align="left"><code>admin123</code></td>
+<td align="left"><code>admin@flightops.aws</code></td>
+</tr>
+<tr>
+<td align="left"><strong>Analyst</strong></td>
+<td align="left"><code>analyst</code></td>
+<td align="left"><code>admin123</code></td>
+<td align="left"><code>analyst@flightops.aws</code></td>
+</tr>
+<tr>
+<td align="left"><strong>Dispatcher</strong></td>
+<td align="left"><code>dispatcher</code></td>
+<td align="left"><code>admin123</code></td>
+<td align="left"><code>dispatcher@flightops.aws</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>8. Mathematical &amp; Physical Models</h2>
+<h3>8.1 Haversine Distance Formula (Nautical Miles)</h3>
+<p>Lateral separation between two aircraft $(\text{lat}_1, \text{lon}_1)$ and $(\text{lat}_2, \text{lon}_2)$ is computed using the spherical Earth radius $R = 3440.065 \text{ NM}$:</p>
+<p>$$d = 2 R \cdot \arcsin\left(\sqrt{\sin^2\left(\frac{\Delta\text{lat}}{2}\right) + \cos(\text{lat}_1)\cos(\text{lat}_2)\sin^2\left(\frac{\Delta\text{lon}}{2}\right)}\right)$$</p>
+<p>Where:
+$$\Delta\text{lat} = (\text{lat}_2 - \text{lat}_1) \cdot \frac{\pi}{180}, \quad \Delta\text{lon} = (\text{lon}_2 - \text{lon}_1) \cdot \frac{\pi}{180}$$</p>
+<h3>8.2 Aircraft Ground Heading Formula</h3>
+<p>The initial bearing angle $\theta$ from position 1 to position 2:</p>
+<p>$$y = \sin(\Delta\text{lon}) \cdot \cos(\text{lat}_2)$$
+$$x = \cos(\text{lat}_1)\sin(\text{lat}_2) - \sin(\text{lat}_1)\cos(\text{lat}_2)\cos(\Delta\text{lon})$$
+$$\theta = (\text{atan2}(y, x) \cdot \frac{180}{\pi} + 360) \pmod{360}$$</p>
+<h3>8.3 Client-Side Physics Dead-Reckoning (<code>SocketContext.jsx</code>)</h3>
+<p>Between WebSocket telemetry updates, the client performs high-frequency dead-reckoning on each tick $\Delta t$:</p>
+<p>$$\text{dist}<em>{\text{NM}} = \text{speedKnots} \cdot \frac{\Delta t}{3600}$$
+$$\text{lat}</em>{t+\Delta t} = \text{lat}<em>t + \frac{\text{dist}</em>{\text{NM}}}{60} \cdot \cos(\theta_{\text{rad}})$$
+$$\text{lon}<em>{t+\Delta t} = \text{lon}<em>t + \frac{\text{dist}</em>{\text{NM}}}{60} \cdot \frac{\sin(\theta</em>{\text{rad}})}{\cos(\text{lat}<em>t \cdot \frac{\pi}{180})}$$
+$$\text{altitude}</em>{t+\Delta t} = \text{altitude}_t + \text{verticalRateFpm} \cdot \frac{\Delta t}{60}$$</p>
+<p>Heading changes are smoothed using a standard rate turn step ($\max 3.0^\circ/\text{sec}$):</p>
+<p>$$\Delta\theta = ((\theta_{\text{target}} - \theta_{\text{current}} + 540) \pmod{360}) - 180$$
+$$\text{step} = \min(|\Delta\theta|, 3.0 \cdot \Delta t)$$
+$$\theta_{t+\Delta t} = (\theta_{\text{current}} + \text{sign}(\Delta\theta) \cdot \text{step} + 360) \pmod{360}$$</p>
+<hr>
+<h2>9. Directory Structure Overview</h2>
+<pre><code>Project/
+├── package.json                   # Root orchestrator &amp; concurrently scripts
+├── README.md                      # Quick start &amp; feature highlights
+├── DOCUMENTATION.md               # Extensive technical reference document
+├── docker-compose.yml             # Container configuration (Mongo, Kafka, Zookeeper, ClickHouse)
+├── scripts/
+│   └── start-dev.js               # Concurrent node runner script
+├── server/                        # Monolithic Express.js Backend Engine
+│   ├── index.js                   # Entry point, HTTP &amp; WebSocket setup
+│   ├── config/
+│   │   ├── db.js                  # MongoDB / Mongo Memory Server initializer
+│   │   └── awsConfig.js           # AWS pipeline configuration settings
+│   ├── models/                    # Mongoose Data Schemas
+│   │   ├── AirspaceConfig.js      # Airspace thresholds &amp; simulation config
+│   │   ├── Alert.js               # Emergency &amp; proximity incident log schema
+│   │   ├── AnalyticsSummary.js    # Aggregated metrics schema
+│   │   ├── Flight.js              # Live telemetry flight state schema
+│   │   └── User.js                # User accounts &amp; RBAC schema
+│   ├── services/                  # Business Logic &amp; Pipeline Engines
+│   │   ├── adsbSimulator.js       # Global 500+ flight trajectory simulator engine
+│   │   ├── backgroundJobs.js      # Cron scheduler for analytical rollups &amp; batch ETL
+│   │   ├── clickhouseService.js   # ClickHouse DW ingestion &amp; query engine
+│   │   ├── glueEtlEngine.js       # Batch Glue ETL execution engine
+│   │   ├── kafkaService.js        # KafkaJS producer/consumer stream interface
+│   │   ├── notificationService.js # Amazon SES &amp; SNS notification dispatcher
+│   │   ├── openSkyService.js      # OpenSky Network live REST API client
+│   │   ├── redshiftAnalytics.js   # Amazon Redshift analytical data generator
+│   │   ├── s3DataLake.js          # S3 raw telemetry partition storage service
+│   │   └── streamProcessor.js     # Kinesis stream processing &amp; rule engine
+│   ├── routes/                    # REST API Controllers
+│   │   ├── alerts.js              # Incident list &amp; acknowledgement routes
+│   │   ├── analytics.js           # QuickSight BI data routes
+│   │   ├── auth.js                # User login &amp; session profile routes
+│   │   ├── config.js              # Airspace configuration management routes
+│   │   ├── etl.js                 # Glue ETL trigger &amp; status routes
+│   │   └── flights.js             # Flight telemetry query &amp; squawk routes
+│   └── middleware/
+│       ├── auth.js                # JWT verification &amp; RBAC check middleware
+│       └── errorHandler.js        # Global Express error handler
+└── client/                        # React 18 + Vite Frontend App
+    ├── index.html                 # Main HTML entry point
+    ├── vite.config.js             # Vite proxy &amp; server settings
+    └── src/
+        ├── App.jsx                # Layout frame, tab routing, state binding
+        ├── index.css              # Dark aviation glassmorphic styling system
+        ├── components/
+        │   ├── AdminPanel.jsx             # Admin threshold &amp; RBAC panel
+        │   ├── AlertCenter.jsx            # Emergency alert feed &amp; SES/SNS logs
+        │   ├── AnalyticsDashboard.jsx     # QuickSight BI Recharts dashboards
+        │   ├── AwsPipelineVisualizer.jsx  # Interactive AWS architecture visualizer
+        │   ├── FlightDrawer.jsx           # Flight telemetry HUD inspector
+        │   ├── FlightList.jsx             # Searchable flight data grid
+        │   ├── MapView.jsx                # Leaflet flight radar map view
+        │   ├── Navbar.jsx                 # Navigation header &amp; search bar
+        │   └── SimulatorControlPanel.jsx  # Telemetry control &amp; emergency triggers
+        ├── context/
+        │   ├── AuthContext.jsx            # Authentication state provider
+        │   └── SocketContext.jsx          # WebSocket provider &amp; dead-reckoning engine
+        └── utils/
+            └── geoUtils.js                # Geographic distance &amp; formatting helpers
+</code></pre>
+<hr>
+<h2>10. Summary &amp; Maintenance Procedures</h2>
+<p>This project serves as a production-grade demonstration of real-time telemetry processing, big data stream processing, and interactive GIS radar visualization using modern MERN and cloud data analytics architectures.</p>
+<h3>Maintenance Commands Checklist</h3>
+<ul>
+<li><strong>Install all dependencies</strong>: <code>npm run install-all</code></li>
+<li><strong>Run full stack in dev mode</strong>: <code>npm run dev</code></li>
+<li><strong>Start Docker services</strong>: <code>docker-compose up -d</code></li>
+<li><strong>Stop Docker services</strong>: <code>docker-compose down</code></li>
+<li><strong>View backend server logs</strong>: <code>node server/index.js</code></li>
+</ul>
+
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Back to Top Floating Button -->
+  <div class="back-to-top" id="backToTop" onclick="scrollToTop()">▲</div>
+
+  <script>
+    // Initialize Mermaid.js
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark',
+      securityLevel: 'loose',
+      flowchart: { curve: 'basis' }
+    });
+
+    // Initialize Highlight.js
+    hljs.highlightAll();
+
+    // Generate Dynamic Table of Contents (TOC)
+    document.addEventListener('DOMContentLoaded', () => {
+      const headings = document.querySelectorAll('.markdown-body h1, .markdown-body h2, .markdown-body h3');
+      const tocList = document.getElementById('tocList');
+      
+      headings.forEach((heading, index) => {
+        const id = 'heading-' + index;
+        heading.id = id;
+        
+        const li = document.createElement('li');
+        li.className = 'toc-item';
+        
+        const link = document.createElement('a');
+        link.href = '#' + id;
+        link.className = 'toc-link' + (heading.tagName === 'H3' ? ' toc-sublink' : '');
+        link.textContent = heading.textContent.replace(/^#+s*/, '');
+        
+        li.appendChild(link);
+        tocList.appendChild(li);
+      });
+
+      // Highlight TOC active item on scroll
+      window.addEventListener('scroll', () => {
+        let current = '';
+        headings.forEach(heading => {
+          const headingTop = heading.offsetTop - 100;
+          if (window.scrollY >= headingTop) {
+            current = heading.id;
+          }
+        });
+
+        document.querySelectorAll('.toc-link').forEach(a => {
+          a.classList.remove('active');
+          if (a.getAttribute('href') === '#' + current) {
+            a.classList.add('active');
+          }
+        });
+
+        // Reading Progress Bar
+        const totalHeight = document.body.scrollHeight - window.innerHeight;
+        const progressPct = (window.scrollY / totalHeight) * 100;
+        document.getElementById('reading-progress').style.width = progressPct + '%';
+
+        // Back to top button visibility
+        const backToTop = document.getElementById('backToTop');
+        if (window.scrollY > 400) {
+          backToTop.classList.add('visible');
+        } else {
+          backToTop.classList.remove('visible');
+        }
+      });
+    });
+
+    // Theme Switcher (Dark / Light)
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      if (currentTheme === 'light') {
+        document.documentElement.removeAttribute('data-theme');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    }
+
+    // Scroll to Top Helper
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Live Search Filter
+    function filterDocs() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const content = document.getElementById('docContent');
+      const paragraphs = content.querySelectorAll('p, li, h1, h2, h3, tr');
+
+      paragraphs.forEach(el => {
+        if (!query) {
+          el.style.display = '';
+        } else if (el.textContent.toLowerCase().includes(query)) {
+          el.style.display = '';
+        } else {
+          el.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, Polyline, Circle, Tooltip } fro
 import L from 'leaflet';
 import { Plane, AlertTriangle, Wind, Navigation, ShieldAlert, Activity, Layers, MapPin } from 'lucide-react';
 import { formatAltitude, getAltitudeColor, getSquawkBadge } from '../utils/geoUtils';
+import GaganLogo from './GaganLogo';
 
 // Helper to construct Flightradar24 rotated yellow plane icon
 function createFR24PlaneIcon(headingDeg, squawk, altitudeFt, isSelected) {
@@ -92,12 +93,12 @@ export default function MapView({ flights, selectedFlight, setSelectedFlight, on
         flexDirection: 'column',
         gap: '8px'
       }}>
-        <div className="glass-panel" style={{ padding: '10px 14px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ width: '10px', height: '10px', background: '#facc15', borderRadius: '50%', display: 'inline-block' }} />
-            <span style={{ fontSize: '13px', fontWeight: '800', color: '#fff' }}>FLIGHTRADAR24 LIVE</span>
+        <div className="glass-panel" style={{ padding: '8px 14px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <GaganLogo size={26} />
+            <span style={{ fontSize: '14px', fontWeight: '900', color: '#facc15', letterSpacing: '0.5px' }}>GAGAN LIVE</span>
           </div>
-          <span style={{ fontSize: '12px', background: '#facc15', color: '#000', fontWeight: '800', padding: '2px 8px', borderRadius: '10px' }}>
+          <span style={{ fontSize: '11px', background: 'rgba(250, 204, 21, 0.2)', color: '#facc15', border: '1px solid rgba(250, 204, 21, 0.4)', fontWeight: '800', padding: '2px 8px', borderRadius: '10px' }}>
             {flights.length} Aircraft
           </span>
         </div>

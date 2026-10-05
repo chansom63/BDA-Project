@@ -95,8 +95,13 @@ class StreamProcessorService {
 
         // Check Emergency Squawk Rules (7700, 7600, 7500)
         if (['7700', '7600', '7500'].includes(evt.squawk)) {
-          const alertKey = `squawk_${evt.flightId}_${evt.squawk}`;
-          if (!this.activeAlertsMemory.has(alertKey)) {
+          const existingAlert = await Alert.findOne({
+            flightId: evt.flightId,
+            squawkCode: evt.squawk,
+            status: 'Active'
+          });
+
+          if (!existingAlert) {
             const emergencyLabels = {
               '7700': 'GENERAL EMERGENCY DECLARATION',
               '7600': 'RADIO COMMUNICATIONS FAILURE',
@@ -114,8 +119,6 @@ class StreamProcessorService {
               message: msg,
               location: { lat: evt.latitude, lon: evt.longitude, altitudeFt: evt.altitudeFt }
             });
-
-            this.activeAlertsMemory.set(alertKey, true);
 
             // Send SES Email & SNS SMS Notification
             if (config.autoNotificationEmail) {
@@ -144,55 +147,7 @@ class StreamProcessorService {
       }
     }
 
-    // 4. Proximity Alert Rule Engine (Compare all pairs in current batch)
-    for (let i = 0; i < updatedFlights.length; i++) {
-      for (let j = i + 1; j < updatedFlights.length; j++) {
-        const f1 = updatedFlights[i];
-        const f2 = updatedFlights[j];
-
-        const distNM = haversineNM(
-          f1.currentPosition.lat, f1.currentPosition.lon,
-          f2.currentPosition.lat, f2.currentPosition.lon
-        );
-
-        const altDiffFt = Math.abs(f1.currentPosition.altitudeFt - f2.currentPosition.altitudeFt);
-
-        // Proximity breached if < proximityLimitNM and vertical separation < 1000 ft
-        if (distNM <= proximityLimitNM && altDiffFt <= 1000) {
-          const proxKey = `prox_${[f1.flightId, f2.flightId].sort().join('_')}`;
-          if (!this.activeAlertsMemory.has(proxKey)) {
-            const msg = `PROXIMITY BREACH DETECTED: Aircraft ${f1.callsign} and ${f2.callsign} are separated by only ${distNM.toFixed(1)} NM at altitude FL${Math.round(f1.currentPosition.altitudeFt/100)}.`;
-
-            const proxAlert = await Alert.create({
-              alertId: `alt_${Date.now()}_${Math.floor(Math.random()*1000)}`,
-              type: 'ProximityBreach',
-              severity: 'CRITICAL',
-              flightId: f1.flightId,
-              callsign: f1.callsign,
-              secondaryFlightId: f2.flightId,
-              secondaryCallsign: f2.callsign,
-              distanceNM: Number(distNM.toFixed(2)),
-              message: msg,
-              location: { lat: f1.currentPosition.lat, lon: f1.currentPosition.lon, altitudeFt: f1.currentPosition.altitudeFt }
-            });
-
-            this.activeAlertsMemory.set(proxKey, true);
-
-            // Send SES Email
-            if (config.autoNotificationEmail) {
-              notificationService.sendEmailNotification(
-                'traffic-separation@atc.aws',
-                `[PROXIMITY ALERT] ${f1.callsign} & ${f2.callsign}`,
-                msg,
-                proxAlert.alertId
-              );
-            }
-
-            this.broadcastWS({ type: 'NEW_ALERT', alert: proxAlert });
-          }
-        }
-      }
-    }
+    // Proximity alert generation disabled as per user specification (only emergency squawks are tracked)
 
     // 5. Broadcast real-time telemetry frame to WebSockets
     this.broadcastWS({

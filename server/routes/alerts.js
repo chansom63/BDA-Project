@@ -50,4 +50,24 @@ router.post('/:alertId/acknowledge', verifyToken, async (req, res, next) => {
   }
 });
 
+// POST /api/alerts/clear-all - Acknowledge and clear all active alerts
+router.post('/clear-all', async (req, res, next) => {
+  try {
+    await Alert.updateMany(
+      { acknowledged: false },
+      {
+        $set: {
+          acknowledged: true,
+          acknowledgedBy: 'System Operator',
+          acknowledgedAt: new Date(),
+          status: 'Resolved'
+        }
+      }
+    );
+    res.json({ success: true, message: 'All active alerts cleared and marked as resolved' });
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;

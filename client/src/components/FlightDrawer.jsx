@@ -238,17 +238,9 @@ export default function FlightDrawer({ flight, onClose, onTriggerSquawk, onFollo
           </div>
         </div>
 
-        {/* Emergency Override Button */}
-        <div style={{ borderTop: '1px solid var(--fr24-panel-border)', paddingTop: '14px' }}>
-          {squawk !== '7700' ? (
-            <button
-              className="btn-danger"
-              style={{ width: '100%', fontSize: '12px', justifyContent: 'center' }}
-              onClick={() => onTriggerSquawk(flight.flightId, '7700')}
-            >
-              <ShieldAlert size={15} /> Declare Squawk 7700 MAYDAY
-            </button>
-          ) : (
+        {/* Emergency Reset Control (Only shown for flights in emergency state) */}
+        {['7700', '7600', '7500'].includes(squawk) && (
+          <div style={{ borderTop: '1px solid var(--fr24-panel-border)', paddingTop: '14px' }}>
             <button
               className="btn-fr24-yellow"
               style={{ width: '100%', fontSize: '12px', justifyContent: 'center' }}
@@ -256,8 +248,8 @@ export default function FlightDrawer({ flight, onClose, onTriggerSquawk, onFollo
             >
               Reset Squawk Code (Normal 1200)
             </button>
-          )}
-        </div>
+          </div>
+        )}
 
       </div>
 

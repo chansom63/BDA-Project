@@ -7,7 +7,6 @@ import AlertCenter from './components/AlertCenter';
 import AwsPipelineVisualizer from './components/AwsPipelineVisualizer';
 import AnalyticsDashboard from './components/AnalyticsDashboard';
 import AdminPanel from './components/AdminPanel';
-import SimulatorControlPanel from './components/SimulatorControlPanel';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { SocketProvider, useSocket } from './context/SocketContext';
@@ -86,10 +85,6 @@ function MainApp() {
         
         {activeTab === 'map' && (
           <div style={{ position: 'relative', width: '100%', height: 'calc(100vh - 72px)' }}>
-            <SimulatorControlPanel
-              flights={flightsList}
-              onTriggerEmergency={handleTriggerSquawk}
-            />
             <MapView
               flights={flightsList}
               selectedFlight={selectedFlight}
