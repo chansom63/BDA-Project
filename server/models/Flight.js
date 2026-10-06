@@ -16,7 +16,7 @@ const flightSchema = new mongoose.Schema({
   radarSource: { type: String, default: 'F-KJFK1' },
   origin: {
     code: { type: String, required: true },
-    icao: { type: String, default: 'KJFK' },
+    icao: { type: String },
     city: { type: String, required: true },
     country: { type: String, default: 'USA' },
     lat: { type: Number, required: true },
@@ -24,7 +24,7 @@ const flightSchema = new mongoose.Schema({
   },
   destination: {
     code: { type: String, required: true },
-    icao: { type: String, default: 'EGLL' },
+    icao: { type: String },
     city: { type: String, required: true },
     country: { type: String, default: 'UK' },
     lat: { type: Number, required: true },

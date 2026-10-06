@@ -111,18 +111,34 @@ class ADSBTelemetrySimulator extends EventEmitter {
         weatherTurbulence = 'Moderate';
       }
 
-      this.flights.push({
-        flightId:        al.cs + (100 + i),
-        callsign:        al.cs + (100 + i),
-        airline:         al.name,
-        aircraftType:    TYPES[i % TYPES.length],
-        registration:    al.cs.charAt(0) + '-' + Math.floor(Math.random()*9000+1000),
-        countryFlag:     al.flag,
-        photoUrl:        'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600&auto=format&fit=crop&q=80',
-        origin:          { code:origAirport.code, city:origAirport.city, country:origAirport.country, lat:origLat, lon:origLon },
-        destination:     { code:destAirport.code, city:destAirport.city, country:destAirport.country, lat:destLat, lon:destLon },
-        std:'--:-- UTC', atd:'--:-- UTC', sta:'--:-- UTC', eta:'--:-- UTC',
-        radarSource:     'SIM-ADS-B-' + origAirport.code,
+        let flightHours = 1 + (Math.random() * 9); // Random total flight duration 1-10 hours
+        let now = new Date();
+        let elapsedMs = flightHours * 3600000 * pct;
+        let remainingMs = flightHours * 3600000 * (1 - pct);
+        let stdDate = new Date(now.getTime() - elapsedMs);
+        let staDate = new Date(now.getTime() + remainingMs);
+
+        const fmtTime = (d) => `${d.getUTCHours().toString().padStart(2,'0')}:${d.getUTCMinutes().toString().padStart(2,'0')} UTC`;
+        
+        let stdStr = fmtTime(stdDate);
+        let staStr = fmtTime(staDate);
+
+        // Add minor delays for ATD and ETA
+        let atdDate = new Date(stdDate.getTime() + (Math.random() * 15 * 60000));
+        let etaDate = new Date(staDate.getTime() + ((Math.random() - 0.5) * 20 * 60000));
+
+        this.flights.push({
+          flightId:        al.cs + (100 + i),
+          callsign:        al.cs + (100 + i),
+          airline:         al.name,
+          aircraftType:    TYPES[i % TYPES.length],
+          registration:    al.cs.charAt(0) + '-' + Math.floor(Math.random()*9000+1000),
+          countryFlag:     al.flag,
+          photoUrl:        'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600&auto=format&fit=crop&q=80',
+          origin:          { code:origAirport.code, city:origAirport.city, country:origAirport.country, lat:origLat, lon:origLon },
+          destination:     { code:destAirport.code, city:destAirport.city, country:destAirport.country, lat:destLat, lon:destLon },
+          std: stdStr, atd: fmtTime(atdDate), sta: staStr, eta: fmtTime(etaDate),
+          radarSource:     'SIM-ADS-B-' + origAirport.code,
         icao24:          Math.floor(Math.random()*0xFFFFFF).toString(16).padStart(6,'0'),
         lat, lon,
         altitudeFt:      30000 + (i % 12) * 1000,

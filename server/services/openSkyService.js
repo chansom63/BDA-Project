@@ -115,6 +115,20 @@ class OpenSkyService extends EventEmitter {
     const traj = this.trajectories.get(icao24);
     traj.push({ lat, lon, altitudeFt, speedKnots, timestamp: new Date() });
     if (traj.length > 40) traj.shift();
+    let flightHours = 1 + (Math.random() * 9); 
+    let now = new Date();
+    let elapsedMs = flightHours * 3600000 * 0.5; // Defaulting OpenSky to 50% for now
+    let remainingMs = flightHours * 3600000 * 0.5;
+    let stdDate = new Date(now.getTime() - elapsedMs);
+    let staDate = new Date(now.getTime() + remainingMs);
+
+    const fmtTime = (d) => `${d.getUTCHours().toString().padStart(2,'0')}:${d.getUTCMinutes().toString().padStart(2,'0')} UTC`;
+    
+    let stdStr = fmtTime(stdDate);
+    let staStr = fmtTime(staDate);
+    let atdDate = new Date(stdDate.getTime() + (Math.random() * 15 * 60000));
+    let etaDate = new Date(staDate.getTime() + ((Math.random() - 0.5) * 20 * 60000));
+
     return {
       eventId:`opensky_${Date.now()}_${icao24}`, timestamp:new Date().toISOString(),
       icao24, callsign, flightId:icao24.toUpperCase(),
@@ -127,7 +141,7 @@ class OpenSkyService extends EventEmitter {
       speedKnots, headingDeg, verticalRateFpm, squawk,
       status:['7700','7600','7500'].includes(squawk)?'Emergency':'In-Flight',
       progressPct:50, weatherTurbulence:'None', trajectory:[...traj],
-      std:'--:-- UTC', atd:'--:-- UTC', sta:'--:-- UTC', eta:'--:-- UTC',
+      std: stdStr, atd: fmtTime(atdDate), sta: staStr, eta: fmtTime(etaDate),
     };
   }
 
