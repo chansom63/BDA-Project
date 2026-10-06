@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Polyline, Circle, Tooltip } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline, Circle, Tooltip, ZoomControl } from 'react-leaflet';
 import L from 'leaflet';
 import { Plane, AlertTriangle, Wind, Navigation, ShieldAlert, Activity, Layers, MapPin } from 'lucide-react';
 import { formatAltitude, getAltitudeColor, getSquawkBadge } from '../utils/geoUtils';
@@ -131,6 +131,13 @@ export default function MapView({ flights, selectedFlight, setSelectedFlight, on
             >
               {showTrails ? 'Trails On' : 'Trails Off'}
             </button>
+            <button
+              className={showRadarSweep ? 'btn-fr24-yellow' : 'btn-secondary'}
+              onClick={() => setShowRadarSweep(!showRadarSweep)}
+              style={{ fontSize: '11px', padding: '4px 8px' }}
+            >
+              {showRadarSweep ? 'Radar On' : 'Radar Off'}
+            </button>
           </div>
         </div>
 
@@ -141,7 +148,7 @@ export default function MapView({ flights, selectedFlight, setSelectedFlight, on
               <button
                 key={val}
                 onClick={() => { setMaxAircraft(val); setShowDropdown(false); }}
-                style={{ padding: '5px 10px', background: val === maxAircraft ? '#facc15' : 'transparent', border: 'none', color: val === maxAircraft ? '#000' : '#ccc', fontSize: '12px', fontWeight: val === maxAircraft ? '800' : '600', cursor: 'pointer', textAlign: 'center', borderBottom: val !== 1000 ? '1px solid #1e293b' : 'none' }}
+                style={{ display: 'block', width: '100%', padding: '5px 10px', background: val === maxAircraft ? '#facc15' : 'transparent', border: 'none', color: val === maxAircraft ? '#000' : '#ccc', fontSize: '12px', fontWeight: val === maxAircraft ? '800' : '600', cursor: 'pointer', textAlign: 'center', borderBottom: val !== 1000 ? '1px solid #1e293b' : 'none' }}
                 onMouseOver={e => { e.currentTarget.style.background = '#facc15'; e.currentTarget.style.color = '#000'; }}
                 onMouseOut={e => { e.currentTarget.style.background = val === maxAircraft ? '#facc15' : 'transparent'; e.currentTarget.style.color = val === maxAircraft ? '#000' : '#ccc'; }}
               >
@@ -183,6 +190,8 @@ export default function MapView({ flights, selectedFlight, setSelectedFlight, on
           attribution='&copy; Flightradar24 Engine &copy; OpenStreetMap'
           maxZoom={19}
         />
+        
+        <ZoomControl position="bottomright" />
 
         {/* Airport Hub Markers */}
         {showAirports && airports.map(ap => (

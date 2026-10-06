@@ -1,12 +1,23 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function SplashLoader({ onComplete }) {
+  const [isFading, setIsFading] = useState(false);
+
   useEffect(() => {
-    const timer = setTimeout(() => {
+    // Start fading out at 4.5 seconds
+    const fadeTimer = setTimeout(() => {
+      setIsFading(true);
+    }, 4500);
+
+    // Completely unmount at 5.0 seconds
+    const completeTimer = setTimeout(() => {
       onComplete();
     }, 5000);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(completeTimer);
+    };
   }, [onComplete]);
 
   return (
@@ -22,6 +33,9 @@ export default function SplashLoader({ onComplete }) {
         justifyContent: 'center',
         color: '#fff',
         fontFamily: 'Arial, Helvetica, sans-serif',
+        opacity: isFading ? 0 : 1,
+        transition: 'opacity 0.5s ease-in-out',
+        pointerEvents: isFading ? 'none' : 'auto'
       }}
     >
       <img

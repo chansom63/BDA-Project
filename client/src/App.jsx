@@ -68,7 +68,7 @@ function MainApp() {
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--fr24-black)', display: 'flex', flexDirection: 'column' }}>
-      
+
       {/* Flightradar24 Top Header Bar */}
       <Navbar
         activeTab={activeTab}
@@ -83,7 +83,7 @@ function MainApp() {
 
       {/* Main Container */}
       <main style={{ flex: 1, position: 'relative' }}>
-        
+
         {activeTab === 'map' && (
           <div style={{ position: 'relative', width: '100%', height: 'calc(100vh - 72px)' }}>
             <MapView
@@ -137,15 +137,17 @@ function MainApp() {
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
 
-  if (showSplash) {
-    return <SplashLoader onComplete={() => setShowSplash(false)} />;
-  }
+
 
   return (
-    <AuthProvider>
-      <SocketProvider>
-        <MainApp />
-      </SocketProvider>
-    </AuthProvider>
+    <>
+      {showSplash && <SplashLoader onComplete={() => setShowSplash(false)} />}
+      <AuthProvider>
+        <SocketProvider>
+          <MainApp />
+        </SocketProvider>
+      </AuthProvider>
+    </>
+
   );
 }

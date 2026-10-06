@@ -57,7 +57,7 @@ body {
   background: var(--fr24-dark-panel);
   border-right: 1px solid var(--fr24-panel-border);
   box-shadow: 10px 0 30px rgba(0, 0, 0, 0.6);
-  z-index: 800;
+  z-index: 3000;
   overflow-y: auto;
   animation: slideInLeft 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
