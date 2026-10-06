@@ -7,6 +7,7 @@ import AlertCenter from './components/AlertCenter';
 import AwsPipelineVisualizer from './components/AwsPipelineVisualizer';
 import AnalyticsDashboard from './components/AnalyticsDashboard';
 import AdminPanel from './components/AdminPanel';
+import SplashLoader from './components/SplashLoader';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { SocketProvider, useSocket } from './context/SocketContext';
@@ -134,6 +135,12 @@ function MainApp() {
 }
 
 export default function App() {
+  const [showSplash, setShowSplash] = useState(true);
+
+  if (showSplash) {
+    return <SplashLoader onComplete={() => setShowSplash(false)} />;
+  }
+
   return (
     <AuthProvider>
       <SocketProvider>
