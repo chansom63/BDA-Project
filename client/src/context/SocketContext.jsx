@@ -109,8 +109,17 @@ export const SocketProvider = ({ children }) => {
     let reconnectTimeout = null;
 
     const connectWS = () => {
-      const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const wsUrl = `${wsProtocol}//${window.location.host}/ws/telemetry`;
+      let wsUrl = '';
+      
+      // If deployed to Vercel (decoupled), use VITE_API_URL pointing to Render backend
+      if (import.meta.env.VITE_API_URL) {
+        // Convert http:// API URL to ws://
+        wsUrl = import.meta.env.VITE_API_URL.replace(/^http/, 'ws') + '/ws/telemetry';
+      } else {
+        // Monolithic deployment fallback (Vite proxy or Node serving React)
+        const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        wsUrl = `${wsProtocol}//${window.location.host}/ws/telemetry`;
+      }
 
       ws = new WebSocket(wsUrl);
 

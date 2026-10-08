@@ -7,6 +7,7 @@ import AlertCenter from './components/AlertCenter';
 import AwsPipelineVisualizer from './components/AwsPipelineVisualizer';
 import AnalyticsDashboard from './components/AnalyticsDashboard';
 import AdminPanel from './components/AdminPanel';
+import SplashLoader from './components/SplashLoader';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { SocketProvider, useSocket } from './context/SocketContext';
@@ -67,7 +68,7 @@ function MainApp() {
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--fr24-black)', display: 'flex', flexDirection: 'column' }}>
-      
+
       {/* Flightradar24 Top Header Bar */}
       <Navbar
         activeTab={activeTab}
@@ -82,7 +83,7 @@ function MainApp() {
 
       {/* Main Container */}
       <main style={{ flex: 1, position: 'relative' }}>
-        
+
         {activeTab === 'map' && (
           <div style={{ position: 'relative', width: '100%', height: 'calc(100vh - 72px)' }}>
             <MapView
@@ -134,11 +135,19 @@ function MainApp() {
 }
 
 export default function App() {
+  const [showSplash, setShowSplash] = useState(true);
+
+
+
   return (
-    <AuthProvider>
-      <SocketProvider>
-        <MainApp />
-      </SocketProvider>
-    </AuthProvider>
+    <>
+      {showSplash && <SplashLoader onComplete={() => setShowSplash(false)} />}
+      <AuthProvider>
+        <SocketProvider>
+          <MainApp />
+        </SocketProvider>
+      </AuthProvider>
+    </>
+
   );
 }
