@@ -51,7 +51,7 @@ export default function SimulatorControlPanel({ flights, onTriggerEmergency }) {
     }}>
       <div className="glass-panel" style={{ padding: '8px 12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
         <span style={{ fontSize: '11px', fontWeight: '700', color: '#ff9900' }}>SIMULATOR HUD</span>
-        
+
         <button
           className="btn-secondary"
           style={{ fontSize: '11px', padding: '4px 8px' }}

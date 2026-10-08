@@ -10,7 +10,7 @@
   --fr24-cyan-glow: rgba(0, 180, 216, 0.4);
   --fr24-red: #ef4444;
   --fr24-green: #10b981;
-  
+
   --text-main: #f3f4f6;
   --text-muted: #9ca3af;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
@@ -36,13 +36,16 @@ body {
   width: 6px;
   height: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: #0f141d;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #232d40;
   border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: var(--fr24-yellow);
 }
@@ -63,8 +66,15 @@ body {
 }
 
 @keyframes slideInLeft {
-  from { transform: translateX(-100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 /* FR24 Glass Cards */
@@ -86,8 +96,13 @@ body {
 
 /* Radar Sweep Effect */
 @keyframes radar-sweep {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .radar-sweep-line {
@@ -107,10 +122,13 @@ body {
 
 /* Emergency Pulse */
 @keyframes pulse-emergency {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.8);
     border-color: #ef4444;
   }
+
   50% {
     box-shadow: 0 0 0 14px rgba(239, 68, 68, 0);
     border-color: #f87171;
@@ -136,6 +154,7 @@ body {
   border-radius: 8px !important;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
 }
+
 .leaflet-popup-tip {
   background: #161d2a !important;
 }
@@ -177,6 +196,7 @@ body {
   align-items: center;
   gap: 8px;
 }
+
 .btn-fr24-yellow:hover {
   filter: brightness(1.1);
   box-shadow: 0 0 14px rgba(250, 204, 21, 0.5);
@@ -195,6 +215,7 @@ body {
   align-items: center;
   gap: 8px;
 }
+
 .btn-primary:hover {
   filter: brightness(1.15);
   box-shadow: 0 0 12px rgba(0, 180, 216, 0.4);
@@ -213,6 +234,7 @@ body {
   align-items: center;
   gap: 8px;
 }
+
 .btn-danger:hover {
   filter: brightness(1.15);
   box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
@@ -231,6 +253,7 @@ body {
   align-items: center;
   gap: 8px;
 }
+
 .btn-secondary:hover {
   background: rgba(255, 255, 255, 0.16);
   color: white;

@@ -51,7 +51,7 @@ export default function AwsPipelineVisualizer() {
 
   return (
     <div style={{ padding: '24px', maxWidth: '1400px', margin: '0 auto' }}>
-      
+
       {/* Title & Manual ETL Trigger */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <div>
@@ -84,7 +84,7 @@ export default function AwsPipelineVisualizer() {
 
       {/* Main Architecture Flow Grid */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        
+
         {/* Step 1: Ingestion & Telemetry Source */}
         <div className="glass-panel" style={{ padding: '20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px' }}>

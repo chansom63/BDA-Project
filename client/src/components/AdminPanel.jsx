@@ -65,7 +65,7 @@ export default function AdminPanel() {
 
   return (
     <div style={{ padding: '24px', maxWidth: '1200px', margin: '0 auto' }}>
-      
+
       <div style={{ marginBottom: '24px' }}>
         <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#fff' }}>System Administration & Config</h2>
         <p style={{ fontSize: '13px', color: '#9ca3af' }}>Airspace safety threshold tuning, simulation speed controls, RBAC user management</p>
@@ -78,7 +78,7 @@ export default function AdminPanel() {
       )}
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
-        
+
         {/* Left: Airspace Safety & Simulator Configuration */}
         <div className="glass-panel" style={{ padding: '20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px' }}>
@@ -87,7 +87,7 @@ export default function AdminPanel() {
           </div>
 
           <form onSubmit={handleSaveConfig} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            
+
             <div>
               <label style={{ fontSize: '13px', color: '#e5e7eb', display: 'block', marginBottom: '6px' }}>
                 Proximity Breach Alert Distance: <strong>{config.proximityAlertDistanceNM} NM</strong>
