@@ -50,7 +50,7 @@ export default function Navbar({ activeTab, setActiveTab, activeAlertCount, flig
   return (
     <header style={{ background: '#0b0f17', borderBottom: '1px solid var(--fr24-panel-border)', padding: '10px 20px', zIndex: 1000, position: 'relative' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px' }}>
-        
+
         {/* Title & GAGAN Fancy Logo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
           <GaganLogo size={42} />

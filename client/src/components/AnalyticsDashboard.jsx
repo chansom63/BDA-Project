@@ -40,7 +40,7 @@ export default function AnalyticsDashboard() {
 
   return (
     <div style={{ padding: '24px', maxWidth: '1400px', margin: '0 auto' }}>
-      
+
       {/* Title */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <div>
@@ -91,7 +91,7 @@ export default function AnalyticsDashboard() {
 
       {/* Analytics Charts Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '24px' }}>
-        
+
         {/* Chart 1: Hourly Active Flight Density */}
         <div className="glass-panel" style={{ padding: '20px' }}>
           <h3 style={{ fontSize: '15px', fontWeight: '700', color: '#fff', marginBottom: '16px' }}>

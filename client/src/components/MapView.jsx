@@ -8,7 +8,7 @@ import GaganLogo from './GaganLogo';
 // Helper to construct Flightradar24 rotated yellow plane icon
 function createFR24PlaneIcon(headingDeg, squawk, altitudeFt, isSelected) {
   const isEmergency = ['7700', '7600', '7500'].includes(squawk);
-  
+
   // Signature Flightradar24 colors: Yellow (#facc15) standard, Cyan (#00b4d8) selected, Red (#ef4444) emergency
   const strokeColor = isEmergency ? '#ef4444' : isSelected ? '#00b4d8' : '#000000';
   const fillColor = isEmergency ? '#ef4444' : isSelected ? '#00b4d8' : '#facc15';
@@ -79,7 +79,7 @@ export default function MapView({ flights, selectedFlight, setSelectedFlight, on
 
   return (
     <div style={{ position: 'relative', width: '100%', height: 'calc(100vh - 72px)', overflow: 'hidden' }}>
-      
+
       {/* Radar Sweep Overlay */}
       {showRadarSweep && (
         <div className="radar-sweep-container" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 450 }}>
@@ -169,11 +169,11 @@ export default function MapView({ flights, selectedFlight, setSelectedFlight, on
         <div className="glass-panel" style={{ padding: '10px 14px', fontSize: '11px' }}>
           <div style={{ fontWeight: '700', color: '#facc15', marginBottom: '6px', letterSpacing: '0.04em' }}>ALTITUDE COLOR PROFILE</div>
           <div style={{ display: 'flex', gap: '12px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: '10px', height: '10px', background: '#a855f7', borderRadius: '2px' }}/> FL380+</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: '10px', height: '10px', background: '#00b4d8', borderRadius: '2px' }}/> FL300-370</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: '10px', height: '10px', background: '#10b981', borderRadius: '2px' }}/> FL200-290</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: '10px', height: '10px', background: '#f59e0b', borderRadius: '2px' }}/> FL100-190</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: '10px', height: '10px', background: '#ef4444', borderRadius: '2px' }}/> &lt;FL100 / MAYDAY</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: '10px', height: '10px', background: '#a855f7', borderRadius: '2px' }} /> FL380+</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: '10px', height: '10px', background: '#00b4d8', borderRadius: '2px' }} /> FL300-370</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: '10px', height: '10px', background: '#10b981', borderRadius: '2px' }} /> FL200-290</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: '10px', height: '10px', background: '#f59e0b', borderRadius: '2px' }} /> FL100-190</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: '10px', height: '10px', background: '#ef4444', borderRadius: '2px' }} /> &lt;FL100 / MAYDAY</div>
           </div>
         </div>
       </div>
@@ -190,7 +190,7 @@ export default function MapView({ flights, selectedFlight, setSelectedFlight, on
           attribution='&copy; Flightradar24 Engine &copy; OpenStreetMap'
           maxZoom={19}
         />
-        
+
         <ZoomControl position="bottomright" />
 
         {/* Airport Hub Markers */}
@@ -269,7 +269,7 @@ export default function MapView({ flights, selectedFlight, setSelectedFlight, on
               {isSelected && originPoint && (
                 <Marker position={originPoint} icon={createAirportPinIcon(flight.origin.code)} zIndexOffset={-100}>
                   <Tooltip direction="bottom" offset={[0, 10]} opacity={0.9} permanent>
-                    <div style={{fontSize: '10px', textAlign: 'center'}}>Origin<br/><b>{flight.origin.city}</b></div>
+                    <div style={{ fontSize: '10px', textAlign: 'center' }}>Origin<br /><b>{flight.origin.city}</b></div>
                   </Tooltip>
                 </Marker>
               )}
@@ -278,7 +278,7 @@ export default function MapView({ flights, selectedFlight, setSelectedFlight, on
               {isSelected && destPoint && (
                 <Marker position={destPoint} icon={createAirportPinIcon(flight.destination.code)} zIndexOffset={-100}>
                   <Tooltip direction="bottom" offset={[0, 10]} opacity={0.9} permanent>
-                    <div style={{fontSize: '10px', textAlign: 'center'}}>Destination<br/><b>{flight.destination.city}</b></div>
+                    <div style={{ fontSize: '10px', textAlign: 'center' }}>Destination<br /><b>{flight.destination.city}</b></div>
                   </Tooltip>
                 </Marker>
               )}

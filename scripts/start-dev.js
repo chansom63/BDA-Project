@@ -1,8 +1,6 @@
 const { spawn } = require('child_process');
 const path = require('path');
 
-console.log('🚀 Launching Monolithic MERN AWS Flight Telemetry System...');
-
 const rootDir = path.resolve(__dirname, '..');
 
 const server = spawn('npm', ['run', 'dev'], {
