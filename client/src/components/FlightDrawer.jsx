@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { X, Plane, Navigation, Wind, ShieldAlert, Radio, Eye, Camera, Clock, Crosshair, Compass, Zap } from 'lucide-react';
 import { formatAltitude, getAltitudeColor, getSquawkBadge } from '../utils/geoUtils';
 
@@ -162,7 +162,7 @@ export default function FlightDrawer({ flight, onClose, onTriggerSquawk, onFollo
       {/* Aircraft Photo Card */}
       <div style={{ position: 'relative', width: '100%', height: '180px', overflow: 'hidden', background: '#090d16' }}>
         <img
-          src={AIRCRAFT_PHOTOS[flight.aircraftType] || DEFAULT_PHOTO}
+          src={flight.photoUrl || 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&auto=format&fit=crop&q=80'}
           alt={flight.aircraftType}
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />
@@ -181,25 +181,6 @@ export default function FlightDrawer({ flight, onClose, onTriggerSquawk, onFollo
 
       <div style={{ padding: '16px' }}>
 
-        {/* Emergency Squawk Badge Banner */}
-        {squawkBadge.isEmergency && (
-          <div className="emergency-pulse" style={{
-            background: 'rgba(239, 68, 68, 0.2)',
-            border: '1px solid #ef4444',
-            borderRadius: '8px',
-            padding: '10px 14px',
-            marginBottom: '16px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px'
-          }}>
-            <ShieldAlert size={22} color="#ef4444" />
-            <div>
-              <div style={{ fontSize: '13px', fontWeight: '800', color: '#ef4444' }}>{squawkBadge.label}</div>
-              <div style={{ fontSize: '11px', color: '#fca5a5' }}>Aircraft broadcast emergency transponder squawk</div>
-            </div>
-          </div>
-        )}
 
         {/* Flight Route Infographic Box (Flightradar24 Style) */}
         <div style={{ background: '#111722', borderRadius: '10px', padding: '14px', marginBottom: '16px', border: '1px solid var(--fr24-panel-border)' }}>
@@ -317,11 +298,11 @@ export default function FlightDrawer({ flight, onClose, onTriggerSquawk, onFollo
           </button>
         </div>
 
-        {/* Primary Flight Display */}
+        {/* 3D Horizon Cockpit HUD View Simulator Overlay */}
         {show3DHud && (
-          <div style={{ background: '#090d16', border: '1px solid var(--fr24-cyan)', borderRadius: '10px', padding: '14px', marginBottom: '16px' }}>
-            <div style={{ fontSize: '11px', fontWeight: '700', color: '#00b4d8', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Zap size={14} /> PRIMARY FLIGHT DISPLAY
+          <div style={{ background: '#090d16', border: '1px solid var(--fr24-cyan)', borderRadius: '10px', padding: '14px', marginBottom: '16px', position: 'relative', overflow: 'hidden' }}>
+            <div style={{ fontSize: '11px', fontWeight: '700', color: '#00b4d8', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Zap size={14} /> 3D ARTIFICIAL HORIZON COCKPIT HUD
             </div>
 
             {/* Artificial Horizon */}
@@ -476,18 +457,6 @@ export default function FlightDrawer({ flight, onClose, onTriggerSquawk, onFollo
           </div>
         </div>
 
-        {/* Emergency Reset Control (Only shown for flights in emergency state) */}
-        {['7700', '7600', '7500'].includes(squawk) && (
-          <div style={{ borderTop: '1px solid var(--fr24-panel-border)', paddingTop: '14px' }}>
-            <button
-              className="btn-fr24-yellow"
-              style={{ width: '100%', fontSize: '12px', justifyContent: 'center' }}
-              onClick={() => onTriggerSquawk(flight.flightId, '1200')}
-            >
-              Reset Squawk Code (Normal 1200)
-            </button>
-          </div>
-        )}
 
       </div>
 

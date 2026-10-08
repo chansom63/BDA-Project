@@ -127,27 +127,6 @@ export default function AdminPanel() {
               </select>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '8px' }}>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#e5e7eb', cursor: 'pointer' }}>
-                <input
-                  type="checkbox"
-                  checked={config.autoNotificationEmail}
-                  onChange={(e) => setConfig({ ...config, autoNotificationEmail: e.target.checked })}
-                  style={{ accentColor: '#ff9900' }}
-                />
-                Automated Amazon SES Email Notifications for Critical Alerts
-              </label>
-
-              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#e5e7eb', cursor: 'pointer' }}>
-                <input
-                  type="checkbox"
-                  checked={config.autoNotificationSMS}
-                  onChange={(e) => setConfig({ ...config, autoNotificationSMS: e.target.checked })}
-                  style={{ accentColor: '#a855f7' }}
-                />
-                Automated Amazon SNS SMS Alerts for Emergency Squawks
-              </label>
-            </div>
 
             <button type="submit" className="btn-primary" disabled={saving} style={{ marginTop: '12px', justifyContent: 'center' }}>
               <Save size={16} /> {saving ? 'Saving...' : 'Save Telemetry Configuration'}
