@@ -298,6 +298,7 @@ export default function MapView({ flights, selectedFlight, setSelectedFlight, on
                   position={[lat, lon]}
                   icon={icon}
                   eventHandlers={{
+                    mousedown: () => setSelectedFlight(flight),
                     click: () => setSelectedFlight(flight)
                   }}
                 >
@@ -307,41 +308,6 @@ export default function MapView({ flights, selectedFlight, setSelectedFlight, on
                       {flight.callsign} • {formatAltitude(alt)} • {Number(speed).toFixed(1)} kts
                     </div>
                   </Tooltip>
-
-                  <Popup>
-                    <div style={{ padding: '6px', minWidth: '190px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                        <span style={{ fontWeight: '800', fontSize: '16px', color: '#facc15' }}>{flight.callsign}</span>
-                        <span style={{
-                          background: squawkBadge.isEmergency ? '#ef4444' : 'rgba(250, 204, 21, 0.2)',
-                          color: squawkBadge.isEmergency ? '#fff' : '#facc15',
-                          fontSize: '10px',
-                          fontWeight: '800',
-                          padding: '2px 6px',
-                          borderRadius: '4px'
-                        }}>
-                          {squawkBadge.label}
-                        </span>
-                      </div>
-                      <div style={{ fontSize: '12px', color: '#d1d5db' }}>{flight.airline} ({flight.aircraftType})</div>
-                      <div style={{ fontSize: '12px', margin: '4px 0', color: '#38bdf8', fontWeight: '600' }}>
-                        {flight.origin?.code} ➔ {flight.destination?.code} ({flight.progressPct}% done)
-                      </div>
-                      <div className="font-mono-hud" style={{ fontSize: '11px', color: '#9ca3af', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px', marginTop: '6px' }}>
-                        <div>ALT: {formatAltitude(alt)}</div>
-                        <div>SPD: {Number(speed).toFixed(1)} kts</div>
-                        <div>HDG: {heading}°</div>
-                        <div>REG: {flight.registration || 'N104AN'}</div>
-                      </div>
-                      <button
-                        className="btn-fr24-yellow"
-                        style={{ width: '100%', marginTop: '8px', fontSize: '11px', justifyContent: 'center' }}
-                        onClick={() => setSelectedFlight(flight)}
-                      >
-                        Inspect Flightradar24 Panel
-                      </button>
-                    </div>
-                  </Popup>
                 </Marker>
               )}
             </React.Fragment>

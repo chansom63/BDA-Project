@@ -53,7 +53,7 @@ body {
 /* Flightradar24 Side Panel Drawer */
 .fr24-drawer {
   position: absolute;
-  top: 72px;
+  top: 0px;
   left: 0;
   width: 420px;
   height: calc(100vh - 72px);

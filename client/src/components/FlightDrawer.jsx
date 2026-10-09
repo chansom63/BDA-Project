@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Plane, Navigation, Wind, ShieldAlert, Radio, Eye, Camera, Clock, Crosshair, Compass, Zap } from 'lucide-react';
 import { formatAltitude, getAltitudeColor, getSquawkBadge } from '../utils/geoUtils';
 
@@ -134,6 +134,7 @@ export default function FlightDrawer({ flight, onClose, onTriggerSquawk, onFollo
     if (onFollowFlight) onFollowFlight(flight, !following);
   };
 
+  try {
   return (
     <aside className="fr24-drawer">
 
@@ -445,7 +446,7 @@ export default function FlightDrawer({ flight, onClose, onTriggerSquawk, onFollo
         <div style={{ background: '#111722', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--fr24-panel-border)', fontSize: '11px', color: '#9ca3af', marginBottom: '16px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
             <span>LAT / LON:</span>
-            <span className="font-mono-hud" style={{ color: '#fff' }}>{lat ? lat.toFixed(4) : 0}°, {lon ? lon.toFixed(4) : 0}°</span>
+            <span className="font-mono-hud" style={{ color: '#fff' }}>{lat ? Number(lat).toFixed(4) : 0}°, {lon ? Number(lon).toFixed(4) : 0}°</span>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
             <span>TRANSPONDER SQUAWK:</span>
@@ -462,4 +463,13 @@ export default function FlightDrawer({ flight, onClose, onTriggerSquawk, onFollo
 
     </aside>
   );
+  } catch (err) {
+    return (
+      <aside className="fr24-drawer" style={{ background: 'red', color: 'white', padding: '20px' }}>
+        <h2>Drawer Crashed!</h2>
+        <p>{err.toString()}</p>
+        <button onClick={onClose} style={{ marginTop: '20px', padding: '10px', color: 'black' }}>Close</button>
+      </aside>
+    );
+  }
 }

@@ -22,10 +22,11 @@ function MainApp() {
   useEffect(() => {
     if (liveFlights && liveFlights.length > 0) {
       setFlightsList(liveFlights);
-      if (selectedFlight) {
-        const updated = liveFlights.find(f => f.flightId === selectedFlight.flightId);
-        if (updated) setSelectedFlight(updated);
-      }
+      setSelectedFlight(prev => {
+        if (!prev) return null;
+        const updated = liveFlights.find(f => f.flightId === prev.flightId);
+        return updated || prev;
+      });
     }
   }, [liveFlights]);
 

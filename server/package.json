@@ -19,6 +19,7 @@
     "mongoose": "^8.5.1",
     "monolithic-mern-aws-flight-telemetry": "file:..",
     "node-cron": "^3.0.3",
+    "webhdfs": "^1.2.0",
     "ws": "^8.18.0"
   }
 }
