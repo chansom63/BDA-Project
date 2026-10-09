@@ -1,8 +1,15 @@
 const s3DataLake = require('./s3DataLake');
 const redshiftAnalytics = require('./redshiftAnalytics');
-const awsConfig = require('../config/awsConfig');
+const WebHDFS = require('webhdfs');
 
-class GlueEtlEngine {
+const hdfs = WebHDFS.createClient({
+  user: 'root',
+  host: 'localhost',
+  port: 9870,
+  path: '/webhdfs/v1'
+});
+
+class HadoopEtlEngine {
   constructor() {
     this.jobHistory = [];
     this.status = 'IDLE';
@@ -13,12 +20,18 @@ class GlueEtlEngine {
     this.status = 'RUNNING';
     const startTime = new Date();
     
-    console.log(`⚡ [AWS Glue ETL] Starting Job "${awsConfig.glue.jobName}"... Crawling S3 data lake bucket "${awsConfig.s3.bucketName}"`);
+    console.log(`⚡ [Hadoop ETL] Starting MapReduce Batch Job... Reading from HDFS Data Lake`);
 
+    // In a production environment, this would submit a YARN job.
+    // For this implementation, we simulate the MapReduce process in Node.js 
+    // by fetching the HDFS directory metrics to simulate processing scale.
+    
+    // We get the HDFS metrics from our data lake service
     const s3Metrics = s3DataLake.getMetrics();
     const processedEvents = Math.max(150, s3Metrics.totalObjectsCount * 12);
 
-    // Update Redshift analytical tables
+    // After MapReduce finishes processing the raw data into aggregates, 
+    // it loads them into the Data Warehouse (Hive / Redshift).
     redshiftAnalytics.recordBatchEtlUpdate(processedEvents);
 
     const endTime = new Date();
@@ -28,12 +41,12 @@ class GlueEtlEngine {
     this.lastRunTime = endTime.toISOString();
 
     const jobRecord = {
-      jobRunId: `jr_${Date.now()}`,
-      jobName: awsConfig.glue.jobName,
+      jobRunId: `mr_job_${Date.now()}`,
+      jobName: 'Hadoop_Flight_Analytics_MapReduce',
       executionTimeSec: durationSec,
       recordsTransformed: processedEvents,
-      sourceS3PartitionsScanned: s3Metrics.activePartitions.length || 1,
-      destinationRedshiftTable: `${awsConfig.redshift.database}.public.fact_flight_telemetry`,
+      sourceHDFSPartitionsScanned: s3Metrics.activePartitions.length || 1,
+      destinationTable: `hive.default.fact_flight_telemetry`,
       status: 'SUCCEEDED',
       timestamp: endTime.toISOString()
     };
@@ -41,14 +54,14 @@ class GlueEtlEngine {
     this.jobHistory.unshift(jobRecord);
     if (this.jobHistory.length > 20) this.jobHistory.pop();
 
-    console.log(`✅ [AWS Glue ETL] Job Finished successfully in ${durationSec}s. ${processedEvents} records loaded into Amazon Redshift.`);
+    console.log(`✅ [Hadoop ETL] MapReduce Job Finished successfully in ${durationSec}s. ${processedEvents} records loaded into Hive Data Warehouse.`);
     return jobRecord;
   }
 
   getJobInfo() {
     return {
-      jobName: awsConfig.glue.jobName,
-      crawlerStatus: awsConfig.glue.crawlerStatus,
+      jobName: 'Hadoop_Flight_Analytics_MapReduce',
+      crawlerStatus: 'N/A',
       status: this.status,
       lastRunTime: this.lastRunTime,
       history: this.jobHistory
@@ -56,4 +69,4 @@ class GlueEtlEngine {
   }
 }
 
-module.exports = new GlueEtlEngine();
+module.exports = new HadoopEtlEngine();

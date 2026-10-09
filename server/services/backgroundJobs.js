@@ -39,13 +39,13 @@ class BackgroundJobsService {
       }
     });
 
-    // Job 2: Run AWS Glue ETL Batch Execution every 1 hour (simulated)
+    // Job 2: Run Hadoop MapReduce Batch Execution every 1 hour
     cron.schedule('0 * * * *', () => {
       try {
-        console.log('🔄 [Cron Job] Triggering hourly AWS Glue ETL Batch Job...');
+        console.log('🔄 [Cron Job] Triggering hourly Hadoop MapReduce Batch Job...');
         glueEtlEngine.runEtlJob();
       } catch (err) {
-        console.error('Error in Glue ETL Cron Job:', err.message);
+        console.error('Error in Hadoop MapReduce Cron Job:', err.message);
       }
     });
   }

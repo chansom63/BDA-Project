@@ -36,9 +36,9 @@ router.get('/dashboard', async (req, res, next) => {
         mskKafka: 'HEALTHY',
         kinesisAnalytics: 'ACTIVE',
         documentDb: 'AVAILABLE',
-        s3DataLake: 'ONLINE',
-        glueEtl: 'READY',
-        redshiftDw: 'AVAILABLE',
+        hdfsDataLake: 'ONLINE',
+        hadoopMapReduce: 'READY',
+        hiveDataWarehouse: 'AVAILABLE',
         quicksight: 'CONNECTED'
       }
     });

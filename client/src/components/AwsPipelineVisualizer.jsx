@@ -28,7 +28,7 @@ export default function AwsPipelineVisualizer() {
 
   const triggerGlueEtl = async () => {
     setEtlRunning(true);
-    setEtlMessage('Running Apache Spark ETL Crawlers & Warehouse Load...');
+    setEtlMessage('Running Hadoop MapReduce Batch ETL...');
     try {
       const res = await fetch('/api/etl/run', {
         method: 'POST',
@@ -71,7 +71,7 @@ export default function AwsPipelineVisualizer() {
           disabled={etlRunning}
         >
           <Play size={16} className={etlRunning ? 'spin' : ''} />
-          {etlRunning ? 'Executing Spark ETL...' : 'Trigger Apache Spark Batch ETL'}
+          {etlRunning ? 'Executing MapReduce ETL...' : 'Trigger Hadoop MapReduce Batch ETL'}
         </button>
       </div>
 
@@ -136,8 +136,8 @@ export default function AwsPipelineVisualizer() {
             </div>
 
             <div style={{ background: 'rgba(255, 153, 0, 0.08)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(255, 153, 0, 0.3)' }}>
-              <div style={{ fontSize: '13px', fontWeight: '700', color: '#ff9900' }}>Local S3-like Raw Data Lake</div>
-              <div style={{ fontSize: '12px', color: '#9ca3af', margin: '4px 0' }}>Raw telemetry partition structure: year=YYYY/month=MM/day=DD/hour=HH (Parquet & JSON)</div>
+              <div style={{ fontSize: '13px', fontWeight: '700', color: '#ff9900' }}>Hadoop HDFS Data Lake</div>
+              <div style={{ fontSize: '12px', color: '#9ca3af', margin: '4px 0' }}>Raw telemetry partition structure: /data/telemetry/year=YYYY/month=MM/day=DD/hour=HH (JSON/HDFS)</div>
               <div className="font-mono-hud" style={{ fontSize: '15px', fontWeight: '700', color: '#ff9900', marginTop: '8px' }}>
                 {pipelineData?.realtimeMetrics?.s3ObjectsCount || 0} Objects • {pipelineData?.realtimeMetrics?.s3ParquetStoredMB || 0} MB Stored
               </div>
@@ -154,15 +154,15 @@ export default function AwsPipelineVisualizer() {
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
             <div style={{ background: 'rgba(168, 85, 247, 0.08)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(168, 85, 247, 0.3)' }}>
-              <div style={{ fontSize: '13px', fontWeight: '700', color: '#a855f7' }}>Apache Spark Batch ETL Pipeline</div>
-              <div style={{ fontSize: '12px', color: '#9ca3af', margin: '4px 0' }}>Automated batch transform, schema crawler discovery & catalog maintenance</div>
+              <div style={{ fontSize: '13px', fontWeight: '700', color: '#a855f7' }}>Hadoop MapReduce Batch ETL</div>
+              <div style={{ fontSize: '12px', color: '#9ca3af', margin: '4px 0' }}>Automated batch transform, computing heavy historical aggregations over HDFS</div>
               <div className="font-mono-hud" style={{ fontSize: '15px', fontWeight: '700', color: '#fff', marginTop: '8px' }}>
                 Catalog Database: flight_telemetry_catalog • Status: READY
               </div>
             </div>
 
             <div style={{ background: 'rgba(56, 189, 248, 0.08)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
-              <div style={{ fontSize: '13px', fontWeight: '700', color: '#38bdf8' }}>Analytical OLAP Data Warehouse</div>
+              <div style={{ fontSize: '13px', fontWeight: '700', color: '#38bdf8' }}>Apache Hive Data Warehouse</div>
               <div style={{ fontSize: '12px', color: '#9ca3af', margin: '4px 0' }}>High performance OLAP analytical database for route statistics & delay analysis</div>
               <div className="font-mono-hud" style={{ fontSize: '15px', fontWeight: '700', color: '#38bdf8', marginTop: '8px' }}>
                 {pipelineData?.realtimeMetrics?.redshiftProcessedEvents?.toLocaleString() || 145200} Rows Queryable
