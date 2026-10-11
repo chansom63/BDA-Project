@@ -141,6 +141,7 @@ class OpenSkyService extends EventEmitter {
       speedKnots, headingDeg, verticalRateFpm, squawk,
       status:['7700','7600','7500'].includes(squawk)?'Emergency':'In-Flight',
       progressPct:50, weatherTurbulence:'None', trajectory:[...traj],
+      engineTemperature: ['7700','7600'].includes(squawk) ? 940 : Math.round(650 + (parseInt(icao24.slice(0,2),16) % 150)),
       std: stdStr, atd: fmtTime(atdDate), sta: staStr, eta: fmtTime(etaDate),
     };
   }

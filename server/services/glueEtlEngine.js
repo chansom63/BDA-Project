@@ -1,13 +1,6 @@
 const s3DataLake = require('./s3DataLake');
 const redshiftAnalytics = require('./redshiftAnalytics');
-const WebHDFS = require('webhdfs');
 
-const hdfs = WebHDFS.createClient({
-  user: 'root',
-  host: 'localhost',
-  port: 9870,
-  path: '/webhdfs/v1'
-});
 
 class HadoopEtlEngine {
   constructor() {
