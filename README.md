@@ -165,4 +165,20 @@ docker exec -it nodemanager /bin/bash /opt/hadoop/mapreduce/run_job.sh
 Open [http://localhost:3000](http://localhost:3000) (User: `admin` / Password: `admin`) → **Dashboards** → **Flight Telemetry Real-Time Monitoring**.
 
 ### 9. Apache Airflow Orchestrator (`bda-airflow`)
-Open [http://localhost:8085](http://localhost:8085) (User: `admin` / Password: `admin`) to view DAGs and triggered tasks.
+Open [http://localhost:8085](http://localhost:8085) (User: `admin` / Password: `admin` or `airflow` / `airflow`) to view orchestrated DAGs:
+
+* **`flight_pipeline_initialization`** (`@once`): Validates connectivity and readiness across Kafka topics, ClickHouse tables, HDFS directories, and Spark cluster workers.
+* **`flight_historical_batch_analytics`** (`@hourly`): Submits Spark SQL batch processing jobs against HDFS historical telemetry, calculates route and aircraft analytics, persists results to HDFS (`/flight-telemetry/analytics`), and audits ClickHouse data warehouse consistency.
+* **`flight_streaming_pipeline_monitor`** (`*/15 * * * *`): Monitors Spark Streaming microbatch health, ClickHouse ingestion velocity, and live anomaly alert rates.
+
+#### Trigger / Test Airflow DAGs manually:
+```bash
+# Test initialization validation
+docker exec bda-airflow airflow dags test flight_pipeline_initialization
+
+# Test historical batch analytics submission to Spark
+docker exec bda-airflow airflow dags test flight_historical_batch_analytics
+
+# Test streaming pipeline monitor
+docker exec bda-airflow airflow dags test flight_streaming_pipeline_monitor
+```
