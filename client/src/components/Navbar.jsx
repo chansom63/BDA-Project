@@ -44,6 +44,7 @@ export default function Navbar({ activeTab, setActiveTab, activeAlertCount, flig
     { id: 'table', label: 'Telemetry List', icon: Radio },
     { id: 'alerts', label: 'Alert Center', icon: AlertTriangle, badge: activeAlertCount },
     { id: 'analytics', label: 'Spark BI Analytics', icon: BarChart3 },
+    { id: 'pipeline', label: 'Pipeline Visualizer', icon: Layers },
     { id: 'admin', label: 'Admin Panel', icon: Settings }
   ];
 
