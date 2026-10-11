@@ -19,8 +19,8 @@ class RedshiftAnalyticsService {
     this.initDefaultDW();
   }
 
-  initDefaultDW() {
-    // Generate realistic historical analytics data for QuickSight BI dashboards
+  async initDefaultDW() {
+    // Generate realistic historical analytics data for BI dashboards
     const hours = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, '0')}:00`);
     
     this.dwData.hourlyFlightDensity = hours.map((h, i) => ({
@@ -60,6 +60,9 @@ class RedshiftAnalyticsService {
       { factor: 'Airport Gate Congestion', count: 19, impactMinutes: 12 }
     ];
 
+    // In a real implementation we would insert this into ClickHouse here:
+    // await fetch('http://localhost:8123/?query=INSERT INTO analytics FORMAT JSONEachRow', { method: 'POST', body: ... })
+    
     this.saveDW();
   }
 
@@ -68,6 +71,12 @@ class RedshiftAnalyticsService {
       const dir = path.dirname(dwFile);
       if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
       fs.writeFileSync(dwFile, JSON.stringify(this.dwData, null, 2), 'utf8');
+      
+      // Simulate real-time streaming into ClickHouse via HTTP interface
+      fetch('http://localhost:8123/?query=CREATE TABLE IF NOT EXISTS default.analytics (lastEtlTimestamp String, totalProcessedEvents UInt32) ENGINE = MergeTree() ORDER BY lastEtlTimestamp', {
+          method: 'POST',
+          headers: { 'Authorization': 'Basic ' + Buffer.from('ch_user:ch_password').toString('base64') }
+      }).catch(e => console.log('ClickHouse not running yet, skipped table creation'));
     } catch (err) {
       console.error('Error saving Redshift DW state:', err.message);
     }
@@ -77,6 +86,15 @@ class RedshiftAnalyticsService {
     this.dwData.lastEtlTimestamp = new Date().toISOString();
     this.dwData.totalProcessedEvents += eventCount;
     this.saveDW();
+
+    // Insert the new batch result into ClickHouse
+    const clickhousePayload = `{"lastEtlTimestamp":"${this.dwData.lastEtlTimestamp}", "totalProcessedEvents":${this.dwData.totalProcessedEvents}}`;
+    
+    fetch('http://localhost:8123/?query=INSERT INTO default.analytics FORMAT JSONEachRow', {
+        method: 'POST',
+        headers: { 'Authorization': 'Basic ' + Buffer.from('ch_user:ch_password').toString('base64') },
+        body: clickhousePayload
+    }).catch(e => console.log('ClickHouse insertion skipped/failed', e.message));
   }
 
   getAnalyticsReport() {
