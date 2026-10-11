@@ -203,6 +203,8 @@ services:
     user: "0:0"
     networks:
       - flight-network
+    ports:
+      - "4040:4040"
     depends_on:
       - spark-master
       - spark-worker
