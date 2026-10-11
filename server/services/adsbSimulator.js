@@ -98,12 +98,14 @@ class ADSBTelemetrySimulator extends EventEmitter {
       let status = 'In-Flight';
       let verticalRateFpm = 0;
       let weatherTurbulence = 'None';
+      let engineTemperature = 650 + (i % 25) * 6;
 
       if (i === 5) {
         squawk = '7700'; // MAYDAY General Emergency
         status = 'Emergency';
         verticalRateFpm = -1500;
         weatherTurbulence = 'Severe';
+        engineTemperature = 960; // Engine Overheating Anomaly
       } else if (i === 15) {
         squawk = '7600'; // Radio Communications Failure
         status = 'Emergency';
@@ -149,6 +151,7 @@ class ADSBTelemetrySimulator extends EventEmitter {
         status:          status,
         progressPct:     pct,
         weatherTurbulence: weatherTurbulence,
+        engineTemperature: engineTemperature,
         trajectory:      [{ lat, lon, altitudeFt: 30000 + (i%12)*1000, speedKnots: 430+(i%8)*10, timestamp: new Date() }]
       });
     }
@@ -184,6 +187,13 @@ class ADSBTelemetrySimulator extends EventEmitter {
       if (f.trajectory.length > 40) f.trajectory.shift();
       f.trajectory.push({ lat:f.lat, lon:f.lon, altitudeFt:f.altitudeFt, speedKnots:f.speedKnots, timestamp:new Date() });
 
+      // Update engine temperature dynamics
+      if (f.squawk === '7700') {
+        f.engineTemperature = 950 + Math.round((Math.random() - 0.5) * 10);
+      } else {
+        f.engineTemperature = Math.max(600, Math.min(850, Math.round((f.engineTemperature || 700) + (Math.random() - 0.5) * 4)));
+      }
+
       // Build telemetry event
       f._event = {
         eventId: 'sim_' + Date.now() + '_' + f.icao24,
@@ -196,6 +206,7 @@ class ADSBTelemetrySimulator extends EventEmitter {
         speedKnots: f.speedKnots, headingDeg: Math.round(f.headingDeg),
         verticalRateFpm: f.verticalRateFpm, squawk: f.squawk, status: f.status,
         progressPct: f.progressPct, weatherTurbulence: f.weatherTurbulence,
+        engineTemperature: f.engineTemperature,
         trajectory: [...f.trajectory],
         std: f.std, atd: f.atd, sta: f.sta, eta: f.eta,
       };

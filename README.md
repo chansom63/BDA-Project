@@ -1,136 +1,168 @@
-# Monolithic MERN Architecture on AWS (Data Analytics Project)
-## Real-Time Flight Telemetry & Tracking System
+# Real-Time Flight Telemetry & Analytics Platform
+## Strict Architecture Compliance & Big Data Pipeline
 
-An end-to-end, high-performance **Real-Time Flight Telemetry & Tracking System** built using a single deployable **Monolithic MERN Application** (MongoDB/DocumentDB, Express.js, React, Node.js) integrated with simulated **AWS Data Analytics Cloud Pipeline** (Amazon MSK Kafka, Kinesis Data Analytics, S3 Data Lake, AWS Glue ETL, Amazon Redshift Data Warehouse, Amazon SES, Amazon SNS, and Amazon QuickSight BI dashboards).
-
----
-
-## 🌟 Key Features
-
-1. **Interactive Flight Radar Map (React + Leaflet)**:
-   - Live moving aircraft markers automatically rotated to match ground heading angle (`headingDeg`).
-   - Altitude-coded color schemes (FL380+ Purple, FL300-370 Cyan, FL200-290 Green, FL100-190 Amber, Emergency Crimson).
-   - Dynamic polyline trajectories displaying historical flight paths.
-   - Animated radar sweep overlay & emergency clearance radius circles.
-2. **Flight Telemetry HUD Inspector (FlightDrawer)**:
-   - Real-time altitude, ground speed (knots), vertical rate (fpm), heading, lat/lon coordinates, and route progress bar.
-   - Emergency squawk controls (Declare MAYDAY 7700, Radio Loss 7600, Hijack 7500).
-3. **Airspace Alert & Proximity Rule Engine**:
-   - Automated haversine proximity breach detection (< 10 NM lateral & < 1,000 ft vertical separation).
-   - Real-time WebSocket alerts & incident acknowledgement workflow.
-   - Simulated **Amazon SES (Email)** and **Amazon SNS (SMS/Push)** dispatch logs.
-4. **AWS Data Analytics Pipeline Architecture Visualizer**:
-   - Live interactive visual flow matching the system architecture diagram.
-   - Metrics display for Amazon MSK, Kinesis, DocumentDB, S3 Raw Data Lake partitions (`year=YYYY/month=MM/day=DD`), AWS Glue ETL Catalog, and Amazon Redshift DW.
-   - Manual **Trigger AWS Glue Batch ETL** action button.
-5. **Amazon QuickSight BI Analytics Dashboards (Recharts)**:
-   - Hourly flight volume & telemetry stream density area charts.
-   - Altitude band distribution pie/donut charts.
-   - Top international air corridor performance & on-time % bar charts.
-   - Flight delay factor analysis.
-6. **Admin Panel & RBAC User Management**:
-   - System threshold tuning (Proximity distance limit, simulation speed 1x to 10x).
-   - Seeded RBAC accounts (`Admin`, `Analyst`, `Dispatcher`, `Viewer`).
+An end-to-end, high-performance **Real-Time Flight Telemetry & Distributed Analytics Pipeline** built in strict compliance with the reference architecture using **Kafka, Apache Spark Structured Streaming, Apache Hadoop HDFS, ClickHouse OLAP, Apache Hive, YARN MapReduce, Apache Airflow, Grafana, and React**.
 
 ---
 
-## 🏗️ System Architecture Overview
+## 🏗️ System Architecture & Data Flow
 
 ```
-[ CLIENTS ] (React Single-Page App)
-    ├── Web Dashboard (Live Radar Map, Flight List, HUD)
-    ├── Mobile Web (PWA)
-    ├── Admin Panel (RBAC, Threshold Settings)
-    └── QuickSight BI Dashboards (Historical Analytics)
-            │
-            ▼ (HTTP / WebSockets)
-[ AWS ENTRY LAYER ]
-    ├── Amazon Route 53 (DNS)
-    ├── Amazon CloudFront (CDN)
-    └── AWS Application Load Balancer
-            │
-            ▼
-[ MONOLITHIC MERN APPLICATION ] (Deployed on AWS EC2)
-    ├── Node.js + Express.js Runtime (REST API + WebSocket Server)
-    ├── Telemetry Ingestion (Amazon MSK / Kafka Stream Consumer)
-    ├── Flight Tracking & State Engine
-    ├── Alert & Proximity Rule Engine
-    ├── Notification Service (Amazon SES Email & Amazon SNS SMS)
-    ├── Background Jobs (node-cron for Analytics Rollups & Glue Scheduling)
-            │
-            ▼
-[ AWS DATA ANALYTICS LAYER ]
-    ├── Real-Time Ingestion: Amazon MSK (Kafka)
-    ├── Stream Processing: Amazon Kinesis Data Analytics
-    ├── Operational DB: Amazon DocumentDB / MongoDB
-    ├── Historical Data Lake: Amazon S3 (YYYY/MM/DD Partitions)
-    ├── Batch Processing: AWS Glue ETL & Catalog
-    └── Analytics DW: Amazon Redshift (OLAP Database)
+[ Flight Telemetry Data Source ]
+    │  (bda-flight-generator: 500 simulated aircraft with engineTemperature & emergency squawks)
+    ▼
+[ Kafka Message Broker ] (bda-kafka: 29092 / 9093)
+    └── Topic: flight-telemetry (raw 15s batches)
+    │
+    ▼
+[ Spark Structured Streaming ] (spark-streaming / spark-master / spark-worker)
+    ├── Anomaly Detection Engine (Squawks 7700/7600, EGT > 900°C, Rapid Descent)
+    ├── Real-Time Metrics & Microbatch Aggregations
+    ├── Storage Sink 1: ClickHouse OLAP Database (live results)
+    └── Storage Sink 2: Hadoop HDFS Data Lake (historical batches)
+    │
+    ├──► [ ClickHouse OLAP DW ] (bda-clickhouse: 8123)
+    │        ├── Table: flight_telemetry (queried via argMax for latest aircraft positions)
+    │        ├── Table: flight_anomalies (detected emergency alerts)
+    │        └── Table: flight_aggregates (15s rollup summaries)
+    │        │
+    │        ├──► [ Backend REST API & Web UI ] (bda-backend: 5000)
+    │        │        ├── GET /api/flights       (10s REST polling by React Leaflet Map)
+    │        │        ├── GET /api/flights/:id   (Detailed aircraft trajectory)
+    │        │        ├── GET /api/anomalies     (Live alert notification feed)
+    │        │        └── GET /api/analytics     (ClickHouse DW rollups)
+    │        │
+    │        └──► [ Grafana Dashboards ] (bda-grafana: 3000)
+    │                 └── Real-Time Monitoring & Anomaly Alert Panels
+    │
+    └──► [ Hadoop HDFS Data Lake ] (namenode: 9870 / 9000 & datanode: 9864)
+             ├── /flight-telemetry/processed
+             ├── /flight-telemetry/anomalies
+             └── /flight-telemetry/analytics
+                     │
+                     ├──► [ Spark SQL Historical Batch Analytics ] (spark-apps/historical_analytics.py)
+                     ├──► [ Apache Hive Tables & Queries ] (hive/create_tables.sql)
+                     └──► [ YARN MapReduce Streaming Batch Jobs ] (nodemanager: 8042 & resourcemanager: 8088)
+
+[ Apache Airflow Orchestrator ] (bda-airflow: 8085)
+    ├── DAG: flight_telemetry_pipeline_init (Topic creation, HDFS dirs, ClickHouse tables)
+    └── DAG: flight_telemetry_historical_analytics (Hourly/daily analytical batch jobs)
 ```
 
 ---
 
-## 🚀 Quick Start Guide
+## 🌐 Microservices Ports & Web Interfaces
 
-### Prerequisites
-- Node.js (v18+ or v24+)
-- npm (v9+)
-
-### Installation & Launching
-
-1. **Install All Dependencies**:
-   ```bash
-   npm run install-all
-   ```
-
-2. **Start Monolithic Application (Server + Client)**:
-   ```bash
-   npm run dev
-   ```
-   Or start the backend server directly:
-   ```bash
-   npm start
-   ```
-
-3. **Access Application Interfaces**:
-   - **Monolithic Web Application**: `http://localhost:5000`
-   - **WebSocket Telemetry Stream**: `ws://localhost:5000/ws/telemetry`
-   - **REST API Health Check**: `http://localhost:5000/api/health`
+| Service | Container Name | Host Port | Internal Port | Description / URL |
+| :--- | :--- | :--- | :--- | :--- |
+| **Web Frontend & API** | `bda-backend` | **5000** | 5000 | [http://localhost:5000](http://localhost:5000) (Interactive Radar Map) |
+| **Grafana** | `bda-grafana` | **3000** | 3000 | [http://localhost:3000](http://localhost:3000) (admin/admin) |
+| **Spark Master UI** | `spark-master` | **8080** | 8080 | [http://localhost:8080](http://localhost:8080) |
+| **Spark Worker UI** | `spark-worker` | **8081** | 8081 | [http://localhost:8081](http://localhost:8081) |
+| **HDFS NameNode UI** | `namenode` | **9870** | 9870 | [http://localhost:9870](http://localhost:9870) |
+| **HDFS DataNode UI** | `datanode` | **9864** | 9864 | [http://localhost:9864](http://localhost:9864) |
+| **YARN ResourceManager** | `resourcemanager` | **8088** | 8088 | [http://localhost:8088](http://localhost:8088) |
+| **YARN NodeManager** | `nodemanager` | **8042** | 8042 | [http://localhost:8042](http://localhost:8042) |
+| **YARN HistoryServer** | `historyserver` | **8188** | 8188 | [http://localhost:8188](http://localhost:8188) |
+| **Apache Airflow** | `bda-airflow` | **8085** | 8080 | [http://localhost:8085](http://localhost:8085) (admin/admin) |
+| **ClickHouse HTTP** | `bda-clickhouse` | **8123** | 8123 | [http://localhost:8123](http://localhost:8123) |
+| **Kafka Broker** | `bda-kafka` | **9093** | 29092 | PLAINTEXT: `localhost:9093` |
 
 ---
 
-## 🔑 Default RBAC Credentials
+## 🚀 Quick Start
 
-| Role | Username | Password | Email |
-| :--- | :--- | :--- | :--- |
-| **Admin** | `admin` | `admin123` | `admin@flightops.aws` |
-| **Analyst** | `analyst` | `admin123` | `analyst@flightops.aws` |
-| **Dispatcher** | `dispatcher` | `admin123` | `dispatcher@flightops.aws` |
+To start all microservices:
+
+```bash
+# Start all containers in background
+docker compose --profile hadoop-batch up -d
+
+# Verify all containers are up and healthy
+docker compose --profile hadoop-batch ps
+```
+
+To run the automated compliance test verifying all 32 integration points:
+
+```bash
+bash scripts/smoke_test.sh
+```
 
 ---
 
-## 📁 Repository Structure
+## 🔍 Interactive Verification Guide
 
+### 1. Interactive Radar Map & Backend API (`bda-backend`)
+- Open [http://localhost:5000](http://localhost:5000) in your browser.
+- The React frontend polls `GET /api/flights` every 10 seconds directly from ClickHouse and renders 500 live aircraft gliding across the map using client-side dead-reckoning.
+- Test the REST API directly:
+```bash
+# Query latest active flights from ClickHouse
+curl -s http://localhost:5000/api/flights | head -c 200
+
+# Query detected anomalies from ClickHouse
+curl -s http://localhost:5000/api/anomalies | head -c 200
+
+# Query specific aircraft
+curl -s http://localhost:5000/api/flights/AAL100
 ```
-Project/
-├── package.json                   # Root orchestrator
-├── README.md                      # Project documentation
-├── scripts/
-│   └── start-dev.js               # Concurrent dev process runner
-├── server/                        # Express + Node.js Monolithic Engine
-│   ├── index.js                   # Server entry point & WebSocket attachment
-│   ├── config/
-│   │   ├── db.js                  # MongoDB / Mongo Memory Server connection
-│   │   └── awsConfig.js           # AWS Data Analytics pipeline settings
-│   ├── models/                    # Mongoose Data Schemas (Flight, Alert, User, etc.)
-│   ├── services/                  # ADSB Simulator, Kinesis Processor, S3 Data Lake, Glue ETL, Redshift DW
-│   ├── routes/                    # REST API endpoints (/api/flights, /api/alerts, /api/analytics, etc.)
-│   └── middleware/                # JWT Authentication & RBAC middleware
-└── client/                        # React + Vite Frontend
-    ├── src/
-    │   ├── App.jsx                # Main layout & tab routing
-    │   ├── index.css              # Dark aviation glassmorphism design system
-    │   ├── components/            # MapView, FlightDrawer, FlightList, AlertCenter, AwsPipelineVisualizer, etc.
-    │   ├── context/               # SocketContext (WS telemetry) & AuthContext
-    │   └── utils/                 # Geo & altitude formatting helpers
+
+### 2. Flight Telemetry Data Generator (`bda-flight-generator`)
+Inspect live flight generation producing 500 simulated aircraft every 15 seconds to Kafka:
+```bash
+docker logs -f --tail 20 bda-flight-generator
 ```
+
+### 3. Kafka Message Broker (`bda-kafka`)
+Interactively consume incoming raw telemetry:
+```bash
+docker exec -it bda-kafka kafka-console-consumer \
+  --bootstrap-server localhost:29092 \
+  --topic flight-telemetry \
+  --max-messages 2
+```
+
+### 4. Spark Structured Streaming Engine (`spark-streaming`)
+Monitor the stream processing microbatches:
+```bash
+docker logs -f --tail 20 spark-streaming
+```
+*Expected Output:*
+```
+--- [MicroBatch #342] Processing 500 records at 2026-10-11 06:30:14 UTC ---
+⚠️ Detected 2 flight anomalies in batch #342!
+💾 Written 500 processed records to HDFS (hdfs://namenode:9000/flight-telemetry/processed)
+💾 Written 2 anomaly records to HDFS (hdfs://namenode:9000/flight-telemetry/anomalies)
+📊 ClickHouse updated: 500 telemetry, 2 anomalies, 1 aggregate summary
+```
+
+### 5. ClickHouse OLAP Data Warehouse (`bda-clickhouse`)
+Open an interactive ClickHouse terminal:
+```bash
+docker exec -it bda-clickhouse clickhouse-client
+```
+Execute analytical queries:
+```sql
+SELECT count() AS total_records FROM flight_telemetry;
+SELECT eventId, callsign, airline, anomalyType, severity FROM flight_anomalies LIMIT 5;
+exit;
+```
+
+### 6. Hadoop HDFS Distributed File System (`namenode`)
+Inspect historical batches stored in HDFS:
+```bash
+docker exec -it namenode hdfs dfs -ls /flight-telemetry/
+docker exec -it namenode hdfs dfs -count /flight-telemetry/processed
+```
+
+### 7. Hadoop YARN MapReduce Batch Job (`nodemanager`)
+Execute a MapReduce streaming batch job across YARN:
+```bash
+docker exec -it nodemanager /bin/bash /opt/hadoop/mapreduce/run_job.sh
+```
+
+### 8. Grafana Real-Time Dashboard (`bda-grafana`)
+Open [http://localhost:3000](http://localhost:3000) (User: `admin` / Password: `admin`) → **Dashboards** → **Flight Telemetry Real-Time Monitoring**.
+
+### 9. Apache Airflow Orchestrator (`bda-airflow`)
+Open [http://localhost:8085](http://localhost:8085) (User: `admin` / Password: `admin`) to view DAGs and triggered tasks.

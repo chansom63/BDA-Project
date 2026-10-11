@@ -1,45 +1,25 @@
 const express = require('express');
 const router = express.Router();
 const clickhouseService = require('../services/clickhouseService');
-const s3DataLake = require('../services/s3DataLake');
-const AnalyticsSummary = require('../models/AnalyticsSummary');
-const Flight = require('../models/Flight');
-const Alert = require('../models/Alert');
 
-// GET /api/analytics/dashboard - QuickSight BI dashboard data endpoint
+// GET /api/analytics/dashboard - Analytics dashboard data endpoint powered directly by ClickHouse
 router.get('/dashboard', async (req, res, next) => {
   try {
-    const clickhouseReport = await clickhouseService.getAnalyticsReport();
-    const s3Metrics = s3DataLake.getMetrics();
-
-    const activeFlightsCount = await Flight.countDocuments({ status: { $ne: 'Landed' } });
-    const emergencyCount = await Flight.countDocuments({ status: 'Emergency' });
-    const totalAlertsCount = await Alert.countDocuments();
-    const activeAlertsCount = await Alert.countDocuments({ status: 'Active' });
-
-    const recentSummaries = await AnalyticsSummary.find().sort({ timestamp: -1 }).limit(24);
+    const report = await clickhouseService.getAnalyticsReport();
 
     res.json({
       success: true,
       realtimeMetrics: {
-        activeFlights: activeFlightsCount,
-        emergencyFlights: emergencyCount,
-        totalAlerts: totalAlertsCount,
-        activeAlerts: activeAlertsCount,
-        s3ParquetStoredMB: s3Metrics.totalSizeMB,
-        s3ObjectsCount: s3Metrics.totalObjectsCount,
-        redshiftProcessedEvents: clickhouseReport.dwData.totalProcessedEvents
+        activeFlights: report.dwData.activeFlights || 0,
+        totalAlerts: report.dwData.totalAnomalies || 0,
+        totalProcessedEvents: report.dwData.totalProcessedEvents || 0
       },
-      redshiftData: clickhouseReport.dwData,
-      recentSummaries,
-      awsPipelineStatus: {
-        mskKafka: 'HEALTHY',
-        kinesisAnalytics: 'ACTIVE',
-        documentDb: 'AVAILABLE',
-        hdfsDataLake: 'ONLINE',
-        hadoopMapReduce: 'READY',
-        hiveDataWarehouse: 'AVAILABLE',
-        quicksight: 'CONNECTED'
+      analyticsData: report.dwData,
+      status: {
+        kafka: 'HEALTHY',
+        sparkStreaming: 'ACTIVE',
+        clickhouse: report.status,
+        hdfs: 'ONLINE'
       }
     });
   } catch (err) {

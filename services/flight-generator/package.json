@@ -1,0 +1,13 @@
+{
+  "name": "flight-telemetry-generator",
+  "version": "1.0.0",
+  "description": "Standalone Flight Telemetry Generator Service producing to Kafka",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "kafkajs": "^2.2.4",
+    "dotenv": "^16.4.5"
+  }
+}

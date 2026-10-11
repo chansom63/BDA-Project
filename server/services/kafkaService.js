@@ -2,9 +2,16 @@ const { Kafka } = require('kafkajs');
 
 class KafkaService {
   constructor() {
+    const brokers = process.env.KAFKA_BROKERS
+      ? process.env.KAFKA_BROKERS.split(',').map(b => b.trim())
+      : ['localhost:9093'];
+    this.rawTopic = process.env.KAFKA_RAW_TOPIC || 'flight-telemetry';
+    this.processedTopic = process.env.KAFKA_PROCESSED_TOPIC || 'processed-events';
+    this.anomaliesTopic = process.env.KAFKA_ANOMALIES_TOPIC || 'anomalies';
+
     this.kafka = new Kafka({
       clientId: 'flight-telemetry-app',
-      brokers: ['localhost:9093']
+      brokers
     });
     this.producer = this.kafka.producer();
     this.consumer = this.kafka.consumer({ groupId: 'flight-stream-processor-group' });
@@ -31,10 +38,10 @@ class KafkaService {
       }));
 
       await this.producer.send({
-        topic: 'raw-adsb-telemetry-feed',
+        topic: this.rawTopic,
         messages,
       });
-      console.log(`📤 Produced batch of ${messages.length} messages to Kafka`);
+      console.log(`📤 Produced batch of ${messages.length} messages to Kafka (${this.rawTopic})`);
     } catch (error) {
       console.error('❌ Kafka Producer Error:', error.message);
     }
@@ -44,7 +51,7 @@ class KafkaService {
     try {
       await this.consumer.connect();
       console.log('✅ Connected to Real Kafka Consumer');
-      await this.consumer.subscribe({ topic: 'raw-adsb-telemetry-feed', fromBeginning: false });
+      await this.consumer.subscribe({ topic: this.rawTopic, fromBeginning: false });
 
       await this.consumer.run({
         eachBatchAutoResolve: true,

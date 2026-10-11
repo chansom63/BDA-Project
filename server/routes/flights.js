@@ -1,45 +1,26 @@
 const express = require('express');
 const router = express.Router();
-const Flight = require('../models/Flight');
-const adsbSimulator = require('../services/adsbSimulator');
-const { verifyToken } = require('../middleware/auth');
+const clickhouseService = require('../services/clickhouseService');
 
-// GET /api/flights - Query live flights with optional bbox, status, or search query
+// GET /api/flights - Query latest flight positions directly from ClickHouse
 router.get('/', async (req, res, next) => {
   try {
-    const { status, search, minLat, maxLat, minLon, maxLon } = req.query;
-    const filter = {};
+    const { status, search, minLat, maxLat, minLon, maxLon, limit } = req.query;
 
-    if (status && status !== 'ALL') {
-      filter.status = status;
-    }
+    const flights = await clickhouseService.getLatestFlights({
+      status,
+      search,
+      minLat,
+      maxLat,
+      minLon,
+      maxLon,
+      limit: limit || 500
+    });
 
-    if (search) {
-      const regex = new RegExp(search, 'i');
-      filter.$or = [
-        { flightId: regex },
-        { callsign: regex },
-        { airline: regex },
-        { icao24: regex },
-        { 'origin.code': regex },
-        { 'destination.code': regex }
-      ];
-    }
-
-    if (minLat && maxLat && minLon && maxLon) {
-      filter['currentPosition.lat'] = { $gte: Number(minLat), $lte: Number(maxLat) };
-      filter['currentPosition.lon'] = { $gte: Number(minLon), $lte: Number(maxLon) };
-    }
-
-    // Only return flights that received a telemetry update in the last 2 minutes.
-    // This prevents stale historical MongoDB records from flooding the initial page load.
-    const twoMinutesAgo = new Date(Date.now() - 2 * 60 * 1000);
-    filter.lastTelemetryUpdate = { $gte: twoMinutesAgo };
-
-    const flights = await Flight.find(filter).sort({ flightId: 1 });
     res.json({
       success: true,
       count: flights.length,
+      timestamp: new Date().toISOString(),
       flights
     });
   } catch (err) {
@@ -47,46 +28,14 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-// GET /api/flights/:flightId - Fetch single flight details and trajectory history
+// GET /api/flights/:flightId - Fetch single flight details and trajectory history from ClickHouse
 router.get('/:flightId', async (req, res, next) => {
   try {
-    const flight = await Flight.findOne({ flightId: req.params.flightId });
+    const flight = await clickhouseService.getFlightById(req.params.flightId);
     if (!flight) {
-      return res.status(404).json({ success: false, message: 'Flight not found' });
+      return res.status(404).json({ success: false, message: 'Flight not found in ClickHouse' });
     }
     res.json({ success: true, flight });
-  } catch (err) {
-    next(err);
-  }
-});
-
-// POST /api/flights/inject - Inject custom flight into simulator feed
-router.post('/inject', verifyToken, async (req, res, next) => {
-  try {
-    const injected = adsbSimulator.injectCustomFlight(req.body);
-    res.status(201).json({
-      success: true,
-      message: `Flight ${injected.flightId} successfully injected into live MSK/Kinesis telemetry stream`,
-      flight: injected
-    });
-  } catch (err) {
-    next(err);
-  }
-});
-
-// POST /api/flights/:flightId/squawk - Change squawk code or trigger emergency
-router.post('/:flightId/squawk', verifyToken, async (req, res, next) => {
-  try {
-    const { squawkCode } = req.body;
-    const updated = adsbSimulator.setSquawk(req.params.flightId, squawkCode);
-    if (!updated) {
-      return res.status(404).json({ success: false, message: 'Flight not found in simulator' });
-    }
-    res.json({
-      success: true,
-      message: `Squawk code for ${req.params.flightId} updated to ${squawkCode}`,
-      flight: updated
-    });
   } catch (err) {
     next(err);
   }

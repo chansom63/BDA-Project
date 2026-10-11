@@ -1,0 +1,347 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "liveNow": true,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "id": 100,
+      "title": "⚡ Real-Time Flight Telemetry Key Performance Indicators",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "grafana-clickhouse-datasource", "uid": "ClickHouse" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 500000 },
+              { "color": "purple", "value": 1000000 }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 5, "w": 6, "x": 0, "y": 1 },
+      "id": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.4.0",
+      "targets": [
+        {
+          "datasource": { "type": "grafana-clickhouse-datasource", "uid": "ClickHouse" },
+          "format": 1,
+          "rawSql": "SELECT count() AS total_telemetry_events FROM default.flight_telemetry",
+          "refId": "A"
+        }
+      ],
+      "title": "📡 Total Telemetry Volume",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "grafana-clickhouse-datasource", "uid": "ClickHouse" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "blue", "value": null },
+              { "color": "green", "value": 100 }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 5, "w": 6, "x": 6, "y": 1 },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.4.0",
+      "targets": [
+        {
+          "datasource": { "type": "grafana-clickhouse-datasource", "uid": "ClickHouse" },
+          "format": 1,
+          "rawSql": "SELECT count(DISTINCT flightId) AS active_airborne_flights FROM default.flight_telemetry WHERE timestamp >= now() - INTERVAL 10 MINUTE",
+          "refId": "A"
+        }
+      ],
+      "title": "✈️ Active Airborne Flights (10m)",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "grafana-clickhouse-datasource", "uid": "ClickHouse" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 5 },
+              { "color": "red", "value": 20 }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 5, "w": 6, "x": 12, "y": 1 },
+      "id": 3,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.4.0",
+      "targets": [
+        {
+          "datasource": { "type": "grafana-clickhouse-datasource", "uid": "ClickHouse" },
+          "format": 1,
+          "rawSql": "SELECT count() AS anomaly_count FROM default.flight_anomalies",
+          "refId": "A"
+        }
+      ],
+      "title": "⚠️ Detected Anomalies & Emergencies",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "grafana-clickhouse-datasource", "uid": "ClickHouse" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 800 },
+              { "color": "red", "value": 900 }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 5, "w": 6, "x": 18, "y": 1 },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.4.0",
+      "targets": [
+        {
+          "datasource": { "type": "grafana-clickhouse-datasource", "uid": "ClickHouse" },
+          "format": 1,
+          "rawSql": "SELECT max(engineTemperature) AS peak_engine_temp FROM default.flight_telemetry",
+          "refId": "A"
+        }
+      ],
+      "title": "🔥 Peak Engine Temp (EGT)",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 6 },
+      "id": 101,
+      "title": "📈 Telemetry Trends: Altitude, Speed & Engine Temperature",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "grafana-clickhouse-datasource", "uid": "ClickHouse" },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "auto"
+          },
+          "unit": "feet"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 7 },
+      "id": 5,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" } },
+      "title": "✈️ Aircraft Altitude Over Time",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": { "type": "grafana-clickhouse-datasource", "uid": "ClickHouse" },
+          "format": 1,
+          "rawSql": "SELECT timestamp AS time, altitudeFt, callsign AS metric FROM default.flight_telemetry ORDER BY timestamp DESC LIMIT 200",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "grafana-clickhouse-datasource", "uid": "ClickHouse" },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "auto"
+          },
+          "unit": "knot"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 7 },
+      "id": 6,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" } },
+      "title": "⚡ Speed Trends (Knots)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": { "type": "grafana-clickhouse-datasource", "uid": "ClickHouse" },
+          "format": 1,
+          "rawSql": "SELECT timestamp AS time, speedKnots, callsign AS metric FROM default.flight_telemetry ORDER BY timestamp DESC LIMIT 200",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "grafana-clickhouse-datasource", "uid": "ClickHouse" },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "auto",
+            "thresholdsStyle": { "mode": "line" }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 850 },
+              { "color": "red", "value": 900 }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 7 },
+      "id": 7,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" } },
+      "title": "🌡️ Engine Temperature Monitoring (°C)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": { "type": "grafana-clickhouse-datasource", "uid": "ClickHouse" },
+          "format": 1,
+          "rawSql": "SELECT timestamp AS time, engineTemperature, callsign AS metric FROM default.flight_telemetry ORDER BY timestamp DESC LIMIT 200",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 15 },
+      "id": 102,
+      "title": "🚨 Real-Time Anomaly Alerts & Pipeline Ingestion Velocity",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "grafana-clickhouse-datasource", "uid": "ClickHouse" },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto"
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 14, "x": 0, "y": 16 },
+      "id": 8,
+      "options": { "showHeader": true },
+      "title": "🚨 Recent Anomaly Alerts & Emergency Squawks",
+      "type": "table",
+      "targets": [
+        {
+          "datasource": { "type": "grafana-clickhouse-datasource", "uid": "ClickHouse" },
+          "format": 1,
+          "rawSql": "SELECT timestamp, flightId, callsign, anomalyType, severity, engineTemperature, altitudeFt, details FROM default.flight_anomalies ORDER BY timestamp DESC LIMIT 25",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "grafana-clickhouse-datasource", "uid": "ClickHouse" },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 80,
+            "lineWidth": 1
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 10, "x": 14, "y": 16 },
+      "id": 9,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" } },
+      "title": "📊 Ingested Events Velocity (Hourly / Minutely)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": { "type": "grafana-clickhouse-datasource", "uid": "ClickHouse" },
+          "format": 1,
+          "rawSql": "SELECT toStartOfMinute(timestamp) AS time, count() AS events_per_min FROM default.flight_telemetry GROUP BY time ORDER BY time DESC LIMIT 60",
+          "refId": "A"
+        }
+      ]
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": ["aviation", "flight-telemetry", "kafka", "spark", "clickhouse"],
+  "time": { "from": "now-6h", "to": "now" },
+  "timepicker": {
+    "refresh_intervals": ["5s", "10s", "30s", "1m", "5m"]
+  },
+  "timezone": "browser",
+  "title": "Real-Time Flight Telemetry & Airspace Operations",
+  "uid": "flight-telemetry-ops",
+  "version": 1
+}

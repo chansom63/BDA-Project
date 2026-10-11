@@ -2,9 +2,8 @@ import React, { createContext, useContext, useEffect, useState, useRef, useCallb
 
 const SocketContext = createContext();
 
-// ── Realistic flight physics dead-reckoning ───────────────────────────────────
+// ── Realistic flight physics dead-reckoning between polling intervals ─────────
 const DEG2RAD = Math.PI / 180;
-const RAD2DEG = 180 / Math.PI;
 
 function deadReckonFlight(f, dtSeconds) {
   const pos = f.currentPosition || f;
@@ -20,25 +19,25 @@ function deadReckonFlight(f, dtSeconds) {
 
   if (!lat && !lon) return f;
 
-  // ── Physics: gradual turn (3°/sec standard rate = 180°/min) ──────────────
-  const maxTurnRate = 3.0; // deg/sec (standard rate turn)
+  // Gradual turn (3°/sec standard rate)
+  const maxTurnRate = 3.0;
   const headingDiff = ((targetHeading - headingDeg + 540) % 360) - 180;
   const turnStep = Math.min(Math.abs(headingDiff), maxTurnRate * dtSeconds);
   headingDeg = (headingDeg + Math.sign(headingDiff) * turnStep + 360) % 360;
 
-  // ── Physics: smooth speed change (typical accel 1 kt/sec) ────────────────
+  // Smooth speed adjustment
   const speedDiff = targetSpeed - speedKnots;
   const speedStep = Math.min(Math.abs(speedDiff), 1.0 * dtSeconds);
   speedKnots = speedKnots + Math.sign(speedDiff) * speedStep;
 
-  // Simulate realistic wind micro-turbulence for dynamic UI feeling
-  speedKnots += (Math.random() - 0.5) * 0.4; // +/- 0.2 knots variance
+  // Micro wind variance for realistic movement
+  speedKnots += (Math.random() - 0.5) * 0.4;
 
-  // ── Physics: altitude change via vertical rate ────────────────────────────
+  // Altitude update
   altitudeFt = altitudeFt + (vertRate * dtSeconds / 60);
   altitudeFt = Math.min(45000, Math.max(500, altitudeFt));
 
-  // ── Dead-reckoning position update ───────────────────────────────────────
+  // Dead-reckoning position update
   const dtHours = dtSeconds / 3600;
   const distNM = speedKnots * dtHours;
   const hdRad = headingDeg * DEG2RAD;
@@ -61,18 +60,16 @@ function deadReckonFlight(f, dtSeconds) {
 }
 
 export const SocketProvider = ({ children }) => {
-  const [socket, setSocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [liveFlights, setLiveFlights] = useState([]);
   const [liveAlerts, setLiveAlerts] = useState([]);
   const [lastTelemetryTimestamp, setLastTelemetryTimestamp] = useState(null);
 
-  // Refs for the animation loop — avoids stale closures
-  const flightsRef = useRef([]);          // canonical server state
-  const lastTickRef = useRef(null);        // timestamp of last rAF tick
-  const rafIdRef = useRef(null);        // requestAnimationFrame id
+  const flightsRef = useRef([]);
+  const lastTickRef = useRef(null);
+  const rafIdRef = useRef(null);
 
-  // ── Animation loop (requestAnimationFrame) ──────────────────────────────────
+  // ── Animation loop (requestAnimationFrame) for smooth 60fps radar map ──────
   const animate = useCallback((now) => {
     rafIdRef.current = requestAnimationFrame(animate);
 
@@ -86,7 +83,6 @@ export const SocketProvider = ({ children }) => {
     const dtSeconds = (now - lastTickRef.current) / 1000;
     lastTickRef.current = now;
 
-    // Cap dt to 2 s to avoid huge jumps after tab is backgrounded
     const safeDt = Math.min(dtSeconds, 2);
     if (safeDt <= 0) return;
 
@@ -95,7 +91,6 @@ export const SocketProvider = ({ children }) => {
     setLiveFlights(updated);
   }, []);
 
-  // Start / stop rAF loop
   useEffect(() => {
     rafIdRef.current = requestAnimationFrame(animate);
     return () => {
@@ -103,70 +98,52 @@ export const SocketProvider = ({ children }) => {
     };
   }, [animate]);
 
-  // ── WebSocket connection ────────────────────────────────────────────────────
+  // ── REST Polling every 10 seconds (Compliance with Architecture) ────────────
   useEffect(() => {
-    let ws = null;
-    let reconnectTimeout = null;
+    const pollIntervalMs = parseInt(import.meta.env.VITE_POLL_INTERVAL_MS || '10000', 10);
+    const apiBase = import.meta.env.VITE_API_URL || '';
 
-    const connectWS = () => {
-      let wsUrl = '';
+    const fetchTelemetry = async () => {
+      try {
+        // 1. Fetch live aircraft positions from ClickHouse via backend API
+        const flightsRes = await fetch(`${apiBase}/api/flights`);
+        if (!flightsRes.ok) throw new Error(`HTTP error ${flightsRes.status}`);
+        const flightsData = await flightsRes.json();
 
-      // If deployed to Vercel (decoupled), use VITE_API_URL pointing to Render backend
-      if (import.meta.env.VITE_API_URL) {
-        // Convert http:// API URL to ws://
-        wsUrl = import.meta.env.VITE_API_URL.replace(/^http/, 'ws') + '/ws/telemetry';
-      } else {
-        // Monolithic deployment fallback (Vite proxy or Node serving React)
-        const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        wsUrl = `${wsProtocol}//${window.location.host}/ws/telemetry`;
-      }
-
-      ws = new WebSocket(wsUrl);
-
-      ws.onopen = () => {
-        console.log('📡 WebSocket Connected to AWS Flight Telemetry Stream');
-        setIsConnected(true);
-      };
-
-      ws.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          if (data.type === 'TELEMETRY_UPDATE') {
-            const incoming = data.flights || [];
-            flightsRef.current = incoming;
-            lastTickRef.current = null;
-            setLiveFlights(incoming);
-            setLastTelemetryTimestamp(data.timestamp);
-          } else if (data.type === 'NEW_ALERT') {
-            setLiveAlerts(prev => [data.alert, ...prev]);
-          }
-        } catch (err) {
-          console.error('Error parsing WS message:', err);
+        if (flightsData.success && Array.isArray(flightsData.flights)) {
+          flightsRef.current = flightsData.flights;
+          lastTickRef.current = null;
+          setLiveFlights(flightsData.flights);
+          setLastTelemetryTimestamp(flightsData.timestamp || new Date().toISOString());
+          setIsConnected(true);
         }
-      };
 
-      ws.onclose = () => {
-        console.log('🔌 WebSocket Closed. Retrying in 3s...');
+        // 2. Fetch recent anomalies from ClickHouse via backend API
+        const alertsRes = await fetch(`${apiBase}/api/anomalies`);
+        if (alertsRes.ok) {
+          const alertsData = await alertsRes.json();
+          if (alertsData.success && Array.isArray(alertsData.anomalies)) {
+            setLiveAlerts(alertsData.anomalies);
+          }
+        }
+      } catch (err) {
+        console.error('REST Polling Error:', err.message);
         setIsConnected(false);
-        reconnectTimeout = setTimeout(() => {
-          connectWS();
-        }, 3000);
-      };
-
-      setSocket(ws);
+      }
     };
 
-    connectWS();
+    // Initial immediate fetch
+    fetchTelemetry();
 
-    return () => {
-      if (ws) ws.close();
-      if (reconnectTimeout) clearTimeout(reconnectTimeout);
-    };
+    // Periodic 10-second polling timer
+    const timerId = setInterval(fetchTelemetry, pollIntervalMs);
+
+    return () => clearInterval(timerId);
   }, []);
 
   return (
     <SocketContext.Provider value={{
-      socket,
+      socket: null,
       isConnected,
       liveFlights,
       liveAlerts,
