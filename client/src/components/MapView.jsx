@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Polyline, Circle, Tooltip, ZoomControl } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline, Circle, Tooltip, ZoomControl, Pane } from 'react-leaflet';
 import L from 'leaflet';
 import { Plane, AlertTriangle, Wind, Navigation, ShieldAlert, Activity, Layers, MapPin } from 'lucide-react';
 import { formatAltitude, getAltitudeColor, getSquawkBadge } from '../utils/geoUtils';
@@ -240,6 +240,7 @@ export default function MapView({ flights, selectedFlight, setSelectedFlight, on
                   color={squawkBadge.isEmergency ? '#ef4444' : isSelected ? '#00b4d8' : '#facc15'}
                   weight={isSelected ? 3 : 2}
                   opacity={isSelected ? 0.9 : 0.6}
+                  pane="trailPane"
                 />
               )}
 
@@ -251,6 +252,7 @@ export default function MapView({ flights, selectedFlight, setSelectedFlight, on
                   weight={2}
                   opacity={0.6}
                   dashArray="5 5"
+                  pane="trailPane"
                 />
               )}
 
@@ -262,6 +264,7 @@ export default function MapView({ flights, selectedFlight, setSelectedFlight, on
                   weight={2}
                   opacity={0.8}
                   dashArray="5 5"
+                  pane="trailPane"
                 />
               )}
 

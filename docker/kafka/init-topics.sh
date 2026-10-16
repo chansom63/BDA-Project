@@ -11,7 +11,11 @@ done
 
 echo "✅ Kafka broker is reachable. Ensuring required topics exist..."
 
-TOPICS=("flight-telemetry" "processed-events" "anomalies" "raw-adsb-telemetry-feed")
+# Exactly three required topics per the approved architecture:
+#   flight-telemetry  — raw events from generator
+#   processed-events  — enriched telemetry from Spark
+#   anomalies         — anomaly records from Spark
+TOPICS=("flight-telemetry" "processed-events" "anomalies")
 
 for TOPIC in "${TOPICS[@]}"; do
   echo "Checking / creating topic: ${TOPIC}"

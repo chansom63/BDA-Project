@@ -176,7 +176,7 @@ export default function FlightList({ flights, setSelectedFlight, onTriggerSquawk
                           <button
                             className="btn-secondary"
                             style={{ fontSize: '11px', padding: '4px 10px' }}
-                            onClick={() => onTriggerSquawk(flight.flightId, '1200')}
+                            onClick={() => onTriggerSquawk?.(flight.flightId, '1200')}
                           >
                             Reset Squawk
                           </button>

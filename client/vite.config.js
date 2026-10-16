@@ -5,12 +5,9 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [react()],
   server: {
+    // Proxy REST API calls to the backend during local development
     proxy: {
-      '/api': 'http://localhost:5000',
-      '/ws': {
-        target: 'ws://localhost:5000',
-        ws: true
-      }
+      '/api': 'http://localhost:5000'
     }
   }
 })
