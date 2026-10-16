@@ -1,6 +1,6 @@
 services:
   # ============================================================================
-  # 1. MESSAGE BROKER & COORDINATION (APACHE KAFKA)
+  # 1. MESSAGE BROKER (APACHE KAFKA + ZOOKEEPER)
   # ============================================================================
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.0
@@ -58,7 +58,7 @@ services:
     restart: "no"
 
   # ============================================================================
-  # 2. FLIGHT TELEMETRY DATA SOURCE (REUSES ADSB SIMULATOR)
+  # 2. FLIGHT TELEMETRY DATA SOURCE (ADSB SIMULATOR → Kafka: flight-telemetry)
   # ============================================================================
   flight-generator:
     build:
@@ -77,87 +77,8 @@ services:
     restart: unless-stopped
 
   # ============================================================================
-  # 3. REAL-TIME OLAP DATA WAREHOUSE (CLICKHOUSE)
-  # ============================================================================
-  clickhouse:
-    image: clickhouse/clickhouse-server:latest
-    container_name: bda-clickhouse
-    networks:
-      - flight-network
-    ports:
-      - "8123:8123"
-      - "9000:9000"
-    environment:
-      CLICKHOUSE_USER: ch_user
-      CLICKHOUSE_PASSWORD: ch_password
-      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
-    volumes:
-      - clickhouse_data:/var/lib/clickhouse
-      - ./docker/clickhouse/init:/docker-entrypoint-initdb.d
-    healthcheck:
-      test: ["CMD-SHELL", "wget -q --spider 'http://localhost:8123/ping' || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    restart: unless-stopped
-
-  # ============================================================================
-  # 4. DISTRIBUTED STORAGE (HADOOP HDFS)
-  # ============================================================================
-  namenode:
-    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
-    container_name: namenode
-    networks:
-      - flight-network
-    ports:
-      - "9870:9870"
-      - "9001:9000"
-    volumes:
-      - hadoop_namenode:/hadoop/dfs/name
-    environment:
-      - CLUSTER_NAME=test
-    env_file:
-      - ./hadoop.env
-    restart: unless-stopped
-
-  datanode:
-    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
-    container_name: datanode
-    networks:
-      - flight-network
-    depends_on:
-      - namenode
-    environment:
-      SERVICE_PRECONDITION: "namenode:9870"
-    ports:
-      - "9864:9864"
-    volumes:
-      - hadoop_datanode:/hadoop/dfs/data
-    env_file:
-      - ./hadoop.env
-    restart: unless-stopped
-
-  hdfs-init:
-    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
-    container_name: bda-hdfs-init
-    networks:
-      - flight-network
-    depends_on:
-      - namenode
-      - datanode
-    entrypoint: ["/bin/bash", "-c"]
-    command: >
-      "until hdfs dfs -ls / > /dev/null 2>&1; do echo 'Waiting for HDFS NameNode...'; sleep 3; done;
-       hdfs dfs -mkdir -p /flight-telemetry/raw /flight-telemetry/processed /flight-telemetry/anomalies /flight-telemetry/analytics;
-       hdfs dfs -chmod -R 777 /flight-telemetry;
-       echo '✅ HDFS directory structure initialized:';
-       hdfs dfs -ls /flight-telemetry"
-    env_file:
-      - ./hadoop.env
-    restart: "no"
-
-  # ============================================================================
-  # 5. STREAM PROCESSING ENGINE (APACHE SPARK STANDALONE CLUSTER)
+  # 3. STREAM PROCESSING ENGINE (APACHE SPARK STRUCTURED STREAMING)
+  #    Reads flight-telemetry → publishes processed-events + anomalies to Kafka
   # ============================================================================
   spark-master:
     image: apache/spark:3.5.0
@@ -206,11 +127,14 @@ services:
     ports:
       - "4040:4040"
     depends_on:
-      - spark-master
-      - spark-worker
-      - kafka
-      - clickhouse
-      - namenode
+      kafka:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
+      spark-master:
+        condition: service_started
+      spark-worker:
+        condition: service_started
     volumes:
       - ./spark-apps:/opt/spark-apps
       - spark_checkpoints:/tmp/spark-checkpoints
@@ -219,12 +143,6 @@ services:
       - KAFKA_INPUT_TOPIC=flight-telemetry
       - KAFKA_PROCESSED_TOPIC=processed-events
       - KAFKA_ANOMALIES_TOPIC=anomalies
-      - CLICKHOUSE_HOST=clickhouse
-      - CLICKHOUSE_PORT=8123
-      - CLICKHOUSE_USER=ch_user
-      - CLICKHOUSE_PASSWORD=ch_password
-      - CLICKHOUSE_DB=default
-      - HDFS_NAMENODE=hdfs://namenode:9000
       - CHECKPOINT_DIR=/tmp/spark-checkpoints/streaming_processor
     command: [
       "/opt/spark/bin/spark-submit",
@@ -239,114 +157,50 @@ services:
     restart: unless-stopped
 
   # ============================================================================
-  # 6. MONITORING & DASHBOARDS (GRAFANA)
+  # 4. REAL-TIME OLAP DATA WAREHOUSE (CLICKHOUSE)
+  #    Ingests from Kafka: processed-events + anomalies via Kafka Engine tables
   # ============================================================================
-  grafana:
-    image: grafana/grafana:10.4.0
-    container_name: bda-grafana
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    container_name: bda-clickhouse
     networks:
       - flight-network
     ports:
-      - "3000:3000"
+      - "8123:8123"
+      - "9000:9000"
     environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-      - GF_USERS_ALLOW_SIGN_UP=false
-      - GF_INSTALL_PLUGINS=grafana-clickhouse-datasource
+      CLICKHOUSE_USER: ch_user
+      CLICKHOUSE_PASSWORD: ch_password
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
     volumes:
-      - grafana_data:/var/lib/grafana
-      - ./docker/grafana/provisioning:/etc/grafana/provisioning
-      - ./docker/grafana/dashboards:/etc/grafana/dashboards
-    depends_on:
-      - clickhouse
+      - clickhouse_data:/var/lib/clickhouse
+      - ./docker/clickhouse/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider 'http://localhost:8123/ping' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: unless-stopped
 
-  # ============================================================================
-  # 7. WORKFLOW ORCHESTRATION (APACHE AIRFLOW)
-  # ============================================================================
-  airflow:
-    image: apache/airflow:2.8.3
-    container_name: bda-airflow
-    networks:
-      - flight-network
-    ports:
-      - "8085:8080"
-    environment:
-      - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
-      - AIRFLOW__CORE__LOAD_EXAMPLES=false
-      - AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=false
-      - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=true
-      - _AIRFLOW_DB_UPGRADE=true
-      - _AIRFLOW_WWW_USER_CREATE=true
-      - _AIRFLOW_WWW_USER_USERNAME=airflow
-      - _AIRFLOW_WWW_USER_PASSWORD=airflow
-    volumes:
-      - ./airflow/dags:/opt/airflow/dags
-      - airflow_logs:/opt/airflow/logs
-    command: standalone
-    restart: unless-stopped
-
-  # ============================================================================
-  # 8. OPTIONAL BATCH SERVICES (HADOOP YARN & MAPREDUCE) - PROFILE: hadoop-batch
-  # ============================================================================
-  resourcemanager:
-    image: bde2020/hadoop-resourcemanager:2.0.0-hadoop3.2.1-java8
-    container_name: resourcemanager
-    profiles:
-      - hadoop-batch
+  # Runs after ClickHouse is healthy to ensure Kafka Engine tables and MVs exist
+  # (docker-entrypoint-initdb.d is skipped when the data volume already exists)
+  clickhouse-init:
+    image: curlimages/curl:latest
+    container_name: bda-clickhouse-init
     networks:
       - flight-network
     depends_on:
-      - namenode
-      - datanode
-    ports:
-      - "8088:8088"
-    environment:
-      SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864"
-    env_file:
-      - ./hadoop.env
-    restart: unless-stopped
-
-  nodemanager:
-    image: bde2020/hadoop-nodemanager:2.0.0-hadoop3.2.1-java8
-    container_name: nodemanager
-    profiles:
-      - hadoop-batch
-    networks:
-      - flight-network
-    depends_on:
-      - resourcemanager
-    ports:
-      - "8042:8042"
-    environment:
-      SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864 resourcemanager:8088"
+      clickhouse:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
     volumes:
-      - ./hadoop/mapreduce:/opt/hadoop/mapreduce
-    env_file:
-      - ./hadoop.env
-    restart: unless-stopped
-
-  historyserver:
-    image: bde2020/hadoop-historyserver:2.0.0-hadoop3.2.1-java8
-    container_name: historyserver
-    profiles:
-      - hadoop-batch
-    networks:
-      - flight-network
-    depends_on:
-      - resourcemanager
-    ports:
-      - "8188:8188"
-    environment:
-      SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864 resourcemanager:8088"
-    volumes:
-      - hadoop_historyserver:/hadoop/yarn/timeline
-    env_file:
-      - ./hadoop.env
-    restart: unless-stopped
+      - ./docker/clickhouse/init-schema.sh:/init-schema.sh
+    entrypoint: ["/bin/sh", "/init-schema.sh"]
+    restart: "no"
 
   # ============================================================================
-  # 9. FLIGHT TELEMETRY BACKEND REST API SERVICE
+  # 5. REST API BACKEND (ClickHouse → REST API → React)
   # ============================================================================
   backend:
     build:
@@ -369,6 +223,45 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
+  # ============================================================================
+  # 6. REACT WEB UI (Flight telemetry map, charts, anomaly alerts)
+  # ============================================================================
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: bda-frontend
+    networks:
+      - flight-network
+    ports:
+      - "3001:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  # ============================================================================
+  # 7. MONITORING & DASHBOARDS (GRAFANA → ClickHouse directly)
+  # ============================================================================
+  grafana:
+    image: grafana/grafana:10.4.0
+    container_name: bda-grafana
+    networks:
+      - flight-network
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_INSTALL_PLUGINS=grafana-clickhouse-datasource
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./docker/grafana/provisioning:/etc/grafana/provisioning
+      - ./docker/grafana/dashboards:/etc/grafana/dashboards
+    depends_on:
+      - clickhouse
+    restart: unless-stopped
+
 # ==============================================================================
 # NETWORKS & PERSISTENT VOLUMES
 # ==============================================================================
@@ -378,13 +271,6 @@ networks:
     driver: bridge
 
 volumes:
-  zookeeper_data:
-  kafka_data:
   clickhouse_data:
-  hadoop_namenode:
-  hadoop_datanode:
-  hadoop_historyserver:
   grafana_data:
-  airflow_logs:
   spark_checkpoints:
-

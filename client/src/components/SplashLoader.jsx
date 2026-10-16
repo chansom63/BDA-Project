@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import gaganLogo from '../assets/gaganlogo.png';
 
 export default function SplashLoader({ onComplete }) {
   const [isFading, setIsFading] = useState(false);
@@ -39,7 +40,7 @@ export default function SplashLoader({ onComplete }) {
       }}
     >
       <img
-        src="/src/assets/gaganlogo.png"
+        src={gaganLogo}
         alt="Project Logo"
         style={{
           width: '200px',

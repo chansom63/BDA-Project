@@ -5,9 +5,11 @@ datasources:
     type: grafana-clickhouse-datasource
     access: proxy
     isDefault: true
+    uid: PDEE91DDB90597936
     jsonData:
-      port: 8123
-      server: clickhouse
+      host: clickhouse
+      port: 9000
+      protocol: native
       username: ch_user
       tlsSkipVerify: true
       defaultDatabase: default

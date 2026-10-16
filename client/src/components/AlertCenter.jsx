@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { AlertTriangle, ShieldAlert, CheckCircle, Mail, MessageSquare, Bell, RefreshCw } from 'lucide-react';
+import { AlertTriangle, ShieldAlert, CheckCircle, Bell, RefreshCw } from 'lucide-react';
 import { useSocket } from '../context/SocketContext';
-import { useAuth } from '../context/AuthContext';
 
 export default function AlertCenter() {
   const { liveAlerts } = useSocket();
-  const { token } = useAuth();
   const [alerts, setAlerts] = useState([]);
-  const [notificationLogs, setNotificationLogs] = useState({ sesEmails: [], snsMessages: [] });
   const [loading, setLoading] = useState(false);
 
   const fetchAlerts = async () => {
@@ -30,23 +27,8 @@ export default function AlertCenter() {
     fetchAlerts();
   }, [liveAlerts]);
 
-  const acknowledgeAlert = async (alertId) => {
-    try {
-      const res = await fetch(`/api/alerts/${alertId}/acknowledge`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      });
-      const data = await res.json();
-      if (data.success) {
-        fetchAlerts();
-      }
-    } catch (err) {
-      console.error('Error acknowledging alert:', err);
-    }
-  };
+  // Note: Acknowledge is a read-only dashboard — alerts are facts from ClickHouse
+  const acknowledgeAlert = (_alertId) => { /* no-op: read-only pipeline */ };
 
   return (
     <div style={{ padding: '24px', maxWidth: '1400px', margin: '0 auto' }}>

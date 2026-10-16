@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Plane, Radio, AlertTriangle, Database, BarChart3, Settings, Layers, Shield, Clock, Search, Zap, FileText } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { Plane, Radio, AlertTriangle, Database, BarChart3, Layers, Shield, Clock, Search, Zap, Settings } from 'lucide-react';
 import { useSocket } from '../context/SocketContext';
 import GaganLogo from './GaganLogo';
 
 export default function Navbar({ activeTab, setActiveTab, activeAlertCount, flights, onSelectFlight }) {
-  const { user } = useAuth();
   const { isConnected } = useSocket();
+  const user = { username: 'analyst', role: 'Analyst' };
   const [utcTime, setUtcTime] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -40,12 +39,10 @@ export default function Navbar({ activeTab, setActiveTab, activeAlertCount, flig
   };
 
   const navItems = [
-    { id: 'map', label: 'Flight Radar Map', icon: Plane },
-    { id: 'table', label: 'Telemetry List', icon: Radio },
-    { id: 'alerts', label: 'Alert Center', icon: AlertTriangle, badge: activeAlertCount },
-    { id: 'analytics', label: 'Spark BI Analytics', icon: BarChart3 },
-    { id: 'pipeline', label: 'Pipeline Visualizer', icon: Layers },
-    { id: 'admin', label: 'Admin Panel', icon: Settings }
+    { id: 'map',       label: 'Flight Radar Map',    icon: Plane },
+    { id: 'table',     label: 'Telemetry List',       icon: Radio },
+    { id: 'alerts',    label: 'Alert Center',         icon: AlertTriangle, badge: activeAlertCount },
+    { id: 'analytics', label: 'BI Analytics',         icon: BarChart3 },
   ];
 
   return (
