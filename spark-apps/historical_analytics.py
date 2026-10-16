@@ -110,9 +110,6 @@ try:
     print(f"\n[3/5] Writing summary analytics to HDFS: {ANALYTICS_OUT_PATH}...")
     q1.coalesce(1).write.mode("overwrite").json(f"{ANALYTICS_OUT_PATH}/aircraft_stats")
     q2.coalesce(1).write.mode("overwrite").json(f"{ANALYTICS_OUT_PATH}/airline_engine_stats")
-    q3.coalesce(1).write.mode("overwrite").json(f"{ANALYTICS_OUT_PATH}/route_corridors")
-    if 'q4' in locals():
-        q4.coalesce(1).write.mode("overwrite").json(f"{ANALYTICS_OUT_PATH}/anomaly_breakdown")
     print(f"✅ Batch historical analytics completed successfully and saved to HDFS.")
 
 except Exception as e:
