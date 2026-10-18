@@ -1,0 +1,11 @@
+replace-imports-with-any = [
+    "pyspark",
+    "pyspark.*",
+]
+
+[errors]
+missing-import = false
+bad-argument-type = false
+bad-assignment = false
+unbound-name = false
+missing-attribute = false

@@ -8,7 +8,8 @@
     "server": "cd server && npm run dev",
     "client": "cd client && npm run dev",
     "dev": "node scripts/start-dev.js",
-    "start": "cd server && npm start"
+    "start": "cd server && npm start",
+    "stream": "python services/data-generator/dynamic_airline_streamer.py"
   },
   "keywords": [
     "mern",

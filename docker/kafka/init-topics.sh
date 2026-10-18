@@ -11,20 +11,29 @@ done
 
 echo "✅ Kafka broker is reachable. Ensuring required topics exist..."
 
-# Exactly three required topics per the approved architecture:
-#   flight-telemetry  — raw events from generator
-#   processed-events  — enriched telemetry from Spark
-#   anomalies         — anomaly records from Spark
-TOPICS=("flight-telemetry" "processed-events" "anomalies")
+# Required Kafka topics across streaming pipeline
+declare -A TOPIC_PARTITIONS=(
+  ["flight-telemetry"]=6
+  ["flight-events"]=3
+  ["bookings"]=3
+  ["financial-events"]=3
+  ["weather-events"]=3
+  ["maintenance-events"]=3
+  ["processed-events"]=6
+  ["anomalies"]=3
+)
 
-for TOPIC in "${TOPICS[@]}"; do
-  echo "Checking / creating topic: ${TOPIC}"
+for TOPIC in "${!TOPIC_PARTITIONS[@]}"; do
+  PARTITIONS=${TOPIC_PARTITIONS[$TOPIC]}
+  echo "Checking / creating topic: ${TOPIC} (partitions: ${PARTITIONS})"
   kafka-topics --bootstrap-server "${BOOTSTRAP_SERVER}" \
     --create \
     --if-not-exists \
     --topic "${TOPIC}" \
-    --partitions 3 \
-    --replication-factor 1
+    --partitions "${PARTITIONS}" \
+    --replication-factor 1 \
+    --config compression.type=lz4 \
+    --config retention.ms=86400000
 done
 
 echo "✅ Topic initialization complete. Current topics on ${BOOTSTRAP_SERVER}:"

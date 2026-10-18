@@ -20,14 +20,31 @@ import json
 import socket
 from datetime import datetime
 
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import (
-    col, from_json, to_json, struct, to_timestamp, lit,
-    when, concat_ws, avg, count, max as spark_max, current_timestamp
-)
-from pyspark.sql.types import (
-    StructType, StructField, StringType, IntegerType, DoubleType
-)
+reconfigure_fn = getattr(sys.stdout, "reconfigure", None)
+if callable(reconfigure_fn):
+    try:
+        reconfigure_fn(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+reconfigure_err = getattr(sys.stderr, "reconfigure", None)
+if callable(reconfigure_err):
+    try:
+        reconfigure_err(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
+try:
+    from pyspark.sql import SparkSession
+    from pyspark.sql.functions import (
+        col, from_json, to_json, struct, to_timestamp, lit,
+        when, concat_ws, avg, count, max as spark_max, current_timestamp
+    )
+    from pyspark.sql.types import (
+        StructType, StructField, StringType, IntegerType, DoubleType
+    )
+    HAS_PYSPARK = True
+except ImportError:
+    HAS_PYSPARK = False
 
 # ---------------------------------------------------------------------------
 # Configuration from environment
@@ -63,52 +80,67 @@ def wait_for_kafka(brokers, timeout_sec=120):
 
 # ---------------------------------------------------------------------------
 # Telemetry JSON schema (must match the generator's event shape)
-# ---------------------------------------------------------------------------
-TELEMETRY_SCHEMA = StructType([
-    StructField("eventId",            StringType(),  True),
-    StructField("timestamp",          StringType(),  True),
-    StructField("icao24",             StringType(),  True),
-    StructField("callsign",           StringType(),  True),
-    StructField("flightId",           StringType(),  True),
-    StructField("airline",            StringType(),  True),
-    StructField("aircraftType",       StringType(),  True),
-    StructField("registration",       StringType(),  True),
-    StructField("countryFlag",        StringType(),  True),
-    StructField("radarSource",        StringType(),  True),
-    StructField("photoUrl",           StringType(),  True),
-    StructField("origin", StructType([
-        StructField("code",    StringType(),  True),
-        StructField("city",    StringType(),  True),
-        StructField("country", StringType(),  True),
-        StructField("lat",     DoubleType(),  True),
-        StructField("lon",     DoubleType(),  True),
-    ]), True),
-    StructField("destination", StructType([
-        StructField("code",    StringType(),  True),
-        StructField("city",    StringType(),  True),
-        StructField("country", StringType(),  True),
-        StructField("lat",     DoubleType(),  True),
-        StructField("lon",     DoubleType(),  True),
-    ]), True),
-    StructField("latitude",           DoubleType(),  True),
-    StructField("longitude",          DoubleType(),  True),
-    StructField("altitudeFt",         IntegerType(), True),
-    StructField("speedKnots",         IntegerType(), True),
-    StructField("headingDeg",         IntegerType(), True),
-    StructField("verticalRateFpm",    IntegerType(), True),
-    StructField("squawk",             StringType(),  True),
-    StructField("status",             StringType(),  True),
-    StructField("progressPct",        IntegerType(), True),
-    StructField("weatherTurbulence",  StringType(),  True),
-    StructField("engineTemperature",  IntegerType(), True),
-    StructField("std",                StringType(),  True),
-    StructField("atd",                StringType(),  True),
-    StructField("sta",                StringType(),  True),
-    StructField("eta",                StringType(),  True),
-])
+if HAS_PYSPARK:
+    TELEMETRY_SCHEMA = StructType([
+        StructField("eventId",            StringType(),  True),
+        StructField("timestamp",          StringType(),  True),
+        StructField("icao24",             StringType(),  True),
+        StructField("callsign",           StringType(),  True),
+        StructField("flightId",           StringType(),  True),
+        StructField("airline",            StringType(),  True),
+        StructField("aircraftType",       StringType(),  True),
+        StructField("registration",       StringType(),  True),
+        StructField("countryFlag",        StringType(),  True),
+        StructField("radarSource",        StringType(),  True),
+        StructField("photoUrl",           StringType(),  True),
+        StructField("origin", StructType([
+            StructField("code",    StringType(),  True),
+            StructField("city",    StringType(),  True),
+            StructField("country", StringType(),  True),
+            StructField("lat",     DoubleType(),  True),
+            StructField("lon",     DoubleType(),  True),
+        ]), True),
+        StructField("destination", StructType([
+            StructField("code",    StringType(),  True),
+            StructField("city",    StringType(),  True),
+            StructField("country", StringType(),  True),
+            StructField("lat",     DoubleType(),  True),
+            StructField("lon",     DoubleType(),  True),
+        ]), True),
+        StructField("latitude",           DoubleType(),  True),
+        StructField("longitude",          DoubleType(),  True),
+        StructField("altitudeFt",         IntegerType(), True),
+        StructField("speedKnots",         IntegerType(), True),
+        StructField("headingDeg",         IntegerType(), True),
+        StructField("verticalRateFpm",    IntegerType(), True),
+        StructField("squawk",             StringType(),  True),
+        StructField("status",             StringType(),  True),
+        StructField("progressPct",        IntegerType(), True),
+        StructField("flightPhase",        StringType(),  True),
+        StructField("weatherTurbulence",  StringType(),  True),
+        StructField("engineTemperature",  IntegerType(), True),
+        StructField("fuelFlowKgh",        DoubleType(),  True),
+        StructField("vibrationMmS",       DoubleType(),  True),
+        StructField("co2EmissionRateKgs", DoubleType(),  True),
+        StructField("sensorQuality",      DoubleType(),  True),
+        StructField("anomalyLabel",       StringType(),  True),
+        StructField("aircraftRegistration", StringType(), True),
+        StructField("std",                StringType(),  True),
+        StructField("atd",                StringType(),  True),
+        StructField("sta",                StringType(),  True),
+        StructField("eta",                StringType(),  True),
+    ])
+else:
+    TELEMETRY_SCHEMA = None
 
 
 def main():
+    if not HAS_PYSPARK:
+        print("❌ PySpark is required for the Spark Structured Streaming engine.", file=sys.stderr)
+        print("💡 Run the streaming processor inside Docker:", file=sys.stderr)
+        print("   docker compose up spark-streaming", file=sys.stderr)
+        sys.exit(1)
+
     wait_for_kafka(KAFKA_BROKERS)
 
     spark = (
@@ -162,8 +194,10 @@ def main():
         anomaly_condition = (
             col("squawk").isin("7700", "7600", "7500") |
             (col("engineTemperature") >= 900) |
-            (col("verticalRateFpm") <= -1200) |
-            (col("weatherTurbulence") == "Severe")
+            (col("verticalRateFpm") <= -2500) |
+            (col("vibrationMmS") >= 4.5) |
+            (col("weatherTurbulence") == "Severe") |
+            (col("anomalyLabel").isNotNull() & (col("anomalyLabel") != "NORMAL"))
         )
 
         anomalies_df = batch_df.filter(anomaly_condition).withColumn(
@@ -172,12 +206,14 @@ def main():
             .when(col("squawk") == "7600", lit("RADIO_COMMUNICATION_FAILURE"))
             .when(col("squawk") == "7500", lit("HIJACK_UNLAWFUL_INTERFERENCE"))
             .when(col("engineTemperature") >= 900, lit("ENGINE_OVERHEAT_CRITICAL"))
-            .when(col("verticalRateFpm") <= -1200, lit("RAPID_DESCENT_ALERT"))
+            .when(col("vibrationMmS") >= 4.5, lit("EXCESSIVE_AIRFRAME_VIBRATION"))
+            .when(col("verticalRateFpm") <= -2500, lit("RAPID_DESCENT_ALERT"))
+            .when(col("anomalyLabel") == "FUEL_DIVERGENCE", lit("FUEL_FLOW_DIVERGENCE"))
             .otherwise(lit("SEVERE_TURBULENCE_HAZARD"))
         ).withColumn(
             "severity",
             when(
-                col("squawk").isin("7700", "7500") | (col("engineTemperature") >= 920),
+                col("squawk").isin("7700", "7500") | (col("engineTemperature") >= 920) | (col("vibrationMmS") >= 5.0),
                 lit("EMERGENCY")
             ).otherwise(lit("WARNING"))
         ).withColumn(
@@ -185,8 +221,9 @@ def main():
             concat_ws(" | ",
                 col("callsign"),
                 col("status"),
-                concat_ws("", lit("Alt: "), col("altitudeFt")),
+                concat_ws("", lit("Alt: "), col("altitudeFt"), lit("ft")),
                 concat_ws("", lit("EGT: "), col("engineTemperature"), lit("C")),
+                concat_ws("", lit("Vibe: "), col("vibrationMmS"), lit("mm/s")),
                 concat_ws("", lit("Squawk: "), col("squawk"))
             )
         )
@@ -200,32 +237,47 @@ def main():
             avg("altitudeFt").alias("avgAlt"),
             avg("speedKnots").alias("avgSpeed"),
             avg("engineTemperature").alias("avgEgt"),
-            spark_max("engineTemperature").alias("maxEgt")
+            spark_max("engineTemperature").alias("maxEgt"),
+            avg("vibrationMmS").alias("avgVibe"),
+            avg("fuelFlowKgh").alias("avgFuel")
         ).collect()[0]
 
         # ── Build processed-events rows ────────────────────────────────────
         #   Shape stored in ClickHouse: matches flight_telemetry table schema
         processed_rows = []
         for r in batch_df.collect():
-            orig = r["origin"]["code"] if r["origin"] else "UNK"
-            dest = r["destination"]["code"] if r["destination"] else "UNK"
+            orig = r["origin"]["code"] if (r["origin"] and isinstance(r["origin"], dict) and "code" in r["origin"]) else (str(r["origin"]) if r["origin"] else "UNK")
+            dest = r["destination"]["code"] if (r["destination"] and isinstance(r["destination"], dict) and "code" in r["destination"]) else (str(r["destination"]) if r["destination"] else "UNK")
+            route = r.get("route") or f"{orig} ➔ {dest}"
+            fuel_kgh = float(r.get("fuelFlowKgh") or 2200.0)
+            co2_rate = float(r.get("co2EmissionRateKgs") or (fuel_kgh / 3600.0 * 3.157))
+
             processed_rows.append({
-                "eventId":           r["eventId"]   or f"ev_{int(time.time()*1000)}",
-                "timestamp":         (r["timestamp"] or batch_time)[:19].replace("T", " "),
-                "flightId":          r["flightId"]  or "UNK",
-                "callsign":          r["callsign"]  or "UNK",
-                "latitude":          float(r["latitude"]          or 0.0),
-                "longitude":         float(r["longitude"]         or 0.0),
-                "altitudeFt":        int(r["altitudeFt"]          or 0),
-                "speedKnots":        int(r["speedKnots"]          or 0),
-                "headingDeg":        int(r["headingDeg"]          or 0),
-                "verticalRateFpm":   int(r["verticalRateFpm"]     or 0),
-                "squawk":            str(r["squawk"]              or "1200"),
-                "status":            str(r["status"]              or "In-Flight"),
-                "engineTemperature": int(r["engineTemperature"]   or 700),
-                "route":             f"{orig} ➔ {dest}",
-                "origin":            orig,
-                "destination":       dest,
+                "eventId":              r["eventId"]   or f"ev_{int(time.time()*1000)}",
+                "timestamp":            (r["timestamp"] or batch_time)[:19].replace("T", " "),
+                "flightId":             r["flightId"]  or "UNK",
+                "callsign":             r["callsign"]  or "UNK",
+                "airline":              r.get("airline") or (r["callsign"][:3] if r["callsign"] else "UNK"),
+                "aircraftType":         r.get("aircraftType") or "Boeing 737-800",
+                "aircraftRegistration": r.get("aircraftRegistration") or r.get("registration") or "N1000",
+                "latitude":             float(r["latitude"]          or 0.0),
+                "longitude":            float(r["longitude"]         or 0.0),
+                "altitudeFt":           int(r["altitudeFt"]          or 0),
+                "speedKnots":           int(r["speedKnots"]          or 0),
+                "headingDeg":           int(r["headingDeg"]          or 0),
+                "verticalRateFpm":      int(r["verticalRateFpm"]     or 0),
+                "squawk":               str(r["squawk"]              or "1200"),
+                "flightPhase":          str(r.get("flightPhase")     or "CRUISE"),
+                "status":               str(r["status"]              or "In-Flight"),
+                "engineTemperature":    int(r["engineTemperature"]   or 700),
+                "fuelFlowKgh":          round(fuel_kgh, 2),
+                "vibrationMmS":         round(float(r.get("vibrationMmS") or 1.1), 2),
+                "co2EmissionRateKgs":   round(co2_rate, 4),
+                "sensorQuality":        round(float(r.get("sensorQuality") or 0.98), 2),
+                "anomalyLabel":         str(r.get("anomalyLabel")    or "NORMAL"),
+                "route":                route,
+                "origin":               orig,
+                "destination":          dest,
             })
 
         # ── Build anomaly rows ─────────────────────────────────────────────

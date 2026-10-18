@@ -76,6 +76,26 @@ services:
       GENERATION_INTERVAL_MS: 15000
     restart: unless-stopped
 
+  # High-volume streaming generator (5,000 sustained / 10,000 burst events/sec)
+  high-volume-generator:
+    build:
+      context: .
+      dockerfile: services/data-generator/Dockerfile
+    container_name: bda-high-volume-generator
+    networks:
+      - flight-network
+    depends_on:
+      kafka:
+        condition: service_healthy
+    profiles:
+      - high-volume
+    environment:
+      KAFKA_BROKERS: kafka:29092
+      RATE_TARGET: 5000
+      AIRCRAFT_COUNT: 1000
+    command: ["python", "live_simulator.py", "--brokers", "kafka:29092", "--rate", "5000", "--aircraft", "1000"]
+    restart: "no"
+
   # ============================================================================
   # 3. STREAM PROCESSING ENGINE (APACHE SPARK STRUCTURED STREAMING)
   #    Reads flight-telemetry → publishes processed-events + anomalies to Kafka

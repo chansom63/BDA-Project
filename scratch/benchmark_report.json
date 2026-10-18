@@ -1,0 +1,62 @@
+{
+  "timestamp": "2026-10-18T14:44:46.548005",
+  "hardware": {
+    "cpu_logical_cores": 4,
+    "ram_total_gb": 11.65,
+    "ram_available_gb": 0.45
+  },
+  "generation_benchmark": {
+    "scale_events": 100000,
+    "elapsed_seconds": 1.373,
+    "throughput_rps": 72809.7,
+    "start_ram_mb": 31.5,
+    "peak_ram_mb": 56.3
+  },
+  "query_benchmark": {
+    "connected": false,
+    "query_results": [
+      {
+        "query_name": "Most Profitable Routes (Ranked by Operating Profit & Margin)",
+        "p50_ms": 13.8,
+        "p95_ms": 17.8,
+        "p99_ms": 18.2,
+        "status": "SIMULATED_OFFLINE"
+      },
+      {
+        "query_name": "Financial Trends Over Time (Daily Aggregations)",
+        "p50_ms": 13.8,
+        "p95_ms": 17.8,
+        "p99_ms": 18.2,
+        "status": "SIMULATED_OFFLINE"
+      },
+      {
+        "query_name": "Flight Delay Distribution & Percentiles (p50, p90, p95)",
+        "p50_ms": 13.8,
+        "p95_ms": 17.8,
+        "p99_ms": 18.2,
+        "status": "SIMULATED_OFFLINE"
+      },
+      {
+        "query_name": "Route Environmental Performance & CO2 Emissions",
+        "p50_ms": 13.8,
+        "p95_ms": 17.8,
+        "p99_ms": 18.2,
+        "status": "SIMULATED_OFFLINE"
+      },
+      {
+        "query_name": "Aircraft Health & Anomaly Frequency Breakdown",
+        "p50_ms": 13.8,
+        "p95_ms": 17.8,
+        "p99_ms": 18.2,
+        "status": "SIMULATED_OFFLINE"
+      },
+      {
+        "query_name": "Airport Ground Operations & Turnaround Delay Correlation",
+        "p50_ms": 13.8,
+        "p95_ms": 17.8,
+        "p99_ms": 18.2,
+        "status": "SIMULATED_OFFLINE"
+      }
+    ]
+  }
+}

@@ -1,0 +1,4052 @@
+[
+  {
+    "airline": "Qantas",
+    "origin": "ICN",
+    "flightsOperated": 37,
+    "totDepDelay": 132.0,
+    "totArrDelay": 129.0,
+    "onTimeCount": 35,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "SIN",
+    "flightsOperated": 35,
+    "totDepDelay": 378.0,
+    "totArrDelay": 607.0,
+    "onTimeCount": 24,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "SIN",
+    "flightsOperated": 34,
+    "totDepDelay": 231.0,
+    "totArrDelay": 267.0,
+    "onTimeCount": 27,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "ICN",
+    "flightsOperated": 32,
+    "totDepDelay": 237.0,
+    "totArrDelay": 215.0,
+    "onTimeCount": 27,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "BLR",
+    "flightsOperated": 32,
+    "totDepDelay": 285.0,
+    "totArrDelay": 253.0,
+    "onTimeCount": 25,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "ATL",
+    "flightsOperated": 32,
+    "totDepDelay": 385.0,
+    "totArrDelay": 305.0,
+    "onTimeCount": 23,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "FRA",
+    "flightsOperated": 31,
+    "totDepDelay": 295.0,
+    "totArrDelay": 581.0,
+    "onTimeCount": 23,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "SYD",
+    "flightsOperated": 31,
+    "totDepDelay": 283.0,
+    "totArrDelay": 259.0,
+    "onTimeCount": 22,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air France",
+    "origin": "SIN",
+    "flightsOperated": 31,
+    "totDepDelay": 222.0,
+    "totArrDelay": 429.0,
+    "onTimeCount": 25,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "DFW",
+    "flightsOperated": 31,
+    "totDepDelay": 210.0,
+    "totArrDelay": 263.0,
+    "onTimeCount": 24,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "ATL",
+    "flightsOperated": 31,
+    "totDepDelay": 198.0,
+    "totArrDelay": 189.0,
+    "onTimeCount": 26,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "ATL",
+    "flightsOperated": 30,
+    "totDepDelay": 185.0,
+    "totArrDelay": 196.0,
+    "onTimeCount": 23,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "SFO",
+    "flightsOperated": 30,
+    "totDepDelay": 227.0,
+    "totArrDelay": 228.0,
+    "onTimeCount": 25,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air India",
+    "origin": "ICN",
+    "flightsOperated": 30,
+    "totDepDelay": 170.0,
+    "totArrDelay": 238.0,
+    "onTimeCount": 26,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "ZRH",
+    "flightsOperated": 30,
+    "totDepDelay": 320.0,
+    "totArrDelay": 323.0,
+    "onTimeCount": 22,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "JNB",
+    "flightsOperated": 30,
+    "totDepDelay": 306.0,
+    "totArrDelay": 270.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Emirates",
+    "origin": "MUC",
+    "flightsOperated": 30,
+    "totDepDelay": 234.0,
+    "totArrDelay": 436.0,
+    "onTimeCount": 23,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "FRA",
+    "flightsOperated": 30,
+    "totDepDelay": 233.0,
+    "totArrDelay": 168.0,
+    "onTimeCount": 26,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qantas",
+    "origin": "DFW",
+    "flightsOperated": 30,
+    "totDepDelay": 260.0,
+    "totArrDelay": 323.0,
+    "onTimeCount": 24,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "SYD",
+    "flightsOperated": 30,
+    "totDepDelay": 160.0,
+    "totArrDelay": 118.0,
+    "onTimeCount": 26,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "British Airways",
+    "origin": "SYD",
+    "flightsOperated": 30,
+    "totDepDelay": 298.0,
+    "totArrDelay": 483.0,
+    "onTimeCount": 23,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qantas",
+    "origin": "JFK",
+    "flightsOperated": 30,
+    "totDepDelay": 161.0,
+    "totArrDelay": 146.0,
+    "onTimeCount": 25,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "BOM",
+    "flightsOperated": 30,
+    "totDepDelay": 298.0,
+    "totArrDelay": 322.0,
+    "onTimeCount": 22,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "BLR",
+    "flightsOperated": 29,
+    "totDepDelay": 227.0,
+    "totArrDelay": 274.0,
+    "onTimeCount": 23,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air France",
+    "origin": "DFW",
+    "flightsOperated": 29,
+    "totDepDelay": 267.0,
+    "totArrDelay": 240.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qantas",
+    "origin": "SYD",
+    "flightsOperated": 29,
+    "totDepDelay": 131.0,
+    "totArrDelay": 147.0,
+    "onTimeCount": 24,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qantas",
+    "origin": "HND",
+    "flightsOperated": 29,
+    "totDepDelay": 211.0,
+    "totArrDelay": 187.0,
+    "onTimeCount": 23,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air France",
+    "origin": "LAX",
+    "flightsOperated": 29,
+    "totDepDelay": 271.0,
+    "totArrDelay": 283.0,
+    "onTimeCount": 22,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air India",
+    "origin": "HND",
+    "flightsOperated": 29,
+    "totDepDelay": 202.0,
+    "totArrDelay": 369.0,
+    "onTimeCount": 22,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "ORD",
+    "flightsOperated": 29,
+    "totDepDelay": 129.0,
+    "totArrDelay": 110.0,
+    "onTimeCount": 25,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Emirates",
+    "origin": "LAX",
+    "flightsOperated": 29,
+    "totDepDelay": 172.0,
+    "totArrDelay": 152.0,
+    "onTimeCount": 26,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "SYD",
+    "flightsOperated": 29,
+    "totDepDelay": 160.0,
+    "totArrDelay": 224.0,
+    "onTimeCount": 24,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "DXB",
+    "flightsOperated": 29,
+    "totDepDelay": 306.0,
+    "totArrDelay": 367.0,
+    "onTimeCount": 23,
+    "severeDelayCount": 2
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "YYZ",
+    "flightsOperated": 29,
+    "totDepDelay": 225.0,
+    "totArrDelay": 401.0,
+    "onTimeCount": 23,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "AMS",
+    "flightsOperated": 29,
+    "totDepDelay": 353.0,
+    "totArrDelay": 392.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "DXB",
+    "flightsOperated": 29,
+    "totDepDelay": 267.0,
+    "totArrDelay": 371.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Emirates",
+    "origin": "AMS",
+    "flightsOperated": 29,
+    "totDepDelay": 219.0,
+    "totArrDelay": 158.0,
+    "onTimeCount": 24,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "DEL",
+    "flightsOperated": 28,
+    "totDepDelay": 222.0,
+    "totArrDelay": 185.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "DOH",
+    "flightsOperated": 28,
+    "totDepDelay": 274.0,
+    "totArrDelay": 300.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Air France",
+    "origin": "DXB",
+    "flightsOperated": 28,
+    "totDepDelay": 274.0,
+    "totArrDelay": 300.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "British Airways",
+    "origin": "AMS",
+    "flightsOperated": 28,
+    "totDepDelay": 297.0,
+    "totArrDelay": 537.0,
+    "onTimeCount": 22,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "ORD",
+    "flightsOperated": 28,
+    "totDepDelay": 336.0,
+    "totArrDelay": 314.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "FCO",
+    "flightsOperated": 28,
+    "totDepDelay": 211.0,
+    "totArrDelay": 206.0,
+    "onTimeCount": 23,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "HND",
+    "flightsOperated": 28,
+    "totDepDelay": 207.0,
+    "totArrDelay": 249.0,
+    "onTimeCount": 23,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qantas",
+    "origin": "MAD",
+    "flightsOperated": 28,
+    "totDepDelay": 143.0,
+    "totArrDelay": 151.0,
+    "onTimeCount": 23,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "AMS",
+    "flightsOperated": 28,
+    "totDepDelay": 272.0,
+    "totArrDelay": 259.0,
+    "onTimeCount": 20,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "FCO",
+    "flightsOperated": 28,
+    "totDepDelay": 242.0,
+    "totArrDelay": 219.0,
+    "onTimeCount": 23,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "LHR",
+    "flightsOperated": 28,
+    "totDepDelay": 218.0,
+    "totArrDelay": 255.0,
+    "onTimeCount": 22,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Qantas",
+    "origin": "JNB",
+    "flightsOperated": 28,
+    "totDepDelay": 255.0,
+    "totArrDelay": 282.0,
+    "onTimeCount": 24,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air France",
+    "origin": "DEL",
+    "flightsOperated": 28,
+    "totDepDelay": 278.0,
+    "totArrDelay": 321.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "HND",
+    "flightsOperated": 28,
+    "totDepDelay": 110.0,
+    "totArrDelay": 128.0,
+    "onTimeCount": 24,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "CDG",
+    "flightsOperated": 28,
+    "totDepDelay": 243.0,
+    "totArrDelay": 642.0,
+    "onTimeCount": 22,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "YYZ",
+    "flightsOperated": 27,
+    "totDepDelay": 190.0,
+    "totArrDelay": 187.0,
+    "onTimeCount": 22,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "ICN",
+    "flightsOperated": 27,
+    "totDepDelay": 250.0,
+    "totArrDelay": 434.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "British Airways",
+    "origin": "JNB",
+    "flightsOperated": 27,
+    "totDepDelay": 146.0,
+    "totArrDelay": 131.0,
+    "onTimeCount": 24,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air India",
+    "origin": "BLR",
+    "flightsOperated": 27,
+    "totDepDelay": 351.0,
+    "totArrDelay": 527.0,
+    "onTimeCount": 22,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "ZRH",
+    "flightsOperated": 27,
+    "totDepDelay": 170.0,
+    "totArrDelay": 187.0,
+    "onTimeCount": 20,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "HKG",
+    "flightsOperated": 27,
+    "totDepDelay": 304.0,
+    "totArrDelay": 339.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Emirates",
+    "origin": "ORD",
+    "flightsOperated": 27,
+    "totDepDelay": 140.0,
+    "totArrDelay": 125.0,
+    "onTimeCount": 23,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Emirates",
+    "origin": "SIN",
+    "flightsOperated": 27,
+    "totDepDelay": 153.0,
+    "totArrDelay": 68.0,
+    "onTimeCount": 23,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "DOH",
+    "flightsOperated": 27,
+    "totDepDelay": 286.0,
+    "totArrDelay": 279.0,
+    "onTimeCount": 20,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "DFW",
+    "flightsOperated": 27,
+    "totDepDelay": 269.0,
+    "totArrDelay": 282.0,
+    "onTimeCount": 20,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "DXB",
+    "flightsOperated": 27,
+    "totDepDelay": 369.0,
+    "totArrDelay": 366.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "British Airways",
+    "origin": "ORD",
+    "flightsOperated": 27,
+    "totDepDelay": 385.0,
+    "totArrDelay": 411.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "ICN",
+    "flightsOperated": 27,
+    "totDepDelay": 218.0,
+    "totArrDelay": 213.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "LAX",
+    "flightsOperated": 27,
+    "totDepDelay": 185.0,
+    "totArrDelay": 205.0,
+    "onTimeCount": 22,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air India",
+    "origin": "ORD",
+    "flightsOperated": 26,
+    "totDepDelay": 173.0,
+    "totArrDelay": 168.0,
+    "onTimeCount": 23,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "IST",
+    "flightsOperated": 26,
+    "totDepDelay": 211.0,
+    "totArrDelay": 215.0,
+    "onTimeCount": 22,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "DFW",
+    "flightsOperated": 26,
+    "totDepDelay": 242.0,
+    "totArrDelay": 216.0,
+    "onTimeCount": 23,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Qantas",
+    "origin": "BOM",
+    "flightsOperated": 26,
+    "totDepDelay": 268.0,
+    "totArrDelay": 414.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "AMS",
+    "flightsOperated": 26,
+    "totDepDelay": 260.0,
+    "totArrDelay": 458.0,
+    "onTimeCount": 20,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "SYD",
+    "flightsOperated": 26,
+    "totDepDelay": 79.0,
+    "totArrDelay": 80.0,
+    "onTimeCount": 25,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "HKG",
+    "flightsOperated": 26,
+    "totDepDelay": 192.0,
+    "totArrDelay": 208.0,
+    "onTimeCount": 22,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Emirates",
+    "origin": "DXB",
+    "flightsOperated": 26,
+    "totDepDelay": 202.0,
+    "totArrDelay": 341.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Emirates",
+    "origin": "ICN",
+    "flightsOperated": 26,
+    "totDepDelay": 240.0,
+    "totArrDelay": 172.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qantas",
+    "origin": "DXB",
+    "flightsOperated": 26,
+    "totDepDelay": 281.0,
+    "totArrDelay": 502.0,
+    "onTimeCount": 20,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "MUC",
+    "flightsOperated": 26,
+    "totDepDelay": 177.0,
+    "totArrDelay": 128.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "DOH",
+    "flightsOperated": 26,
+    "totDepDelay": 277.0,
+    "totArrDelay": 297.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Emirates",
+    "origin": "FRA",
+    "flightsOperated": 26,
+    "totDepDelay": 182.0,
+    "totArrDelay": 95.0,
+    "onTimeCount": 22,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "JNB",
+    "flightsOperated": 26,
+    "totDepDelay": 124.0,
+    "totArrDelay": 146.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air France",
+    "origin": "MAD",
+    "flightsOperated": 26,
+    "totDepDelay": 192.0,
+    "totArrDelay": 369.0,
+    "onTimeCount": 20,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "DEL",
+    "flightsOperated": 26,
+    "totDepDelay": 174.0,
+    "totArrDelay": 300.0,
+    "onTimeCount": 23,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air India",
+    "origin": "DFW",
+    "flightsOperated": 26,
+    "totDepDelay": 149.0,
+    "totArrDelay": 272.0,
+    "onTimeCount": 23,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "GRU",
+    "flightsOperated": 26,
+    "totDepDelay": 243.0,
+    "totArrDelay": 235.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "LAX",
+    "flightsOperated": 26,
+    "totDepDelay": 258.0,
+    "totArrDelay": 257.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "BKK",
+    "flightsOperated": 26,
+    "totDepDelay": 192.0,
+    "totArrDelay": 222.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "LAX",
+    "flightsOperated": 26,
+    "totDepDelay": 231.0,
+    "totArrDelay": 413.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Emirates",
+    "origin": "HND",
+    "flightsOperated": 26,
+    "totDepDelay": 245.0,
+    "totArrDelay": 200.0,
+    "onTimeCount": 22,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "ATL",
+    "flightsOperated": 26,
+    "totDepDelay": 231.0,
+    "totArrDelay": 232.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "YYZ",
+    "flightsOperated": 26,
+    "totDepDelay": 230.0,
+    "totArrDelay": 205.0,
+    "onTimeCount": 20,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "ICN",
+    "flightsOperated": 26,
+    "totDepDelay": 148.0,
+    "totArrDelay": 509.0,
+    "onTimeCount": 22,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "ICN",
+    "flightsOperated": 26,
+    "totDepDelay": 245.0,
+    "totArrDelay": 213.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "IST",
+    "flightsOperated": 26,
+    "totDepDelay": 75.0,
+    "totArrDelay": 74.0,
+    "onTimeCount": 23,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air India",
+    "origin": "IST",
+    "flightsOperated": 26,
+    "totDepDelay": 163.0,
+    "totArrDelay": 139.0,
+    "onTimeCount": 22,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air France",
+    "origin": "MUC",
+    "flightsOperated": 26,
+    "totDepDelay": 303.0,
+    "totArrDelay": 286.0,
+    "onTimeCount": 20,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "ORD",
+    "flightsOperated": 26,
+    "totDepDelay": 212.0,
+    "totArrDelay": 221.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "SFO",
+    "flightsOperated": 26,
+    "totDepDelay": 139.0,
+    "totArrDelay": 114.0,
+    "onTimeCount": 23,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "MUC",
+    "flightsOperated": 25,
+    "totDepDelay": 106.0,
+    "totArrDelay": 75.0,
+    "onTimeCount": 23,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "HND",
+    "flightsOperated": 25,
+    "totDepDelay": 256.0,
+    "totArrDelay": 234.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "BOM",
+    "flightsOperated": 25,
+    "totDepDelay": 108.0,
+    "totArrDelay": 121.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "BKK",
+    "flightsOperated": 25,
+    "totDepDelay": 187.0,
+    "totArrDelay": 156.0,
+    "onTimeCount": 20,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "BLR",
+    "flightsOperated": 25,
+    "totDepDelay": 236.0,
+    "totArrDelay": 300.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "ICN",
+    "flightsOperated": 25,
+    "totDepDelay": 252.0,
+    "totArrDelay": 239.0,
+    "onTimeCount": 20,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "CDG",
+    "flightsOperated": 25,
+    "totDepDelay": 33.0,
+    "totArrDelay": 14.0,
+    "onTimeCount": 25,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "GRU",
+    "flightsOperated": 25,
+    "totDepDelay": 118.0,
+    "totArrDelay": 87.0,
+    "onTimeCount": 20,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "DOH",
+    "flightsOperated": 25,
+    "totDepDelay": 357.0,
+    "totArrDelay": 309.0,
+    "onTimeCount": 20,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "LAX",
+    "flightsOperated": 25,
+    "totDepDelay": 191.0,
+    "totArrDelay": 202.0,
+    "onTimeCount": 20,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "FCO",
+    "flightsOperated": 25,
+    "totDepDelay": 239.0,
+    "totArrDelay": 302.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "MAD",
+    "flightsOperated": 25,
+    "totDepDelay": 389.0,
+    "totArrDelay": 414.0,
+    "onTimeCount": 13,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Air India",
+    "origin": "MUC",
+    "flightsOperated": 25,
+    "totDepDelay": 302.0,
+    "totArrDelay": 285.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Qantas",
+    "origin": "SIN",
+    "flightsOperated": 25,
+    "totDepDelay": 195.0,
+    "totArrDelay": 231.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air France",
+    "origin": "FCO",
+    "flightsOperated": 25,
+    "totDepDelay": 233.0,
+    "totArrDelay": 211.0,
+    "onTimeCount": 20,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "MAD",
+    "flightsOperated": 25,
+    "totDepDelay": 140.0,
+    "totArrDelay": 341.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "BOM",
+    "flightsOperated": 25,
+    "totDepDelay": 174.0,
+    "totArrDelay": 192.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Emirates",
+    "origin": "DFW",
+    "flightsOperated": 25,
+    "totDepDelay": 143.0,
+    "totArrDelay": 152.0,
+    "onTimeCount": 20,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "DFW",
+    "flightsOperated": 25,
+    "totDepDelay": 164.0,
+    "totArrDelay": 192.0,
+    "onTimeCount": 22,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "ZRH",
+    "flightsOperated": 25,
+    "totDepDelay": 156.0,
+    "totArrDelay": 122.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "MUC",
+    "flightsOperated": 25,
+    "totDepDelay": 124.0,
+    "totArrDelay": 170.0,
+    "onTimeCount": 24,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "British Airways",
+    "origin": "LHR",
+    "flightsOperated": 25,
+    "totDepDelay": 86.0,
+    "totArrDelay": 73.0,
+    "onTimeCount": 23,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "CDG",
+    "flightsOperated": 25,
+    "totDepDelay": 225.0,
+    "totArrDelay": 433.0,
+    "onTimeCount": 20,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qantas",
+    "origin": "MUC",
+    "flightsOperated": 25,
+    "totDepDelay": 213.0,
+    "totArrDelay": 195.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "AMS",
+    "flightsOperated": 25,
+    "totDepDelay": 247.0,
+    "totArrDelay": 251.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air India",
+    "origin": "SYD",
+    "flightsOperated": 24,
+    "totDepDelay": 187.0,
+    "totArrDelay": 190.0,
+    "onTimeCount": 20,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qantas",
+    "origin": "FCO",
+    "flightsOperated": 24,
+    "totDepDelay": 159.0,
+    "totArrDelay": 114.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "British Airways",
+    "origin": "FRA",
+    "flightsOperated": 24,
+    "totDepDelay": 159.0,
+    "totArrDelay": 98.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "JFK",
+    "flightsOperated": 24,
+    "totDepDelay": 200.0,
+    "totArrDelay": 224.0,
+    "onTimeCount": 20,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "ZRH",
+    "flightsOperated": 24,
+    "totDepDelay": 292.0,
+    "totArrDelay": 336.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "ZRH",
+    "flightsOperated": 24,
+    "totDepDelay": 95.0,
+    "totArrDelay": 300.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qantas",
+    "origin": "ATL",
+    "flightsOperated": 24,
+    "totDepDelay": 97.0,
+    "totArrDelay": 97.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "SFO",
+    "flightsOperated": 24,
+    "totDepDelay": 216.0,
+    "totArrDelay": 182.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "HKG",
+    "flightsOperated": 24,
+    "totDepDelay": 200.0,
+    "totArrDelay": 179.0,
+    "onTimeCount": 20,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "LAX",
+    "flightsOperated": 24,
+    "totDepDelay": 258.0,
+    "totArrDelay": 297.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "British Airways",
+    "origin": "MUC",
+    "flightsOperated": 24,
+    "totDepDelay": 276.0,
+    "totArrDelay": 445.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Qantas",
+    "origin": "HKG",
+    "flightsOperated": 24,
+    "totDepDelay": 198.0,
+    "totArrDelay": 250.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "JFK",
+    "flightsOperated": 24,
+    "totDepDelay": 124.0,
+    "totArrDelay": 105.0,
+    "onTimeCount": 23,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "IST",
+    "flightsOperated": 24,
+    "totDepDelay": 176.0,
+    "totArrDelay": 388.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "British Airways",
+    "origin": "FCO",
+    "flightsOperated": 24,
+    "totDepDelay": 214.0,
+    "totArrDelay": 197.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "CDG",
+    "flightsOperated": 24,
+    "totDepDelay": 80.0,
+    "totArrDelay": 89.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "FRA",
+    "flightsOperated": 24,
+    "totDepDelay": 166.0,
+    "totArrDelay": 157.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "CDG",
+    "flightsOperated": 24,
+    "totDepDelay": 197.0,
+    "totArrDelay": 188.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "SFO",
+    "flightsOperated": 24,
+    "totDepDelay": 291.0,
+    "totArrDelay": 294.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "ICN",
+    "flightsOperated": 24,
+    "totDepDelay": 83.0,
+    "totArrDelay": 47.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "ORD",
+    "flightsOperated": 24,
+    "totDepDelay": 180.0,
+    "totArrDelay": 248.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air France",
+    "origin": "CDG",
+    "flightsOperated": 24,
+    "totDepDelay": 171.0,
+    "totArrDelay": 350.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "YYZ",
+    "flightsOperated": 24,
+    "totDepDelay": 197.0,
+    "totArrDelay": 235.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "British Airways",
+    "origin": "HND",
+    "flightsOperated": 24,
+    "totDepDelay": 233.0,
+    "totArrDelay": 388.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "ATL",
+    "flightsOperated": 24,
+    "totDepDelay": 200.0,
+    "totArrDelay": 168.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "HKG",
+    "flightsOperated": 24,
+    "totDepDelay": 193.0,
+    "totArrDelay": 180.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "SYD",
+    "flightsOperated": 24,
+    "totDepDelay": 244.0,
+    "totArrDelay": 216.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Emirates",
+    "origin": "IST",
+    "flightsOperated": 24,
+    "totDepDelay": 110.0,
+    "totArrDelay": 114.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air France",
+    "origin": "HKG",
+    "flightsOperated": 23,
+    "totDepDelay": 320.0,
+    "totArrDelay": 370.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "ORD",
+    "flightsOperated": 23,
+    "totDepDelay": 191.0,
+    "totArrDelay": 189.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "GRU",
+    "flightsOperated": 23,
+    "totDepDelay": 128.0,
+    "totArrDelay": 82.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "SFO",
+    "flightsOperated": 23,
+    "totDepDelay": 153.0,
+    "totArrDelay": 160.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "BKK",
+    "flightsOperated": 23,
+    "totDepDelay": 153.0,
+    "totArrDelay": 140.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qantas",
+    "origin": "IST",
+    "flightsOperated": 23,
+    "totDepDelay": 289.0,
+    "totArrDelay": 286.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "SIN",
+    "flightsOperated": 23,
+    "totDepDelay": 62.0,
+    "totArrDelay": 81.0,
+    "onTimeCount": 22,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "British Airways",
+    "origin": "SFO",
+    "flightsOperated": 23,
+    "totDepDelay": 202.0,
+    "totArrDelay": 235.0,
+    "onTimeCount": 22,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "HKG",
+    "flightsOperated": 23,
+    "totDepDelay": 178.0,
+    "totArrDelay": 157.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "AMS",
+    "flightsOperated": 23,
+    "totDepDelay": 247.0,
+    "totArrDelay": 216.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qantas",
+    "origin": "BLR",
+    "flightsOperated": 23,
+    "totDepDelay": 220.0,
+    "totArrDelay": 215.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Air India",
+    "origin": "LAX",
+    "flightsOperated": 23,
+    "totDepDelay": 155.0,
+    "totArrDelay": 214.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "BKK",
+    "flightsOperated": 23,
+    "totDepDelay": 186.0,
+    "totArrDelay": 211.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "SFO",
+    "flightsOperated": 23,
+    "totDepDelay": 196.0,
+    "totArrDelay": 261.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air India",
+    "origin": "GRU",
+    "flightsOperated": 23,
+    "totDepDelay": 367.0,
+    "totArrDelay": 367.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "DOH",
+    "flightsOperated": 23,
+    "totDepDelay": 139.0,
+    "totArrDelay": 89.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "PVG",
+    "flightsOperated": 23,
+    "totDepDelay": 268.0,
+    "totArrDelay": 307.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "FCO",
+    "flightsOperated": 23,
+    "totDepDelay": 170.0,
+    "totArrDelay": 144.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Emirates",
+    "origin": "MAD",
+    "flightsOperated": 23,
+    "totDepDelay": 287.0,
+    "totArrDelay": 275.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Emirates",
+    "origin": "BKK",
+    "flightsOperated": 23,
+    "totDepDelay": 211.0,
+    "totArrDelay": 264.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "AMS",
+    "flightsOperated": 23,
+    "totDepDelay": 184.0,
+    "totArrDelay": 255.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "LAX",
+    "flightsOperated": 23,
+    "totDepDelay": 139.0,
+    "totArrDelay": 146.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "MUC",
+    "flightsOperated": 23,
+    "totDepDelay": 282.0,
+    "totArrDelay": 283.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "British Airways",
+    "origin": "LAX",
+    "flightsOperated": 23,
+    "totDepDelay": 116.0,
+    "totArrDelay": 141.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "AMS",
+    "flightsOperated": 23,
+    "totDepDelay": 199.0,
+    "totArrDelay": 371.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "MUC",
+    "flightsOperated": 23,
+    "totDepDelay": 273.0,
+    "totArrDelay": 416.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "MAD",
+    "flightsOperated": 23,
+    "totDepDelay": 150.0,
+    "totArrDelay": 125.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air India",
+    "origin": "SIN",
+    "flightsOperated": 23,
+    "totDepDelay": 168.0,
+    "totArrDelay": 148.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "JNB",
+    "flightsOperated": 23,
+    "totDepDelay": 251.0,
+    "totArrDelay": 241.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "JNB",
+    "flightsOperated": 23,
+    "totDepDelay": 194.0,
+    "totArrDelay": 336.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air India",
+    "origin": "ATL",
+    "flightsOperated": 23,
+    "totDepDelay": 120.0,
+    "totArrDelay": 71.0,
+    "onTimeCount": 20,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Emirates",
+    "origin": "DOH",
+    "flightsOperated": 23,
+    "totDepDelay": 377.0,
+    "totArrDelay": 383.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "BLR",
+    "flightsOperated": 23,
+    "totDepDelay": 103.0,
+    "totArrDelay": 202.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "FCO",
+    "flightsOperated": 23,
+    "totDepDelay": 215.0,
+    "totArrDelay": 150.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Emirates",
+    "origin": "SYD",
+    "flightsOperated": 23,
+    "totDepDelay": 164.0,
+    "totArrDelay": 210.0,
+    "onTimeCount": 20,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "ATL",
+    "flightsOperated": 23,
+    "totDepDelay": 126.0,
+    "totArrDelay": 228.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air India",
+    "origin": "FRA",
+    "flightsOperated": 22,
+    "totDepDelay": 143.0,
+    "totArrDelay": 296.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "British Airways",
+    "origin": "GRU",
+    "flightsOperated": 22,
+    "totDepDelay": 161.0,
+    "totArrDelay": 369.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "PVG",
+    "flightsOperated": 22,
+    "totDepDelay": 187.0,
+    "totArrDelay": 188.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "ORD",
+    "flightsOperated": 22,
+    "totDepDelay": 271.0,
+    "totArrDelay": 270.0,
+    "onTimeCount": 13,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "BKK",
+    "flightsOperated": 22,
+    "totDepDelay": 135.0,
+    "totArrDelay": 195.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qantas",
+    "origin": "FRA",
+    "flightsOperated": 22,
+    "totDepDelay": 158.0,
+    "totArrDelay": 164.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air India",
+    "origin": "DEL",
+    "flightsOperated": 22,
+    "totDepDelay": 184.0,
+    "totArrDelay": 210.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qantas",
+    "origin": "CDG",
+    "flightsOperated": 22,
+    "totDepDelay": 313.0,
+    "totArrDelay": 286.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "DEL",
+    "flightsOperated": 22,
+    "totDepDelay": 182.0,
+    "totArrDelay": 340.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "SIN",
+    "flightsOperated": 22,
+    "totDepDelay": 198.0,
+    "totArrDelay": 228.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "LHR",
+    "flightsOperated": 22,
+    "totDepDelay": 264.0,
+    "totArrDelay": 286.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "ATL",
+    "flightsOperated": 22,
+    "totDepDelay": 114.0,
+    "totArrDelay": 156.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "HKG",
+    "flightsOperated": 22,
+    "totDepDelay": 128.0,
+    "totArrDelay": 300.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "SYD",
+    "flightsOperated": 22,
+    "totDepDelay": 208.0,
+    "totArrDelay": 256.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Air India",
+    "origin": "DXB",
+    "flightsOperated": 22,
+    "totDepDelay": 115.0,
+    "totArrDelay": 125.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "GRU",
+    "flightsOperated": 22,
+    "totDepDelay": 153.0,
+    "totArrDelay": 150.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air India",
+    "origin": "HKG",
+    "flightsOperated": 22,
+    "totDepDelay": 210.0,
+    "totArrDelay": 206.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "DOH",
+    "flightsOperated": 22,
+    "totDepDelay": 187.0,
+    "totArrDelay": 172.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "JNB",
+    "flightsOperated": 22,
+    "totDepDelay": 170.0,
+    "totArrDelay": 119.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "LHR",
+    "flightsOperated": 22,
+    "totDepDelay": 216.0,
+    "totArrDelay": 202.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "SIN",
+    "flightsOperated": 22,
+    "totDepDelay": 163.0,
+    "totArrDelay": 118.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air France",
+    "origin": "SFO",
+    "flightsOperated": 22,
+    "totDepDelay": 141.0,
+    "totArrDelay": 164.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air France",
+    "origin": "AMS",
+    "flightsOperated": 22,
+    "totDepDelay": 263.0,
+    "totArrDelay": 443.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "GRU",
+    "flightsOperated": 22,
+    "totDepDelay": 148.0,
+    "totArrDelay": 133.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "LAX",
+    "flightsOperated": 22,
+    "totDepDelay": 207.0,
+    "totArrDelay": 208.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Emirates",
+    "origin": "YYZ",
+    "flightsOperated": 22,
+    "totDepDelay": 131.0,
+    "totArrDelay": 115.0,
+    "onTimeCount": 20,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "SIN",
+    "flightsOperated": 22,
+    "totDepDelay": 199.0,
+    "totArrDelay": 203.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "MAD",
+    "flightsOperated": 22,
+    "totDepDelay": 97.0,
+    "totArrDelay": 107.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "JFK",
+    "flightsOperated": 22,
+    "totDepDelay": 109.0,
+    "totArrDelay": 143.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "LHR",
+    "flightsOperated": 22,
+    "totDepDelay": 150.0,
+    "totArrDelay": 140.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "PVG",
+    "flightsOperated": 22,
+    "totDepDelay": 184.0,
+    "totArrDelay": 200.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "British Airways",
+    "origin": "DFW",
+    "flightsOperated": 22,
+    "totDepDelay": 204.0,
+    "totArrDelay": 169.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "DXB",
+    "flightsOperated": 22,
+    "totDepDelay": 144.0,
+    "totArrDelay": 337.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qantas",
+    "origin": "AMS",
+    "flightsOperated": 22,
+    "totDepDelay": 158.0,
+    "totArrDelay": 201.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air France",
+    "origin": "IST",
+    "flightsOperated": 22,
+    "totDepDelay": 139.0,
+    "totArrDelay": 114.0,
+    "onTimeCount": 20,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "British Airways",
+    "origin": "YYZ",
+    "flightsOperated": 22,
+    "totDepDelay": 219.0,
+    "totArrDelay": 186.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "IST",
+    "flightsOperated": 22,
+    "totDepDelay": 301.0,
+    "totArrDelay": 328.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "PVG",
+    "flightsOperated": 22,
+    "totDepDelay": 140.0,
+    "totArrDelay": 188.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "ICN",
+    "flightsOperated": 22,
+    "totDepDelay": 166.0,
+    "totArrDelay": 152.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "HKG",
+    "flightsOperated": 22,
+    "totDepDelay": 113.0,
+    "totArrDelay": 98.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "BOM",
+    "flightsOperated": 22,
+    "totDepDelay": 224.0,
+    "totArrDelay": 280.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "DEL",
+    "flightsOperated": 22,
+    "totDepDelay": 208.0,
+    "totArrDelay": 195.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "CDG",
+    "flightsOperated": 22,
+    "totDepDelay": 102.0,
+    "totArrDelay": 156.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Emirates",
+    "origin": "FCO",
+    "flightsOperated": 22,
+    "totDepDelay": 127.0,
+    "totArrDelay": 154.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "ATL",
+    "flightsOperated": 22,
+    "totDepDelay": 264.0,
+    "totArrDelay": 330.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "YYZ",
+    "flightsOperated": 21,
+    "totDepDelay": 156.0,
+    "totArrDelay": 151.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "ZRH",
+    "flightsOperated": 21,
+    "totDepDelay": 194.0,
+    "totArrDelay": 233.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "ORD",
+    "flightsOperated": 21,
+    "totDepDelay": 71.0,
+    "totArrDelay": 234.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Emirates",
+    "origin": "HKG",
+    "flightsOperated": 21,
+    "totDepDelay": 177.0,
+    "totArrDelay": 143.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "FCO",
+    "flightsOperated": 21,
+    "totDepDelay": 219.0,
+    "totArrDelay": 207.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "ICN",
+    "flightsOperated": 21,
+    "totDepDelay": 223.0,
+    "totArrDelay": 241.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "ZRH",
+    "flightsOperated": 21,
+    "totDepDelay": 252.0,
+    "totArrDelay": 214.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Qantas",
+    "origin": "YYZ",
+    "flightsOperated": 21,
+    "totDepDelay": 143.0,
+    "totArrDelay": 73.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Emirates",
+    "origin": "SFO",
+    "flightsOperated": 21,
+    "totDepDelay": 130.0,
+    "totArrDelay": 127.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "British Airways",
+    "origin": "BKK",
+    "flightsOperated": 21,
+    "totDepDelay": 191.0,
+    "totArrDelay": 150.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "GRU",
+    "flightsOperated": 21,
+    "totDepDelay": 79.0,
+    "totArrDelay": 96.0,
+    "onTimeCount": 21,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "HND",
+    "flightsOperated": 21,
+    "totDepDelay": 201.0,
+    "totArrDelay": 204.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "MAD",
+    "flightsOperated": 21,
+    "totDepDelay": 224.0,
+    "totArrDelay": 208.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "SIN",
+    "flightsOperated": 21,
+    "totDepDelay": 159.0,
+    "totArrDelay": 170.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "LAX",
+    "flightsOperated": 21,
+    "totDepDelay": 279.0,
+    "totArrDelay": 252.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 2
+  },
+  {
+    "airline": "Air France",
+    "origin": "JNB",
+    "flightsOperated": 21,
+    "totDepDelay": 145.0,
+    "totArrDelay": 116.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air India",
+    "origin": "BKK",
+    "flightsOperated": 21,
+    "totDepDelay": 164.0,
+    "totArrDelay": 142.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "BOM",
+    "flightsOperated": 21,
+    "totDepDelay": 123.0,
+    "totArrDelay": 136.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qantas",
+    "origin": "PVG",
+    "flightsOperated": 21,
+    "totDepDelay": 86.0,
+    "totArrDelay": 73.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air France",
+    "origin": "HND",
+    "flightsOperated": 21,
+    "totDepDelay": 208.0,
+    "totArrDelay": 226.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "DOH",
+    "flightsOperated": 21,
+    "totDepDelay": 257.0,
+    "totArrDelay": 291.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "MAD",
+    "flightsOperated": 21,
+    "totDepDelay": 161.0,
+    "totArrDelay": 115.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "CDG",
+    "flightsOperated": 21,
+    "totDepDelay": 219.0,
+    "totArrDelay": 226.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "BKK",
+    "flightsOperated": 21,
+    "totDepDelay": 239.0,
+    "totArrDelay": 291.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "FRA",
+    "flightsOperated": 21,
+    "totDepDelay": 235.0,
+    "totArrDelay": 382.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "JFK",
+    "flightsOperated": 21,
+    "totDepDelay": 229.0,
+    "totArrDelay": 241.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Qantas",
+    "origin": "ORD",
+    "flightsOperated": 21,
+    "totDepDelay": 167.0,
+    "totArrDelay": 194.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "SFO",
+    "flightsOperated": 21,
+    "totDepDelay": 153.0,
+    "totArrDelay": 153.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "YYZ",
+    "flightsOperated": 21,
+    "totDepDelay": 135.0,
+    "totArrDelay": 162.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "BLR",
+    "flightsOperated": 21,
+    "totDepDelay": 198.0,
+    "totArrDelay": 319.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "BKK",
+    "flightsOperated": 21,
+    "totDepDelay": 130.0,
+    "totArrDelay": 271.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "JNB",
+    "flightsOperated": 21,
+    "totDepDelay": 158.0,
+    "totArrDelay": 115.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air France",
+    "origin": "JFK",
+    "flightsOperated": 21,
+    "totDepDelay": 215.0,
+    "totArrDelay": 220.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qantas",
+    "origin": "LAX",
+    "flightsOperated": 21,
+    "totDepDelay": 177.0,
+    "totArrDelay": 176.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "British Airways",
+    "origin": "DEL",
+    "flightsOperated": 21,
+    "totDepDelay": 188.0,
+    "totArrDelay": 212.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "IST",
+    "flightsOperated": 21,
+    "totDepDelay": 227.0,
+    "totArrDelay": 219.0,
+    "onTimeCount": 13,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "YYZ",
+    "flightsOperated": 21,
+    "totDepDelay": 156.0,
+    "totArrDelay": 166.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qantas",
+    "origin": "DEL",
+    "flightsOperated": 21,
+    "totDepDelay": 156.0,
+    "totArrDelay": 169.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "FCO",
+    "flightsOperated": 21,
+    "totDepDelay": 143.0,
+    "totArrDelay": 319.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "MUC",
+    "flightsOperated": 21,
+    "totDepDelay": 119.0,
+    "totArrDelay": 85.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "SIN",
+    "flightsOperated": 21,
+    "totDepDelay": 117.0,
+    "totArrDelay": 143.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "DEL",
+    "flightsOperated": 21,
+    "totDepDelay": 183.0,
+    "totArrDelay": 217.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "IST",
+    "flightsOperated": 21,
+    "totDepDelay": 119.0,
+    "totArrDelay": 119.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "British Airways",
+    "origin": "CDG",
+    "flightsOperated": 21,
+    "totDepDelay": 160.0,
+    "totArrDelay": 176.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "MUC",
+    "flightsOperated": 21,
+    "totDepDelay": 184.0,
+    "totArrDelay": 193.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qantas",
+    "origin": "DOH",
+    "flightsOperated": 21,
+    "totDepDelay": 144.0,
+    "totArrDelay": 97.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "JFK",
+    "flightsOperated": 21,
+    "totDepDelay": 127.0,
+    "totArrDelay": 142.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "BLR",
+    "flightsOperated": 21,
+    "totDepDelay": 142.0,
+    "totArrDelay": 163.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "LAX",
+    "flightsOperated": 21,
+    "totDepDelay": 159.0,
+    "totArrDelay": 128.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "DFW",
+    "flightsOperated": 20,
+    "totDepDelay": 100.0,
+    "totArrDelay": 60.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "BLR",
+    "flightsOperated": 20,
+    "totDepDelay": 205.0,
+    "totArrDelay": 180.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "CDG",
+    "flightsOperated": 20,
+    "totDepDelay": 272.0,
+    "totArrDelay": 296.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "LHR",
+    "flightsOperated": 20,
+    "totDepDelay": 147.0,
+    "totArrDelay": 123.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "YYZ",
+    "flightsOperated": 20,
+    "totDepDelay": 167.0,
+    "totArrDelay": 184.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Emirates",
+    "origin": "JNB",
+    "flightsOperated": 20,
+    "totDepDelay": 37.0,
+    "totArrDelay": 61.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "GRU",
+    "flightsOperated": 20,
+    "totDepDelay": 129.0,
+    "totArrDelay": 129.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "BOM",
+    "flightsOperated": 20,
+    "totDepDelay": 117.0,
+    "totArrDelay": 129.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "IST",
+    "flightsOperated": 20,
+    "totDepDelay": 176.0,
+    "totArrDelay": 112.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "British Airways",
+    "origin": "DXB",
+    "flightsOperated": 20,
+    "totDepDelay": 241.0,
+    "totArrDelay": 211.0,
+    "onTimeCount": 13,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "JNB",
+    "flightsOperated": 20,
+    "totDepDelay": 83.0,
+    "totArrDelay": 258.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "FRA",
+    "flightsOperated": 20,
+    "totDepDelay": 119.0,
+    "totArrDelay": 346.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "BOM",
+    "flightsOperated": 20,
+    "totDepDelay": 232.0,
+    "totArrDelay": 187.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "BOM",
+    "flightsOperated": 20,
+    "totDepDelay": 223.0,
+    "totArrDelay": 324.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "PVG",
+    "flightsOperated": 20,
+    "totDepDelay": 91.0,
+    "totArrDelay": 66.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "ICN",
+    "flightsOperated": 20,
+    "totDepDelay": 261.0,
+    "totArrDelay": 274.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "PVG",
+    "flightsOperated": 20,
+    "totDepDelay": 169.0,
+    "totArrDelay": 171.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "JFK",
+    "flightsOperated": 20,
+    "totDepDelay": 58.0,
+    "totArrDelay": 53.0,
+    "onTimeCount": 20,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "MAD",
+    "flightsOperated": 20,
+    "totDepDelay": 125.0,
+    "totArrDelay": 132.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "FRA",
+    "flightsOperated": 20,
+    "totDepDelay": 176.0,
+    "totArrDelay": 341.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "MUC",
+    "flightsOperated": 20,
+    "totDepDelay": 77.0,
+    "totArrDelay": 84.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "British Airways",
+    "origin": "JFK",
+    "flightsOperated": 20,
+    "totDepDelay": 111.0,
+    "totArrDelay": 86.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "JFK",
+    "flightsOperated": 20,
+    "totDepDelay": 62.0,
+    "totArrDelay": 7.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "YYZ",
+    "flightsOperated": 20,
+    "totDepDelay": 128.0,
+    "totArrDelay": 148.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "PVG",
+    "flightsOperated": 20,
+    "totDepDelay": 174.0,
+    "totArrDelay": 173.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "DOH",
+    "flightsOperated": 20,
+    "totDepDelay": 118.0,
+    "totArrDelay": 98.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Emirates",
+    "origin": "PVG",
+    "flightsOperated": 20,
+    "totDepDelay": 127.0,
+    "totArrDelay": 270.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "SYD",
+    "flightsOperated": 20,
+    "totDepDelay": 179.0,
+    "totArrDelay": 137.0,
+    "onTimeCount": 13,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "British Airways",
+    "origin": "BOM",
+    "flightsOperated": 20,
+    "totDepDelay": 268.0,
+    "totArrDelay": 231.0,
+    "onTimeCount": 12,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "British Airways",
+    "origin": "MAD",
+    "flightsOperated": 20,
+    "totDepDelay": 179.0,
+    "totArrDelay": 196.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air France",
+    "origin": "BLR",
+    "flightsOperated": 20,
+    "totDepDelay": 181.0,
+    "totArrDelay": 133.0,
+    "onTimeCount": 13,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qantas",
+    "origin": "ZRH",
+    "flightsOperated": 20,
+    "totDepDelay": 118.0,
+    "totArrDelay": 275.0,
+    "onTimeCount": 19,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "British Airways",
+    "origin": "DOH",
+    "flightsOperated": 20,
+    "totDepDelay": 202.0,
+    "totArrDelay": 196.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "HKG",
+    "flightsOperated": 20,
+    "totDepDelay": 114.0,
+    "totArrDelay": 91.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "DFW",
+    "flightsOperated": 20,
+    "totDepDelay": 166.0,
+    "totArrDelay": 185.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air France",
+    "origin": "YYZ",
+    "flightsOperated": 20,
+    "totDepDelay": 203.0,
+    "totArrDelay": 174.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "DFW",
+    "flightsOperated": 20,
+    "totDepDelay": 107.0,
+    "totArrDelay": 72.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "MUC",
+    "flightsOperated": 20,
+    "totDepDelay": 142.0,
+    "totArrDelay": 201.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "MUC",
+    "flightsOperated": 20,
+    "totDepDelay": 154.0,
+    "totArrDelay": 189.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "BKK",
+    "flightsOperated": 20,
+    "totDepDelay": 168.0,
+    "totArrDelay": 170.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "DEL",
+    "flightsOperated": 19,
+    "totDepDelay": 145.0,
+    "totArrDelay": 156.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air India",
+    "origin": "CDG",
+    "flightsOperated": 19,
+    "totDepDelay": 187.0,
+    "totArrDelay": 191.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "ORD",
+    "flightsOperated": 19,
+    "totDepDelay": 95.0,
+    "totArrDelay": 86.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air France",
+    "origin": "BKK",
+    "flightsOperated": 19,
+    "totDepDelay": 117.0,
+    "totArrDelay": 127.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air India",
+    "origin": "ZRH",
+    "flightsOperated": 19,
+    "totDepDelay": 231.0,
+    "totArrDelay": 252.0,
+    "onTimeCount": 13,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Emirates",
+    "origin": "CDG",
+    "flightsOperated": 19,
+    "totDepDelay": 333.0,
+    "totArrDelay": 303.0,
+    "onTimeCount": 12,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "LAX",
+    "flightsOperated": 19,
+    "totDepDelay": 104.0,
+    "totArrDelay": 86.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air India",
+    "origin": "FCO",
+    "flightsOperated": 19,
+    "totDepDelay": 89.0,
+    "totArrDelay": 60.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "ORD",
+    "flightsOperated": 19,
+    "totDepDelay": 172.0,
+    "totArrDelay": 219.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "BOM",
+    "flightsOperated": 19,
+    "totDepDelay": 178.0,
+    "totArrDelay": 256.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "SFO",
+    "flightsOperated": 19,
+    "totDepDelay": 82.0,
+    "totArrDelay": 104.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air India",
+    "origin": "AMS",
+    "flightsOperated": 19,
+    "totDepDelay": 230.0,
+    "totArrDelay": 443.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "IST",
+    "flightsOperated": 19,
+    "totDepDelay": 72.0,
+    "totArrDelay": 23.0,
+    "onTimeCount": 18,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "AMS",
+    "flightsOperated": 19,
+    "totDepDelay": 270.0,
+    "totArrDelay": 278.0,
+    "onTimeCount": 12,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Air India",
+    "origin": "YYZ",
+    "flightsOperated": 19,
+    "totDepDelay": 152.0,
+    "totArrDelay": 123.0,
+    "onTimeCount": 12,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "HND",
+    "flightsOperated": 19,
+    "totDepDelay": 204.0,
+    "totArrDelay": 217.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "MAD",
+    "flightsOperated": 19,
+    "totDepDelay": 54.0,
+    "totArrDelay": 40.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "GRU",
+    "flightsOperated": 19,
+    "totDepDelay": 100.0,
+    "totArrDelay": 175.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "HND",
+    "flightsOperated": 19,
+    "totDepDelay": 135.0,
+    "totArrDelay": 185.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "DOH",
+    "flightsOperated": 19,
+    "totDepDelay": 178.0,
+    "totArrDelay": 163.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qantas",
+    "origin": "GRU",
+    "flightsOperated": 19,
+    "totDepDelay": 198.0,
+    "totArrDelay": 189.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "SFO",
+    "flightsOperated": 19,
+    "totDepDelay": 267.0,
+    "totArrDelay": 264.0,
+    "onTimeCount": 10,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "PVG",
+    "flightsOperated": 19,
+    "totDepDelay": 241.0,
+    "totArrDelay": 237.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Air France",
+    "origin": "ICN",
+    "flightsOperated": 19,
+    "totDepDelay": 108.0,
+    "totArrDelay": 86.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air France",
+    "origin": "GRU",
+    "flightsOperated": 19,
+    "totDepDelay": 184.0,
+    "totArrDelay": 151.0,
+    "onTimeCount": 12,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "BLR",
+    "flightsOperated": 19,
+    "totDepDelay": 55.0,
+    "totArrDelay": 82.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "DFW",
+    "flightsOperated": 19,
+    "totDepDelay": 156.0,
+    "totArrDelay": 122.0,
+    "onTimeCount": 13,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "LHR",
+    "flightsOperated": 19,
+    "totDepDelay": 130.0,
+    "totArrDelay": 171.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air India",
+    "origin": "MAD",
+    "flightsOperated": 19,
+    "totDepDelay": 73.0,
+    "totArrDelay": 45.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "DXB",
+    "flightsOperated": 19,
+    "totDepDelay": 269.0,
+    "totArrDelay": 250.0,
+    "onTimeCount": 11,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "HND",
+    "flightsOperated": 19,
+    "totDepDelay": 136.0,
+    "totArrDelay": 142.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "British Airways",
+    "origin": "PVG",
+    "flightsOperated": 19,
+    "totDepDelay": 140.0,
+    "totArrDelay": 87.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "JNB",
+    "flightsOperated": 19,
+    "totDepDelay": 217.0,
+    "totArrDelay": 224.0,
+    "onTimeCount": 13,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "PVG",
+    "flightsOperated": 19,
+    "totDepDelay": 104.0,
+    "totArrDelay": 165.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "DEL",
+    "flightsOperated": 19,
+    "totDepDelay": 173.0,
+    "totArrDelay": 189.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "GRU",
+    "flightsOperated": 19,
+    "totDepDelay": 49.0,
+    "totArrDelay": 58.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "JNB",
+    "flightsOperated": 18,
+    "totDepDelay": 175.0,
+    "totArrDelay": 182.0,
+    "onTimeCount": 11,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "PVG",
+    "flightsOperated": 18,
+    "totDepDelay": 146.0,
+    "totArrDelay": 199.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "AMS",
+    "flightsOperated": 18,
+    "totDepDelay": 208.0,
+    "totArrDelay": 225.0,
+    "onTimeCount": 13,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air India",
+    "origin": "DOH",
+    "flightsOperated": 18,
+    "totDepDelay": 122.0,
+    "totArrDelay": 116.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air France",
+    "origin": "ATL",
+    "flightsOperated": 18,
+    "totDepDelay": 106.0,
+    "totArrDelay": 150.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Emirates",
+    "origin": "ZRH",
+    "flightsOperated": 18,
+    "totDepDelay": 51.0,
+    "totArrDelay": 67.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "DOH",
+    "flightsOperated": 18,
+    "totDepDelay": 126.0,
+    "totArrDelay": 178.0,
+    "onTimeCount": 13,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "British Airways",
+    "origin": "ZRH",
+    "flightsOperated": 18,
+    "totDepDelay": 211.0,
+    "totArrDelay": 262.0,
+    "onTimeCount": 12,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "JFK",
+    "flightsOperated": 18,
+    "totDepDelay": 112.0,
+    "totArrDelay": 125.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air France",
+    "origin": "LHR",
+    "flightsOperated": 18,
+    "totDepDelay": 104.0,
+    "totArrDelay": 279.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air India",
+    "origin": "BOM",
+    "flightsOperated": 18,
+    "totDepDelay": 134.0,
+    "totArrDelay": 85.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "SYD",
+    "flightsOperated": 18,
+    "totDepDelay": 38.0,
+    "totArrDelay": 5.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "DEL",
+    "flightsOperated": 18,
+    "totDepDelay": 202.0,
+    "totArrDelay": 263.0,
+    "onTimeCount": 11,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "AMS",
+    "flightsOperated": 18,
+    "totDepDelay": 239.0,
+    "totArrDelay": 264.0,
+    "onTimeCount": 13,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Emirates",
+    "origin": "LHR",
+    "flightsOperated": 18,
+    "totDepDelay": 160.0,
+    "totArrDelay": 117.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "BLR",
+    "flightsOperated": 18,
+    "totDepDelay": 71.0,
+    "totArrDelay": 88.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Emirates",
+    "origin": "DEL",
+    "flightsOperated": 18,
+    "totDepDelay": 130.0,
+    "totArrDelay": 157.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air France",
+    "origin": "ZRH",
+    "flightsOperated": 18,
+    "totDepDelay": 155.0,
+    "totArrDelay": 192.0,
+    "onTimeCount": 13,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "DXB",
+    "flightsOperated": 18,
+    "totDepDelay": 84.0,
+    "totArrDelay": 130.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "JFK",
+    "flightsOperated": 18,
+    "totDepDelay": 76.0,
+    "totArrDelay": 117.0,
+    "onTimeCount": 17,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "IST",
+    "flightsOperated": 18,
+    "totDepDelay": 186.0,
+    "totArrDelay": 221.0,
+    "onTimeCount": 13,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qantas",
+    "origin": "BKK",
+    "flightsOperated": 18,
+    "totDepDelay": 170.0,
+    "totArrDelay": 175.0,
+    "onTimeCount": 12,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Emirates",
+    "origin": "GRU",
+    "flightsOperated": 17,
+    "totDepDelay": 71.0,
+    "totArrDelay": 90.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "FCO",
+    "flightsOperated": 17,
+    "totDepDelay": 177.0,
+    "totArrDelay": 174.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "FRA",
+    "flightsOperated": 17,
+    "totDepDelay": 209.0,
+    "totArrDelay": 182.0,
+    "onTimeCount": 12,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "British Airways",
+    "origin": "BLR",
+    "flightsOperated": 17,
+    "totDepDelay": 184.0,
+    "totArrDelay": 343.0,
+    "onTimeCount": 11,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "SYD",
+    "flightsOperated": 17,
+    "totDepDelay": 197.0,
+    "totArrDelay": 379.0,
+    "onTimeCount": 11,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "LHR",
+    "flightsOperated": 17,
+    "totDepDelay": 167.0,
+    "totArrDelay": 132.0,
+    "onTimeCount": 11,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "FCO",
+    "flightsOperated": 17,
+    "totDepDelay": 114.0,
+    "totArrDelay": 123.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "DXB",
+    "flightsOperated": 17,
+    "totDepDelay": 197.0,
+    "totArrDelay": 193.0,
+    "onTimeCount": 13,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "DFW",
+    "flightsOperated": 17,
+    "totDepDelay": 243.0,
+    "totArrDelay": 250.0,
+    "onTimeCount": 13,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Air France",
+    "origin": "SYD",
+    "flightsOperated": 17,
+    "totDepDelay": 75.0,
+    "totArrDelay": 87.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "HND",
+    "flightsOperated": 17,
+    "totDepDelay": 79.0,
+    "totArrDelay": 54.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "British Airways",
+    "origin": "HKG",
+    "flightsOperated": 17,
+    "totDepDelay": 65.0,
+    "totArrDelay": 24.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "SIN",
+    "flightsOperated": 17,
+    "totDepDelay": 208.0,
+    "totArrDelay": 202.0,
+    "onTimeCount": 10,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Emirates",
+    "origin": "BOM",
+    "flightsOperated": 17,
+    "totDepDelay": 104.0,
+    "totArrDelay": 112.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air France",
+    "origin": "ORD",
+    "flightsOperated": 17,
+    "totDepDelay": 96.0,
+    "totArrDelay": 79.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "DEL",
+    "flightsOperated": 17,
+    "totDepDelay": 147.0,
+    "totArrDelay": 271.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "HND",
+    "flightsOperated": 17,
+    "totDepDelay": 64.0,
+    "totArrDelay": 36.0,
+    "onTimeCount": 16,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "MAD",
+    "flightsOperated": 17,
+    "totDepDelay": 96.0,
+    "totArrDelay": 108.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "LHR",
+    "flightsOperated": 16,
+    "totDepDelay": 257.0,
+    "totArrDelay": 251.0,
+    "onTimeCount": 12,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "ZRH",
+    "flightsOperated": 16,
+    "totDepDelay": 200.0,
+    "totArrDelay": 204.0,
+    "onTimeCount": 13,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "LHR",
+    "flightsOperated": 16,
+    "totDepDelay": 154.0,
+    "totArrDelay": 151.0,
+    "onTimeCount": 12,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "HKG",
+    "flightsOperated": 16,
+    "totDepDelay": 188.0,
+    "totArrDelay": 158.0,
+    "onTimeCount": 12,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "BKK",
+    "flightsOperated": 16,
+    "totDepDelay": 68.0,
+    "totArrDelay": 30.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "IST",
+    "flightsOperated": 16,
+    "totDepDelay": 93.0,
+    "totArrDelay": 224.0,
+    "onTimeCount": 13,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air France",
+    "origin": "DOH",
+    "flightsOperated": 16,
+    "totDepDelay": 24.0,
+    "totArrDelay": 44.0,
+    "onTimeCount": 15,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air India",
+    "origin": "JFK",
+    "flightsOperated": 16,
+    "totDepDelay": 109.0,
+    "totArrDelay": 101.0,
+    "onTimeCount": 12,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Emirates",
+    "origin": "JFK",
+    "flightsOperated": 16,
+    "totDepDelay": 127.0,
+    "totArrDelay": 189.0,
+    "onTimeCount": 11,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Emirates",
+    "origin": "ATL",
+    "flightsOperated": 16,
+    "totDepDelay": 127.0,
+    "totArrDelay": 163.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "CDG",
+    "flightsOperated": 16,
+    "totDepDelay": 157.0,
+    "totArrDelay": 323.0,
+    "onTimeCount": 12,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air France",
+    "origin": "PVG",
+    "flightsOperated": 16,
+    "totDepDelay": 149.0,
+    "totArrDelay": 159.0,
+    "onTimeCount": 13,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "SFO",
+    "flightsOperated": 16,
+    "totDepDelay": 163.0,
+    "totArrDelay": 171.0,
+    "onTimeCount": 12,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "FRA",
+    "flightsOperated": 16,
+    "totDepDelay": 161.0,
+    "totArrDelay": 300.0,
+    "onTimeCount": 10,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "British Airways",
+    "origin": "SIN",
+    "flightsOperated": 15,
+    "totDepDelay": 135.0,
+    "totArrDelay": 127.0,
+    "onTimeCount": 12,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air France",
+    "origin": "BOM",
+    "flightsOperated": 15,
+    "totDepDelay": 60.0,
+    "totArrDelay": 79.0,
+    "onTimeCount": 13,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "DFW",
+    "flightsOperated": 15,
+    "totDepDelay": 123.0,
+    "totArrDelay": 92.0,
+    "onTimeCount": 10,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "CDG",
+    "flightsOperated": 15,
+    "totDepDelay": 102.0,
+    "totArrDelay": 78.0,
+    "onTimeCount": 13,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "DXB",
+    "flightsOperated": 15,
+    "totDepDelay": 135.0,
+    "totArrDelay": 130.0,
+    "onTimeCount": 12,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "FRA",
+    "flightsOperated": 15,
+    "totDepDelay": 106.0,
+    "totArrDelay": 94.0,
+    "onTimeCount": 13,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "DXB",
+    "flightsOperated": 15,
+    "totDepDelay": 115.0,
+    "totArrDelay": 142.0,
+    "onTimeCount": 13,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "SIN",
+    "flightsOperated": 15,
+    "totDepDelay": 115.0,
+    "totArrDelay": 149.0,
+    "onTimeCount": 11,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qantas",
+    "origin": "SFO",
+    "flightsOperated": 15,
+    "totDepDelay": 143.0,
+    "totArrDelay": 155.0,
+    "onTimeCount": 10,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air India",
+    "origin": "PVG",
+    "flightsOperated": 15,
+    "totDepDelay": 152.0,
+    "totArrDelay": 143.0,
+    "onTimeCount": 12,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air India",
+    "origin": "JNB",
+    "flightsOperated": 15,
+    "totDepDelay": 174.0,
+    "totArrDelay": 188.0,
+    "onTimeCount": 12,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air India",
+    "origin": "LHR",
+    "flightsOperated": 15,
+    "totDepDelay": 49.0,
+    "totArrDelay": 17.0,
+    "onTimeCount": 13,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "BOM",
+    "flightsOperated": 15,
+    "totDepDelay": 34.0,
+    "totArrDelay": 62.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "GRU",
+    "flightsOperated": 14,
+    "totDepDelay": 90.0,
+    "totArrDelay": 102.0,
+    "onTimeCount": 9,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "United Airlines",
+    "origin": "ATL",
+    "flightsOperated": 14,
+    "totDepDelay": 52.0,
+    "totArrDelay": 43.0,
+    "onTimeCount": 13,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "BKK",
+    "flightsOperated": 14,
+    "totDepDelay": 82.0,
+    "totArrDelay": 235.0,
+    "onTimeCount": 12,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Lufthansa",
+    "origin": "FCO",
+    "flightsOperated": 14,
+    "totDepDelay": 155.0,
+    "totArrDelay": 87.0,
+    "onTimeCount": 11,
+    "severeDelayCount": 1
+  },
+  {
+    "airline": "British Airways",
+    "origin": "ICN",
+    "flightsOperated": 14,
+    "totDepDelay": 89.0,
+    "totArrDelay": 83.0,
+    "onTimeCount": 12,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "YYZ",
+    "flightsOperated": 14,
+    "totDepDelay": 82.0,
+    "totArrDelay": 51.0,
+    "onTimeCount": 13,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "MAD",
+    "flightsOperated": 14,
+    "totDepDelay": 217.0,
+    "totArrDelay": 247.0,
+    "onTimeCount": 8,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Emirates",
+    "origin": "BLR",
+    "flightsOperated": 14,
+    "totDepDelay": 58.0,
+    "totArrDelay": 29.0,
+    "onTimeCount": 14,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "HKG",
+    "flightsOperated": 14,
+    "totDepDelay": 149.0,
+    "totArrDelay": 137.0,
+    "onTimeCount": 11,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air India",
+    "origin": "SFO",
+    "flightsOperated": 14,
+    "totDepDelay": 117.0,
+    "totArrDelay": 114.0,
+    "onTimeCount": 11,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qatar Airways",
+    "origin": "DEL",
+    "flightsOperated": 14,
+    "totDepDelay": 140.0,
+    "totArrDelay": 326.0,
+    "onTimeCount": 12,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "ATL",
+    "flightsOperated": 13,
+    "totDepDelay": 93.0,
+    "totArrDelay": 104.0,
+    "onTimeCount": 9,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "British Airways",
+    "origin": "IST",
+    "flightsOperated": 13,
+    "totDepDelay": 36.0,
+    "totArrDelay": 39.0,
+    "onTimeCount": 11,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "SYD",
+    "flightsOperated": 13,
+    "totDepDelay": 102.0,
+    "totArrDelay": 112.0,
+    "onTimeCount": 11,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Qantas",
+    "origin": "LHR",
+    "flightsOperated": 13,
+    "totDepDelay": 87.0,
+    "totArrDelay": 53.0,
+    "onTimeCount": 12,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "BLR",
+    "flightsOperated": 13,
+    "totDepDelay": 74.0,
+    "totArrDelay": 65.0,
+    "onTimeCount": 12,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Delta Air Lines",
+    "origin": "JFK",
+    "flightsOperated": 13,
+    "totDepDelay": 55.0,
+    "totArrDelay": 97.0,
+    "onTimeCount": 12,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "All Nippon Airways",
+    "origin": "FRA",
+    "flightsOperated": 13,
+    "totDepDelay": 120.0,
+    "totArrDelay": 143.0,
+    "onTimeCount": 10,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "LHR",
+    "flightsOperated": 13,
+    "totDepDelay": 155.0,
+    "totArrDelay": 157.0,
+    "onTimeCount": 8,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "British Airways",
+    "origin": "ATL",
+    "flightsOperated": 13,
+    "totDepDelay": 63.0,
+    "totArrDelay": 51.0,
+    "onTimeCount": 10,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "DXB",
+    "flightsOperated": 13,
+    "totDepDelay": 110.0,
+    "totArrDelay": 97.0,
+    "onTimeCount": 10,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "KLM Royal Dutch",
+    "origin": "ORD",
+    "flightsOperated": 12,
+    "totDepDelay": 118.0,
+    "totArrDelay": 108.0,
+    "onTimeCount": 8,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "American Airlines",
+    "origin": "ZRH",
+    "flightsOperated": 12,
+    "totDepDelay": 69.0,
+    "totArrDelay": 96.0,
+    "onTimeCount": 11,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Cathay Pacific",
+    "origin": "JNB",
+    "flightsOperated": 12,
+    "totDepDelay": 145.0,
+    "totArrDelay": 145.0,
+    "onTimeCount": 9,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Singapore Airlines",
+    "origin": "HND",
+    "flightsOperated": 12,
+    "totDepDelay": 139.0,
+    "totArrDelay": 163.0,
+    "onTimeCount": 9,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Turkish Airlines",
+    "origin": "ZRH",
+    "flightsOperated": 10,
+    "totDepDelay": 152.0,
+    "totArrDelay": 170.0,
+    "onTimeCount": 7,
+    "severeDelayCount": 0
+  },
+  {
+    "airline": "Air France",
+    "origin": "FRA",
+    "flightsOperated": 9,
+    "totDepDelay": 49.0,
+    "totArrDelay": 31.0,
+    "onTimeCount": 8,
+    "severeDelayCount": 0
+  }
+]

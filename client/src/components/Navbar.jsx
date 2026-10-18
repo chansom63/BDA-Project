@@ -42,7 +42,7 @@ export default function Navbar({ activeTab, setActiveTab, activeAlertCount, flig
     { id: 'map',       label: 'Flight Radar Map',    icon: Plane },
     { id: 'table',     label: 'Telemetry List',       icon: Radio },
     { id: 'alerts',    label: 'Alert Center',         icon: AlertTriangle, badge: activeAlertCount },
-    { id: 'analytics', label: 'BI Analytics',         icon: BarChart3 },
+    { id: 'analytics', label: 'Airline Analytics',   icon: BarChart3 },
   ];
 
   return (
