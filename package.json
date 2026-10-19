@@ -10,7 +10,9 @@
     "test": "PYTHONPATH=. ./.venv/bin/pytest tests/ -v",
     "clean": "bash scripts/clean.sh",
     "down:clean": "bash scripts/clean.sh",
-    "clean:all": "bash scripts/clean.sh --all"
+    "clean:all": "bash scripts/clean.sh --all",
+    "deep:clean": "bash scripts/clean.sh --all",
+    "deep-clean": "bash scripts/clean.sh --all"
   },
   "keywords": [
     "mern",

@@ -17,7 +17,7 @@ pkill -f "streamlit run dashboard/app.py" 2>/dev/null || true
 
 # 2. Start Full Containerized Pipeline via Docker Compose
 echo "🐳 [1/2] Launching containerized services via Docker Compose..."
-docker compose -f docker-compose.pipeline.yml up -d
+docker compose -f docker-compose.pipeline.yml up -d --build
 
 # 3. Wait for services to initialize
 echo "⏳ [2/2] Waiting for services to initialize..."
@@ -26,6 +26,7 @@ sleep 4
 echo "======================================================================"
 echo "✨ All components started successfully!"
 echo "----------------------------------------------------------------------"
+echo "🌐 React Web UI (Radar/Map) : http://localhost:3001"
 echo "🌐 Streamlit Dashboard      : http://localhost:8501"
 echo "🗄️  Mongo Express Web UI     : http://localhost:8082"
 echo "⚡ Spark Master Web UI      : http://localhost:8084"
