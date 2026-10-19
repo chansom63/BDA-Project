@@ -1,0 +1,54 @@
+[
+  {
+    "_id": "QRN-e9b418cb2a1d04fa",
+    "event_id": "QRN-e9b418cb2a1d04fa",
+    "source_topic": "flight-events",
+    "received_at_utc": "2026-10-19T13:00:00Z",
+    "quarantine_reason": "MALFORMED_JSON: Expecting property name enclosed in double quotes: line 1 column 2",
+    "validation_errors": [
+      "Parse error: Expecting property name enclosed in double quotes: line 1 column 2"
+    ],
+    "raw_payload": "{bad_json: 1234, corrupted_stream...}",
+    "resolved": false,
+    "resolution_notes": null,
+    "kafka_topic": "flight-events",
+    "kafka_partition": 0,
+    "kafka_offset": 1042,
+    "kafka_timestamp": "2026-10-19T13:00:00Z"
+  },
+  {
+    "_id": "QRN-4a11f27dc09bc731",
+    "event_id": "QRN-4a11f27dc09bc731",
+    "source_topic": "flight-events",
+    "received_at_utc": "2026-10-19T13:05:12Z",
+    "quarantine_reason": "DATA_QUALITY_INVALID: Latitude out of valid range [-90, +90]: 142.5; Negative velocity rejected: -45.0 m/s",
+    "validation_errors": [
+      "Latitude out of valid range [-90, +90]: 142.5",
+      "Negative velocity rejected: -45.0 m/s"
+    ],
+    "raw_payload": "{\"event_time\":1792411200,\"icao24\":\"800b21\",\"latitude\":142.5,\"longitude\":75.3,\"velocity\":-45.0}",
+    "resolved": false,
+    "resolution_notes": null,
+    "kafka_topic": "flight-events",
+    "kafka_partition": 1,
+    "kafka_offset": 2088,
+    "kafka_timestamp": "2026-10-19T13:05:12Z"
+  },
+  {
+    "_id": "QRN-8f3b9090a21f7c18",
+    "event_id": "QRN-8f3b9090a21f7c18",
+    "source_topic": "passenger-dcs-events",
+    "received_at_utc": "2026-10-19T13:10:45Z",
+    "quarantine_reason": "DATA_QUALITY_INVALID: boarded_passengers (240) exceeds aircraft capacity (189)",
+    "validation_errors": [
+      "boarded_passengers (240) exceeds aircraft capacity (189)"
+    ],
+    "raw_payload": "{\"flight_number\":\"SG 8181\",\"total_seating_capacity\":189,\"booked_passengers\":190,\"boarded_passengers\":240,\"timestamp_utc\":\"2026-10-19T12:54:00Z\"}",
+    "resolved": false,
+    "resolution_notes": null,
+    "kafka_topic": "passenger-dcs-events",
+    "kafka_partition": 2,
+    "kafka_offset": 3110,
+    "kafka_timestamp": "2026-10-19T13:10:45Z"
+  }
+]
