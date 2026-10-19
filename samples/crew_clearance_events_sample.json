@@ -1,0 +1,18 @@
+{
+  "timestamp_utc": "2026-10-19T12:54:00Z",
+  "flight_number": "SG 8181",
+  "tail_number": "VT-SGB",
+  "origin_iata": "DEL",
+  "certifying_ame_license": "CAR66-B1-2002",
+  "crs_release_number": "CRS-DEL-20261019-102",
+  "pre_flight_inspection": "PASSED",
+  "engine_oil_uplift_qts": 0.5,
+  "tlb_technical_logbook_signed": true,
+  "cockpit_crew_fdtl": {
+    "captain_hours_28d": 62.4,
+    "first_officer_hours_28d": 51.2,
+    "mandatory_rest_compliant": true,
+    "fdp_within_limits": true
+  },
+  "source": "CMS_MRO_CLEARANCE_SIMULATOR"
+}

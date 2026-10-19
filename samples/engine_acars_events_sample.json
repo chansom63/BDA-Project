@@ -1,0 +1,28 @@
+{
+  "packet_id": "ACARS-SIM-1792411200-2",
+  "timestamp_utc": "2026-10-19T12:54:00Z",
+  "tail_number": "VT-SGB",
+  "aircraft_model": "Boeing 737-800",
+  "engine_model": "CFM56-7B26",
+  "engine_1": {
+    "egt_margin_c": 26.4,
+    "vibration_n1": 0.48,
+    "vibration_n2": 0.45,
+    "oil_pressure_psi": 45.2,
+    "oil_temperature_c": 92.4,
+    "sfc_drift_pct": 0.6,
+    "remaining_useful_life_cycles": 2324
+  },
+  "engine_2": {
+    "egt_margin_c": 27.1,
+    "vibration_n1": 0.51,
+    "vibration_n2": 0.48,
+    "oil_pressure_psi": 44.8,
+    "oil_temperature_c": 93.1,
+    "sfc_drift_pct": 0.7,
+    "remaining_useful_life_cycles": 2383
+  },
+  "apu_hours": 9430.2,
+  "apu_bleed_status": "NORMAL",
+  "source": "FADEC_ACARS_EMU_SIMULATOR"
+}

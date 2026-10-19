@@ -1,0 +1,225 @@
+version: '3.8'
+
+services:
+  # ============================================================================
+  # 1. MESSAGE BROKER: APACHE ZOOKEEPER & KAFKA
+  # ============================================================================
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.0
+    container_name: flight-zookeeper
+    networks:
+      - flight-pipeline-net
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    restart: unless-stopped
+
+  kafka:
+    image: confluentinc/cp-kafka:7.4.0
+    container_name: flight-kafka
+    networks:
+      - flight-pipeline-net
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092,PLAINTEXT_HOST://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+    depends_on:
+      - zookeeper
+    restart: unless-stopped
+
+  kafka-init-topics:
+    image: confluentinc/cp-kafka:7.4.0
+    container_name: flight-kafka-init-topics
+    networks:
+      - flight-pipeline-net
+    depends_on:
+      - kafka
+    entrypoint: [ "/bin/sh", "-c" ]
+    command: |
+      "
+      echo -e '⏳ Waiting for Kafka to be ready...'
+      cub kafka-ready -b kafka:29092 1 30
+      echo -e 'Creating 5 operational Kafka topics...'
+      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic flight-events --partitions 3 --replication-factor 1
+      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic acdm-turnaround-events --partitions 3 --replication-factor 1
+      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic engine-acars-events --partitions 3 --replication-factor 1
+      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic passenger-dcs-events --partitions 3 --replication-factor 1
+      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic crew-clearance-events --partitions 3 --replication-factor 1
+      echo -e '✅ Topics initialized successfully:'
+      kafka-topics --bootstrap-server kafka:29092 --list
+      "
+    restart: "no"
+
+  # ============================================================================
+  # 2. OPERATIONAL DATABASE: MONGODB & WEB VIEWER
+  # ============================================================================
+  mongodb:
+    image: mongo:7.0
+    container_name: flight-mongodb
+    networks:
+      - flight-pipeline-net
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_flight_data:/data/db
+    restart: unless-stopped
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: flight-mongo-express
+    networks:
+      - flight-pipeline-net
+    ports:
+      - "8082:8081"
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_BASICAUTH: "false"
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+
+  # ============================================================================
+  # 3. APACHE SPARK CLUSTER (MASTER & WORKER)
+  # ============================================================================
+  spark-master:
+    image: flight-spark:3.5.0
+    container_name: flight-spark-master
+    networks:
+      - flight-pipeline-net
+    ports:
+      - "8084:8080" # Spark Master Web UI
+      - "7077:7077" # Spark Master RPC Port
+    environment:
+      - SPARK_MODE=master
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+    command: ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.master.Master", "--host", "spark-master", "--port", "7077", "--webui-port", "8080"]
+    restart: unless-stopped
+
+  spark-worker:
+    image: flight-spark:3.5.0
+    container_name: flight-spark-worker
+    networks:
+      - flight-pipeline-net
+    ports:
+      - "8083:8081" # Spark Worker Web UI
+    depends_on:
+      - spark-master
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_MEMORY=1G
+      - SPARK_WORKER_CORES=2
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+    command: ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.worker.Worker", "spark://spark-master:7077", "--webui-port", "8081"]
+    restart: unless-stopped
+
+  # ============================================================================
+  # 4. SPARK STREAMING INGESTION DRIVER
+  # ============================================================================
+  spark-streaming:
+    image: flight-spark:3.5.0
+    container_name: flight-spark-streaming
+    user: "0:0"
+    networks:
+      - flight-pipeline-net
+    ports:
+      - "4040:4040" # Spark Driver Application Web UI & Structured Streaming Graph
+    depends_on:
+      - kafka
+      - mongodb
+      - spark-master
+      - spark-worker
+    volumes:
+      - ./ingestion:/opt/ingestion
+      - ./simulators:/opt/simulators
+      - ./scripts:/opt/scripts
+      - spark_checkpoints:/tmp/spark-checkpoints
+      - /home/chansom163/.ivy2:/root/.ivy2
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - MONGO_URI=mongodb://mongodb:27017
+      - MONGO_DB_NAME=flight_analytics
+      - SPARK_MASTER=spark://spark-master:7077
+      - PYTHONPATH=/opt
+      - PYTHONUNBUFFERED=1
+    command: [
+      "/opt/spark/bin/spark-submit",
+      "--master", "spark://spark-master:7077",
+      "--packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0",
+      "--conf", "spark.jars.ivy=/root/.ivy2",
+      "--conf", "spark.cores.max=2",
+      "--conf", "spark.driver.memory=512m",
+      "--conf", "spark.executor.memory=512m",
+      "/opt/ingestion/pipeline.py"
+    ]
+    restart: unless-stopped
+
+  # ============================================================================
+  # 5. CONTINUOUS DATA STREAM SIMULATOR
+  # ============================================================================
+  simulator:
+    build:
+      context: .
+      dockerfile: docker/simulator/Dockerfile
+    image: flight-simulator:latest
+    container_name: flight-simulator
+    networks:
+      - flight-pipeline-net
+    volumes:
+      - ./simulators:/app/simulators
+      - ./ingestion:/app/ingestion
+    depends_on:
+      - kafka
+      - kafka-init-topics
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+
+  # ============================================================================
+  # 6. STREAMLIT REAL-TIME ANALYTICS DASHBOARD
+  # ============================================================================
+  dashboard:
+    build:
+      context: .
+      dockerfile: docker/dashboard/Dockerfile
+    image: flight-dashboard:latest
+    container_name: flight-dashboard
+    networks:
+      - flight-pipeline-net
+    ports:
+      - "8501:8501" # Streamlit Web UI
+    volumes:
+      - ./dashboard:/app/dashboard
+      - ./ingestion:/app/ingestion
+    depends_on:
+      - mongodb
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017
+      - MONGO_DB_NAME=flight_analytics
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+
+networks:
+  flight-pipeline-net:
+    driver: bridge
+
+volumes:
+  mongo_flight_data:
+  spark_checkpoints:

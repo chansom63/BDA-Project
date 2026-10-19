@@ -31,3 +31,9 @@ Thumbs.db
 *.njsproj
 *.sln
 *.swp
+
+# Python venv & bytecode
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/

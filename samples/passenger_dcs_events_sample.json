@@ -1,0 +1,23 @@
+{
+  "timestamp_utc": "2026-10-19T12:54:00Z",
+  "flight_number": "SG 8181",
+  "tail_number": "VT-SGB",
+  "origin_iata": "DEL",
+  "destination_iata": "BOM",
+  "total_seating_capacity": 189,
+  "booked_passengers": 174,
+  "boarded_passengers": 162,
+  "digiyatra_biometric_count": 110,
+  "digiyatra_adoption_pct": 67.9,
+  "class_split": {
+    "spiceplus_boarded": 12,
+    "spiceflex_boarded": 22,
+    "economy_boarded": 128
+  },
+  "special_service_requests": {
+    "wchr_wheelchair": 4,
+    "infants_onboard": 2,
+    "preordered_meals": 72
+  },
+  "source": "DCS_PASSENGER_BOARDING_SIMULATOR"
+}

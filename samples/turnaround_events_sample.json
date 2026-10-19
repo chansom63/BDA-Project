@@ -1,0 +1,23 @@
+{
+  "timestamp_utc": "2026-10-19T12:54:00Z",
+  "flight_number": "SG 8181",
+  "tail_number": "VT-SGB",
+  "origin_airport": "DEL",
+  "stand_gate": "T3-G14",
+  "milestone_sobt": "08:00",
+  "milestone_tobt": "08:18",
+  "milestone_tsat": "08:23",
+  "tobt_variance_minutes": 18,
+  "turnaround_progress_pct": 65.0,
+  "ramp_services": {
+    "deboarding_completed": true,
+    "cleaning_completed": true,
+    "catering_completed": true,
+    "fueling_liters_uplifted": 4018.0,
+    "fueling_completed": true,
+    "baggage_loading_pct": 74.0,
+    "boarding_pct": 40.0
+  },
+  "iata_delay_code": "35",
+  "source": "A-CDM_RAMP_TELEMETRY_SIMULATOR"
+}

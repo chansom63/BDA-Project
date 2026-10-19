@@ -4,11 +4,13 @@
   "description": "Monolithic MERN Architecture on AWS (Data Analytics Project) - Real-Time Flight Telemetry & Tracking System",
   "main": "server/index.js",
   "scripts": {
-    "install-all": "npm install && npm --prefix server install && npm --prefix client install",
-    "server": "cd server && npm run dev",
-    "client": "cd client && npm run dev",
-    "dev": "node scripts/start-dev.js",
-    "start": "cd server && npm start"
+    "start": "bash scripts/start_all.sh",
+    "stop": "bash scripts/stop_all.sh",
+    "status": "docker compose -f docker-compose.pipeline.yml ps",
+    "test": "PYTHONPATH=. ./.venv/bin/pytest tests/ -v",
+    "clean": "bash scripts/clean.sh",
+    "down:clean": "bash scripts/clean.sh",
+    "clean:all": "bash scripts/clean.sh --all"
   },
   "keywords": [
     "mern",

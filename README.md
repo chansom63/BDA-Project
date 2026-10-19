@@ -88,6 +88,21 @@ To run the automated compliance test verifying all 32 integration points:
 bash scripts/smoke_test.sh
 ```
 
+### 🛑 Stopping & Clearing All Data from Disk
+
+Standard `docker compose down` leaves persistent volumes (ClickHouse, Grafana, Spark checkpoints) on disk. To stop all containers and wipe all persistent storage and cached data clean from disk:
+
+```bash
+# Complete disk and volume cleanup:
+./scripts/clean.sh
+
+# Or via npm:
+npm run clean
+
+# Deep clean (also prunes project built images & Docker build cache):
+./scripts/clean.sh --all
+```
+
 ---
 
 ## 🔍 Interactive Verification Guide
@@ -137,14 +152,16 @@ docker logs -f --tail 20 spark-streaming
 ```
 
 ### 5. ClickHouse OLAP Data Warehouse (`bda-clickhouse`)
+> 📖 **Full Schema Specification**: See [DATABASE_SCHEMA.md](file:///home/chansom163/Academics/BDA/project/BDA-Project/DATABASE_SCHEMA.md) for the detailed column dictionary, index structures, Kafka engine queues, and materialized views.
+
 Open an interactive ClickHouse terminal:
 ```bash
-docker exec -it bda-clickhouse clickhouse-client
+docker exec -it bda-clickhouse clickhouse-client -u ch_user --password ch_password
 ```
 Execute analytical queries:
 ```sql
 SELECT count() AS total_records FROM flight_telemetry;
-SELECT eventId, callsign, airline, anomalyType, severity FROM flight_anomalies LIMIT 5;
+SELECT anomalyId, callsign, anomalyType, severity FROM flight_anomalies LIMIT 5;
 exit;
 ```
 
@@ -161,8 +178,10 @@ Execute a MapReduce streaming batch job across YARN:
 docker exec -it nodemanager /bin/bash /opt/hadoop/mapreduce/run_job.sh
 ```
 
-### 8. Grafana Real-Time Dashboard (`bda-grafana`)
-Open [http://localhost:3000](http://localhost:3000) (User: `admin` / Password: `admin`) → **Dashboards** → **Flight Telemetry Real-Time Monitoring**.
+### 8. Grafana Real-Time Dashboards (`bda-grafana`)
+Open [http://localhost:3000](http://localhost:3000) (User: `admin` / Password: `admin`) → **Dashboards**:
+- **ClickHouse Server & Performance Monitoring** (`clickhouse-server-ops`): Real-time QPS, query latency profiles (avg/max ms), tracked memory, MergeTree table storage breakdown, compression ratios, background pool tasks, and slow query analyzer.
+- **Flight Telemetry Real-Time Monitoring** (`flight-telemetry-ops`): Live airborne flights, altitude/speed/temperature time series, emergency squawk alerts, and event ingestion velocity.
 
 ### 9. Apache Airflow Orchestrator (`bda-airflow`)
 Open [http://localhost:8085](http://localhost:8085) (User: `admin` / Password: `admin`) to view DAGs and triggered tasks.
