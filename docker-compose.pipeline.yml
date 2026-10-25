@@ -92,6 +92,9 @@ services:
   # 3. APACHE SPARK CLUSTER (MASTER & WORKER)
   # ============================================================================
   spark-master:
+    build:
+      context: .
+      dockerfile: docker/spark/Dockerfile
     image: flight-spark:3.5.0
     container_name: flight-spark-master
     networks:

@@ -17,7 +17,7 @@ pkill -f "streamlit run dashboard/app.py" 2>/dev/null || true
 
 # 2. Start Full Containerized Pipeline via Docker Compose
 echo "🐳 [1/2] Launching containerized services via Docker Compose..."
-docker compose -f docker-compose.pipeline.yml up -d
+docker compose -f docker-compose.pipeline.yml up -d --build
 
 # 3. Wait for services to initialize
 echo "⏳ [2/2] Waiting for services to initialize..."
