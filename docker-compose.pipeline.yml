@@ -104,6 +104,7 @@ services:
       - "7077:7077" # Spark Master RPC Port
     environment:
       - SPARK_MODE=master
+      - SPARK_PUBLIC_DNS=localhost
       - SPARK_RPC_AUTHENTICATION_ENABLED=no
       - SPARK_RPC_ENCRYPTION_ENABLED=no
       - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
@@ -112,6 +113,9 @@ services:
     restart: unless-stopped
 
   spark-worker:
+    build:
+      context: .
+      dockerfile: docker/spark/Dockerfile
     image: flight-spark:3.5.0
     container_name: flight-spark-worker
     networks:
@@ -122,6 +126,7 @@ services:
       - spark-master
     environment:
       - SPARK_MODE=worker
+      - SPARK_PUBLIC_DNS=localhost
       - SPARK_MASTER_URL=spark://spark-master:7077
       - SPARK_WORKER_MEMORY=1G
       - SPARK_WORKER_CORES=2
@@ -136,6 +141,9 @@ services:
   # 4. SPARK STREAMING INGESTION DRIVER
   # ============================================================================
   spark-streaming:
+    build:
+      context: .
+      dockerfile: docker/spark/Dockerfile
     image: flight-spark:3.5.0
     container_name: flight-spark-streaming
     user: "0:0"
@@ -155,6 +163,7 @@ services:
       - spark_checkpoints:/tmp/spark-checkpoints
       - /home/chansom163/.ivy2:/root/.ivy2
     environment:
+      - SPARK_PUBLIC_DNS=localhost
       - KAFKA_BOOTSTRAP_SERVERS=kafka:29092
       - MONGO_URI=mongodb://mongodb:27017
       - MONGO_DB_NAME=flight_analytics

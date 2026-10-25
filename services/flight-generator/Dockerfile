@@ -6,8 +6,9 @@ WORKDIR /app
 COPY services/flight-generator/package*.json ./
 RUN npm install --production
 
-# Copy reused flight telemetry simulator from server
+# Copy reused flight telemetry simulator and OpenSky live client from server
 COPY server/services/adsbSimulator.js ./adsbSimulator.js
+COPY server/services/openSkyService.js ./openSkyService.js
 
 # Copy generator runner
 COPY services/flight-generator/index.js ./index.js

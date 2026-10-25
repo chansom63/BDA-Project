@@ -14,7 +14,7 @@ router.get('/', async (req, res, next) => {
       maxLat,
       minLon,
       maxLon,
-      limit: limit || 500
+      limit: limit || 2000
     });
 
     res.json({

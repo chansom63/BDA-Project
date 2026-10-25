@@ -4,8 +4,8 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-// Load the existing flight simulator module
-const adsbSimulator = require('./adsbSimulator');
+// Load OpenSky service (which combines live OpenSky API flights + ADS-B simulator)
+const openSkyService = require('./openSkyService');
 
 const KAFKA_BROKERS = (process.env.KAFKA_BROKERS || 'kafka:29092').split(',').map(b => b.trim());
 const KAFKA_TOPIC = process.env.KAFKA_TOPIC || 'flight-telemetry';
@@ -13,7 +13,7 @@ const INTERVAL_MS = parseInt(process.env.GENERATION_INTERVAL_MS || '15000', 10);
 const CLIENT_ID = process.env.KAFKA_CLIENT_ID || 'flight-telemetry-generator';
 
 console.log(`====================================================`);
-console.log(`✈️  Starting Standalone Flight Telemetry Generator`);
+console.log(`✈️  Starting Standalone Flight Telemetry Generator (OpenSky + Simulator)`);
 console.log(`📡 Target Kafka Brokers: ${KAFKA_BROKERS.join(', ')}`);
 console.log(`📦 Kafka Topic: ${KAFKA_TOPIC}`);
 console.log(`⏱️  Batch Interval: ${INTERVAL_MS} ms`);
@@ -56,7 +56,7 @@ async function connectProducer() {
 async function start() {
   await connectProducer();
 
-  adsbSimulator.on('telemetry_batch', async (batch) => {
+  openSkyService.on('telemetry_batch', async (batch) => {
     if (!isConnected || !batch || batch.length === 0) return;
 
     try {
@@ -78,14 +78,14 @@ async function start() {
     }
   });
 
-  // Start internal simulation physics loop
-  adsbSimulator.startSimulation(INTERVAL_MS);
+  // Start OpenSky polling & simulation loop
+  openSkyService.start();
 }
 
 // Graceful shutdown
 async function shutdown() {
   console.log(`🛑 Stopping generator service...`);
-  adsbSimulator.stopSimulation();
+  openSkyService.stop();
   try {
     await producer.disconnect();
     console.log(`🔌 Kafka producer disconnected cleanly.`);

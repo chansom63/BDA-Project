@@ -168,6 +168,11 @@ class ADSBTelemetrySimulator extends EventEmitter {
       f.lat += (dist / 60) * Math.cos(hdRad);
       f.lon += (dist / 60) * Math.sin(hdRad) / (Math.cos(f.lat * Math.PI / 180) || 0.001);
 
+      if (f.lon > 180) f.lon -= 360;
+      if (f.lon < -180) f.lon += 360;
+      if (f.lat > 85) f.lat = 85;
+      if (f.lat < -85) f.lat = -85;
+
       if (f.verticalRateFpm !== 0) {
         f.altitudeFt += f.verticalRateFpm * (20/60) * this.speedMultiplier;
         if (f.altitudeFt <= 5000) f.verticalRateFpm = 0;
@@ -178,10 +183,15 @@ class ADSBTelemetrySimulator extends EventEmitter {
       f.progressPct   = Math.min(100, Math.max(0, Math.round(((totalDist - remDist) / totalDist) * 100)));
 
       if (remDist < 20) {
-        f.lat = f.origin.lat; f.lon = f.origin.lon;
+        // Plane arrived at destination: turn around for return route smoothly without teleporting across the map
+        const prevOrigin = f.origin;
+        f.origin = f.destination;
+        f.destination = prevOrigin;
+        f.headingDeg = calculateHeading(f.lat, f.lon, f.destination.lat, f.destination.lon);
         f.altitudeFt = 35000;
         f.status = ['7700','7600','7500'].includes(f.squawk) ? 'Emergency' : 'In-Flight';
-        f.progressPct = 0; f.trajectory = [];
+        f.progressPct = 0;
+        f.trajectory = [{ lat: f.lat, lon: f.lon, altitudeFt: f.altitudeFt, speedKnots: f.speedKnots, timestamp: new Date() }];
       }
 
       if (f.trajectory.length > 40) f.trajectory.shift();

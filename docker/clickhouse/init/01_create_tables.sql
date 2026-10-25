@@ -127,7 +127,7 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS mv_processed_to_telemetry
 TO flight_telemetry AS
 SELECT
     eventId,
-    parseDateTimeBestEffort(timestamp) AS timestamp,
+    parseDateTimeBestEffortOrNull(timestamp) AS timestamp,
     flightId,
     callsign,
     latitude,
@@ -143,14 +143,14 @@ SELECT
     origin,
     destination
 FROM kafka_processed_events_queue
-WHERE flightId != '' AND flightId != 'UNK' AND windowStart IS NULL;
+WHERE flightId != '' AND flightId != 'UNK' AND (windowStart IS NULL OR windowStart = '');
 
 -- Aggregates: ingest rows that carry the aggregate summary fields
 CREATE MATERIALIZED VIEW IF NOT EXISTS mv_processed_to_aggregates
 TO flight_aggregates AS
 SELECT
-    parseDateTimeBestEffort(windowStart) AS windowStart,
-    parseDateTimeBestEffort(windowEnd)   AS windowEnd,
+    parseDateTimeBestEffortOrNull(windowStart) AS windowStart,
+    parseDateTimeBestEffortOrNull(windowEnd)   AS windowEnd,
     totalFlights,
     avgAltitude,
     avgSpeed,
@@ -158,7 +158,7 @@ SELECT
     maxEngineTemp,
     anomalyCount
 FROM kafka_processed_events_queue
-WHERE windowStart IS NOT NULL;
+WHERE windowStart IS NOT NULL AND windowStart != '';
 
 -- Anomalies: ingest from anomalies Kafka queue
 CREATE MATERIALIZED VIEW IF NOT EXISTS mv_anomalies_to_storage

@@ -44,6 +44,8 @@ function deadReckonFlight(f, dtSeconds) {
   const latRad = lat * DEG2RAD;
   lat = lat + (distNM / 60) * Math.cos(hdRad);
   lon = lon + (distNM / 60) * Math.sin(hdRad) / (Math.cos(latRad) || 0.001);
+  if (lon > 180) lon -= 360;
+  if (lon < -180) lon += 360;
 
   return {
     ...f,
@@ -106,7 +108,7 @@ export const SocketProvider = ({ children }) => {
     const fetchTelemetry = async () => {
       try {
         // 1. Fetch live aircraft positions from ClickHouse via backend API
-        const flightsRes = await fetch(`${apiBase}/api/flights`);
+        const flightsRes = await fetch(`${apiBase}/api/flights?limit=2000`);
         if (!flightsRes.ok) throw new Error(`HTTP error ${flightsRes.status}`);
         const flightsData = await flightsRes.json();
 

@@ -99,7 +99,7 @@ class ClickHouseService {
       }
 
       const whereStr = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : '';
-      const limitStr = options.limit ? `LIMIT ${Number(options.limit)}` : 'LIMIT 500';
+      const limitStr = options.limit ? `LIMIT ${Number(options.limit)}` : 'LIMIT 2000';
 
       const query = `
         SELECT
