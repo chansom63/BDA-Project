@@ -49,6 +49,8 @@ function deadReckonFlight(f, dtSeconds) {
 
   return {
     ...f,
+    lat,
+    lon,
     latitude: lat,
     longitude: lon,
     altitudeFt: Math.round(altitudeFt),
@@ -69,9 +71,10 @@ export const SocketProvider = ({ children }) => {
 
   const flightsRef = useRef([]);
   const lastTickRef = useRef(null);
+  const lastRenderUpdateRef = useRef(0);
   const rafIdRef = useRef(null);
 
-  // ── Animation loop (requestAnimationFrame) for smooth 60fps radar map ──────
+  // ── Smooth physics dead-reckoning animation loop ──────────────────────────
   const animate = useCallback((now) => {
     rafIdRef.current = requestAnimationFrame(animate);
 
@@ -90,7 +93,12 @@ export const SocketProvider = ({ children }) => {
 
     const updated = flightsRef.current.map(f => deadReckonFlight(f, safeDt));
     flightsRef.current = updated;
-    setLiveFlights(updated);
+
+    // Throttle React state re-renders to every 500ms to keep 60fps UI smooth with 1,000 aircraft
+    if (now - lastRenderUpdateRef.current > 500) {
+      lastRenderUpdateRef.current = now;
+      setLiveFlights(updated);
+    }
   }, []);
 
   useEffect(() => {

@@ -143,6 +143,7 @@ class ADSBTelemetrySimulator extends EventEmitter {
           radarSource:     'SIM-ADS-B-' + origAirport.code,
         icao24:          Math.floor(Math.random()*0xFFFFFF).toString(16).padStart(6,'0'),
         lat, lon,
+        latitude: lat, longitude: lon,
         altitudeFt:      30000 + (i % 12) * 1000,
         speedKnots:      430 + (i % 8) * 10,
         headingDeg:      hdg,

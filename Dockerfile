@@ -21,11 +21,6 @@ COPY client/dist ./client/dist
 EXPOSE 5000
 
 ENV PORT=5000 \
-    NODE_ENV=production \
-    CLICKHOUSE_HOST=clickhouse \
-    CLICKHOUSE_PORT=8123 \
-    CLICKHOUSE_USER=ch_user \
-    CLICKHOUSE_PASSWORD=ch_password \
-    CLICKHOUSE_DB=default
+    NODE_ENV=production
 
 CMD ["node", "server/index.js"]

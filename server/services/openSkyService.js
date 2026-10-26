@@ -88,6 +88,14 @@ class OpenSkyService extends EventEmitter {
     this.meta         = new Map();  // icao24 → {airline, type, reg}
     this.trajectories = new Map();  // icao24 → [{lat,lon,...}]
     this.targetIcaos  = new Set();  // icao24 → tracked subset
+    this.latestEvents = adsbSimulator.getCurrentFlights();
+  }
+
+  getLatestFlights() {
+    if (this.latestEvents && this.latestEvents.length > 0) {
+      return this.latestEvents;
+    }
+    return adsbSimulator.getCurrentFlights();
   }
 
   _parseState(sv) {
@@ -137,6 +145,7 @@ class OpenSkyService extends EventEmitter {
       photoUrl:'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600&auto=format&fit=crop&q=80',
       origin:      { code:'LIVE', city:originCountry, country:originCountry, lat, lon },
       destination: { code:'LIVE', city:'En Route',    country:'?',          lat, lon },
+      lat, lon,
       latitude:lat, longitude:lon, altitudeFt:Math.round(altitudeFt),
       speedKnots, headingDeg, verticalRateFpm, squawk,
       status:['7700','7600','7500'].includes(squawk)?'Emergency':'In-Flight',
@@ -155,6 +164,7 @@ class OpenSkyService extends EventEmitter {
       // We must still tick the simulator and emit telemetry even when skipping real fetch!
       adsbSimulator.tick();
       const simFlights = adsbSimulator.getCurrentFlights();
+      this.latestEvents = simFlights;
       this.emit('telemetry_batch', simFlights);
       return;
     }
@@ -206,6 +216,7 @@ class OpenSkyService extends EventEmitter {
       adsbSimulator.tick(); // manually step the physics for simulator
       const simFlights = adsbSimulator.getCurrentFlights();
       events.push(...simFlights);
+      this.latestEvents = events;
 
       console.log(`🛫 OpenSky poll #${this.fetchCount} → ${events.length} total aircraft (${events.length - simFlights.length} real, ${simFlights.length} sim)`);
       this.emit('telemetry_batch', events);

@@ -91,15 +91,47 @@ function MainApp() {
   );
 }
 
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error, errorInfo) {
+    console.error("Dashboard error:", error, errorInfo);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: '32px', color: '#fff', background: '#0f172a', minHeight: '100vh', fontFamily: 'sans-serif' }}>
+          <h2 style={{ color: '#ef4444' }}>⚠️ Dashboard Display Error</h2>
+          <pre style={{ background: '#1e293b', padding: '16px', borderRadius: '8px', overflow: 'auto', marginTop: '16px', color: '#f87171' }}>
+            {this.state.error?.stack || this.state.error?.toString()}
+          </pre>
+          <button
+            onClick={() => window.location.reload()}
+            style={{ marginTop: '16px', padding: '10px 20px', background: '#facc15', color: '#000', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}
+          >
+            Reload Dashboard
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
 
   return (
-    <>
+    <ErrorBoundary>
       {showSplash && <SplashLoader onComplete={() => setShowSplash(false)} />}
       <SocketProvider>
         <MainApp />
       </SocketProvider>
-    </>
+    </ErrorBoundary>
   );
 }

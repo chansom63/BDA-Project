@@ -192,6 +192,7 @@ export default function MapView({ flights, selectedFlight, setSelectedFlight, on
         />
 
         <ZoomControl position="bottomright" />
+        <Pane name="trailPane" style={{ zIndex: 400 }} />
 
         {/* Airport Hub Markers */}
         {showAirports && airports.map(ap => (
@@ -212,27 +213,34 @@ export default function MapView({ flights, selectedFlight, setSelectedFlight, on
 
         {/* Flight Markers & Trajectory Polylines */}
         {displayedFlights.map(flight => {
-          const lat = flight.currentPosition?.lat || flight.lat;
-          const lon = flight.currentPosition?.lon || flight.lon;
-          const alt = flight.currentPosition?.altitudeFt || flight.altitudeFt || 30000;
-          const heading = flight.currentPosition?.headingDeg || flight.headingDeg || 0;
-          const speed = flight.currentPosition?.speedKnots || flight.speedKnots || 450;
+          const lat = Number(flight.currentPosition?.lat ?? flight.latitude ?? flight.lat);
+          const lon = Number(flight.currentPosition?.lon ?? flight.longitude ?? flight.lon);
+
+          if (!lat || !lon || isNaN(lat) || isNaN(lon)) return null;
+
+          const alt = flight.currentPosition?.altitudeFt ?? flight.altitudeFt ?? 30000;
+          const heading = flight.currentPosition?.headingDeg ?? flight.headingDeg ?? 0;
+          const speed = flight.currentPosition?.speedKnots ?? flight.speedKnots ?? 450;
           const squawk = flight.squawk || '1200';
           const isSelected = selectedFlight?.flightId === flight.flightId;
           const squawkBadge = getSquawkBadge(squawk);
 
           const icon = createFR24PlaneIcon(heading, squawk, alt, isSelected);
 
-          const trajectoryPoints = (flight.trajectory || []).map(t => [t.lat, t.lon]);
-          if (trajectoryPoints.length > 0 && lat && lon) {
+          const trajectoryPoints = (flight.trajectory || [])
+            .filter(t => t && (t.lat != null || t.latitude != null) && (t.lon != null || t.longitude != null))
+            .map(t => [Number(t.lat ?? t.latitude), Number(t.lon ?? t.longitude)]);
+          if (trajectoryPoints.length > 0) {
             trajectoryPoints.push([lat, lon]);
           }
 
-          const originPoint = flight.origin?.lat && flight.origin?.lon ? [flight.origin.lat, flight.origin.lon] : null;
-          const destPoint = flight.destination?.lat && flight.destination?.lon ? [flight.destination.lat, flight.destination.lon] : null;
+          const originPoint = flight.origin?.lat && flight.origin?.lon ? [Number(flight.origin.lat), Number(flight.origin.lon)] : null;
+          const destPoint = flight.destination?.lat && flight.destination?.lon ? [Number(flight.destination.lat), Number(flight.destination.lon)] : null;
+
+          const flightKey = flight.flightId || flight.icao24 || `${lat}_${lon}`;
 
           return (
-            <React.Fragment key={flight.flightId}>
+            <React.Fragment key={flightKey}>
               {/* Flight Trajectory Line */}
               {(showTrails || isSelected) && trajectoryPoints.length > 1 && (
                 <Polyline
